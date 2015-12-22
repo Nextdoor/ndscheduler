@@ -1,4 +1,3 @@
-
 # Nextdoor Scheduler
 
 ![Apache](https://img.shields.io/hexpm/l/plug.svg) 

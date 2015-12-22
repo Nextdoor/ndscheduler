@@ -76,7 +76,7 @@ setup(
     ],
     test_suite='nose.collector',
     install_requires=[
-        'setuptools',
+        'setuptools == 17.1',
         'APScheduler == 3.0.0',
         'SQLAlchemy == 0.9.7',
         'tornado == 4.0.1',

@@ -1,0 +1,6 @@
+#!/bin/bash
+
+# Run scheduler server inside docker container
+source /mnt/scheduler/bin/activate && \
+	NDSCHEDULER_SETTINGS_MODULE=simple_scheduler.settings \
+	python /mnt/scheduler/src/ndscheduler/simple_scheduler/scheduler.py

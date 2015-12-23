@@ -1,0 +1,3 @@
+# Additional dependencies for simple_scheduler only
+
+requests == 2.9.1

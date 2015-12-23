@@ -1,0 +1,13 @@
+language: python
+
+python:
+  - "2.7"
+
+install:
+  - make init
+  - make install
+
+before_script:
+  - make flake8
+
+script: make test

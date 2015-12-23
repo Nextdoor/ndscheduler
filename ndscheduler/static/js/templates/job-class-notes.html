@@ -1,0 +1,17 @@
+<% if (job.notes.length > 0) { %>
+    <b>Notes</b>: <%- job.notes %><br>
+<% } %>
+
+<% if (job.arguments.length > 0) { %>
+    <b>Arguments:</b>
+    <ol>
+        <% _.forEach(job.arguments, function(argument) { %>
+            <li>(<%- argument.type %>) <%- argument.description %></li>
+        <% }); %>
+    </ol>
+<% } %>
+
+<% if (job.example_arguments.length > 0) { %>
+    <b>Example arguments to fill in next field</b>:<br>
+    <%- job.example_arguments %>
+<% } %>

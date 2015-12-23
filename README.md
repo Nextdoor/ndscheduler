@@ -32,9 +32,15 @@ Check out our blog post - [We Don’t Run Cron Jobs at Nextdoor](https://engblog
 
 ## Try it NOW
 
+From source code:
+
     git clone https://github.com/Nextdoor/ndscheduler.git
     cd ndscheduler
     make simple
+
+Or use docker:
+
+    docker run -it -p 8888:8888 wenbinf/ndscheduler
     
 Open your browser and go to [localhost:8888](http://localhost:8888). 
 

@@ -114,6 +114,8 @@ The reference implementation also comes with [3 sample jobs](https://github.com/
 * SlackJob: it sends a slack message periodically, for example, team standup reminder.
 * ShellJob: it runs an executable command, for example, run curl to crawl web pages.
 
+And it's [dockerized](https://github.com/Nextdoor/ndscheduler/tree/master/simple_scheduler/docker).
+
 ## Contribute code to ndscheduler
 
 **Install dependencies**

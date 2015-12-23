@@ -58,6 +58,9 @@ Using pip (from GitHub repo)
     # Or put this if you want a specific commit
     git+https://github.com/Nextdoor/ndscheduler.git@5843322ebb440d324ca5a66ba55fea1fd00dabe8
 
+    # Or put this if you want a specific tag version
+    git+https://github.com/Nextdoor/ndscheduler.git@v0.1.0#egg=ndscheduler
+    
     #
     # Run from command line
     #

@@ -10,7 +10,7 @@ RUN apt-get -qq update && \
 RUN virtualenv /mnt/scheduler && \
     . /mnt/scheduler/bin/activate && \
     pip install -e git+https://github.com/Nextdoor/ndscheduler.git@v0.1.1#egg=ndscheduler && \
-    pip install -r /mnt/scheduler/src/ndscheduler/simple_scheduler/requirements.txt && ls
+    pip install -r /mnt/scheduler/src/ndscheduler/simple_scheduler/requirements.txt
 
 ADD run_scheduler /mnt/scheduler/bin/run_scheduler
 RUN chmod 755 /mnt/scheduler/bin/run_scheduler

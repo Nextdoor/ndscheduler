@@ -4,6 +4,8 @@ PIP=.venv/bin/pip
 SOURCE_VENV=source .venv/bin/activate
 FLAKE8_CHECKING=flake8 ndscheduler simple_scheduler --max-line-length 100
 
+all: test
+
 init:
 	@echo "Initialize dev environment for ndscheduler ..."
 	@echo "Install pre-commit hook for git."

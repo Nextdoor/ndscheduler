@@ -2,14 +2,14 @@ SHELL:=/bin/bash
 PYTHON=.venv/bin/python
 PIP=.venv/bin/pip
 SOURCE_VENV=source .venv/bin/activate
-FLAKE8_CHECKING=flake8 ndscheduler simple_scheduler --max-line-length 100
+FLAKE8_CHECKING=$(SOURCE_VENV) && flake8 ndscheduler simple_scheduler --max-line-length 100
 
 all: test
 
 init:
 	@echo "Initialize dev environment for ndscheduler ..."
 	@echo "Install pre-commit hook for git."
-	@echo $(FLAKE8_CHECKING) > .git/hooks/pre-commit
+	@echo "$(FLAKE8_CHECKING)" > .git/hooks/pre-commit && chmod 755 .git/hooks/pre-commit
 	@echo "Setup python virtual environment."
 	virtualenv .venv
 	$(SOURCE_VENV) && $(PIP) install flake8

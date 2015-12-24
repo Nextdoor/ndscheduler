@@ -17,7 +17,7 @@ METADATA = sqlalchemy.MetaData()
 #
 EXECUTIONS = sqlalchemy.Table(
     settings.EXECUTIONS_TABLENAME, METADATA,
-    sqlalchemy.Column('eid', sqlalchemy.Text, primary_key=True),
+    sqlalchemy.Column('eid', sqlalchemy.Unicode(191, _warn_on_bytestring=False), primary_key=True),
     sqlalchemy.Column('hostname', sqlalchemy.Text, nullable=True),
     sqlalchemy.Column('pid', sqlalchemy.Integer, nullable=True),
     sqlalchemy.Column('state', sqlalchemy.Integer, nullable=False),

@@ -18,7 +18,8 @@ class DatastorePostgresql(base.DatastoreBase):
             'sslmode': 'disable'
         }
 
-        :return:
+        :return: database url
+        :rtype: str
         """
 
         return 'postgresql://%s:%s@%s:%d/%s?sslmode=%s' % (

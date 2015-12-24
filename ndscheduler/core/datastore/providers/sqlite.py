@@ -17,7 +17,8 @@ class DatastoreSqlite(base.DatastoreBase):
             'file_path': 'an_absolute_path'
         }
 
-        :return:
+        :return: database url
+        :rtype: str
         """
         if 'file_path' in settings.DATABASE_CONFIG_DICT:
             file_path = settings.DATABASE_CONFIG_DICT['file_path']

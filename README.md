@@ -26,7 +26,7 @@ Check out our blog post - [We Don’t Run Cron Jobs at Nextdoor](https://engblog
     * Job: represents a schedule job and decides how to run a paricular job.
     * Execution: represents an instance of job execution.
     * AuditLog: logs when and who runs what job.
-  * [ScheduleManager](https://github.com/Nextdoor/ndscheduler/blob/master/ndscheduler/core/scheduler_manager.py): Access Datastore to manage jobs, i.e., schedule/modify/delete/pause/resume a job.
+  * [ScheduleManager](https://github.com/Nextdoor/ndscheduler/blob/master/ndscheduler/core/scheduler_manager.py): access Datastore to manage jobs, i.e., schedule/modify/delete/pause/resume a job.
 * [Server](https://github.com/Nextdoor/ndscheduler/tree/master/ndscheduler/server): a tornado server that runs ScheduleManager and provides REST APIs and serves UI.
 * [Web UI](https://github.com/Nextdoor/ndscheduler/tree/master/ndscheduler/static): a single page HTML app; this is a default implementation.
 

@@ -1,4 +1,4 @@
-"""A job to send a HTTP GET periodically."""
+"""A job to send a HTTP (GET or DELETE) periodically."""
 
 import logging
 import requests

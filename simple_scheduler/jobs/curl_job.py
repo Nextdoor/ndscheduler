@@ -15,7 +15,7 @@ class CurlJob(job.JobBase):
     def meta_info(cls):
         return {
             'job_class_string': '%s.%s' % (cls.__module__, cls.__name__),
-            'notes': ('This sends a HTTP request to a particular URL'),
+            'notes': 'This sends a HTTP request to a particular URL',
             'arguments': [
                 # url
                 {'type': 'string', 'description': 'What URL you want to make a GET call?'},

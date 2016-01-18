@@ -1,5 +1,6 @@
 # Additional dependencies for simple_scheduler only
 
+apns == 2.0.1
 requests == 2.9.1
 
 # Uncomment this if you want to use Postgres as datastore

@@ -109,10 +109,11 @@ Run it
     
 Access the web ui via [localhost:8888](http://localhost:8888)
 
-The reference implementation also comes with [3 sample jobs](https://github.com/Nextdoor/ndscheduler/tree/master/simple_scheduler/jobs).
+The reference implementation also comes with [several sample jobs](https://github.com/Nextdoor/ndscheduler/tree/master/simple_scheduler/jobs).
 * AwesomeJob: it just prints out 2 arguments you pass in.
 * SlackJob: it sends a slack message periodically, for example, team standup reminder.
 * ShellJob: it runs an executable command, for example, run curl to crawl web pages.
+* CurlJob: it's like running [curl](http://curl.haxx.se/) periodically.
 
 And it's [dockerized](https://github.com/Nextdoor/ndscheduler/tree/master/simple_scheduler/docker).
 

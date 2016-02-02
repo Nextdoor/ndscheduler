@@ -5,7 +5,7 @@
 
 ``ndscheduler`` is a flexible python library for building your own cron-like system to schedule jobs, which is to run a tornado process to serve REST APIs and a web ui. It's like [LLVM](http://llvm.org/) that provides modular and reusable components for building a compiler. 
 
-Check out our blog post - [We Don’t Run Cron Jobs at Nextdoor](https://engblog.nextdoor.com/2015/06/10/we-do-not-run-cron-jobs-at-nextdoor/)
+Check out our blog post - [We Don’t Run Cron Jobs at Nextdoor](https://medium.com/nextdoor-engineering/we-don-t-run-cron-jobs-at-nextdoor-6f7f9cc62040#.150z7i5lx)
 
 ## Table of contents
   

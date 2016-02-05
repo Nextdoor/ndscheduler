@@ -1,7 +1,7 @@
 SHELL:=/bin/bash
 PYTHON=.venv/bin/python
 PIP=.venv/bin/pip
-SOURCE_VENV=source .venv/bin/activate
+SOURCE_VENV=. .venv/bin/activate
 FLAKE8_CHECKING=$(SOURCE_VENV) && flake8 ndscheduler simple_scheduler --max-line-length 100
 
 all: test

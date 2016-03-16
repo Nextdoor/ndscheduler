@@ -29,7 +29,7 @@ class CurlJob(job.JobBase):
         }
 
     def run(self, url, request_type,  *args, **kwargs):
-        print 'Calling GET on url: %s' % (url)
+        print('Calling GET on url: %s' % (url))
 
         session = requests.Session()
         result = session.request(request_type,

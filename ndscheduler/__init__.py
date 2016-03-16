@@ -76,12 +76,12 @@ class Settings(object):
                     if setting == setting.upper():
                         setting_value = getattr(settings_module, setting)
                         setattr(self, setting, setting_value)
-            except ImportError, e:
+            except ImportError as e:
                 error = ImportError(
                     'Could not import settings "%s" (Is it on sys.path?): %s' %
                     (settings_module_path, e))
                 logger.warn(error)
-        except KeyError, e:
+        except KeyError:
             # NOTE: This is arguably an EnvironmentError, but that causes
             # problems with Python's interactive help.
             logger.warn(

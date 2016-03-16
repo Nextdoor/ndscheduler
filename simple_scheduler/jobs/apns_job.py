@@ -28,7 +28,7 @@ class APNSJob(job.JobBase):
         }
 
     def run(self, token, alert="Hello World",  *args, **kwargs):
-        print 'Sending %s to %s' % (alert, token)
+        print('Sending %s to %s' % (alert, token))
 
         cert_file = os.environ['APNS_CERT_PATH'] or 'simple_scheduler/jobs/apns-cert.pem'
         apns = APNs(use_sandbox=False, cert_file=cert_file)

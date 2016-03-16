@@ -14,7 +14,8 @@ multiprocessing
 
 PACKAGE = 'ndscheduler'
 __version__ = None
-execfile(os.path.join('ndscheduler', 'version.py'))  # set __version__
+
+exec(open(os.path.join('ndscheduler', 'version.py')).read())  # set __version__
 
 
 # -*- Hooks -*-
@@ -47,6 +48,9 @@ classes = """
     Topic :: Software Development :: Object Brokering
     Programming Language :: Python
     Programming Language :: Python :: 2.7
+    Programming Language :: Python :: 3.3
+    Programming Language :: Python :: 3.4
+    Programming Language :: Python :: 3.5
     Programming Language :: Python :: Implementation :: CPython
     Operating System :: OS Independent
 """
@@ -67,9 +71,9 @@ setup(
     keywords='scheduler nextdoor cron python',
     packages=find_packages(),
     include_package_data=True,
-extras_require = {
-'python_version<"3.3"': ['funcsigs']
-},
+    extras_require={
+    'python_version<"3.3"': ['funcsigs']
+    },
     tests_require=[
         'funcsigs',
         'mock == 1.1.2',
@@ -79,8 +83,9 @@ extras_require = {
     install_requires=[
         'APScheduler == 3.0.0',
         'SQLAlchemy == 1.0.0',
+        'future == 0.15.2',
         'tornado == 4.3.0',
-        'python-dateutil == 2.2'
+        'python-dateutil == 2.2',
     ],
     classifiers=classifiers,
     cmdclass={'clean': CleanHook},

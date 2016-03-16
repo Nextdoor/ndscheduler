@@ -1,5 +1,6 @@
 """Some convenient utils functions."""
 
+from builtins import str
 import datetime
 import importlib
 import logging
@@ -88,12 +89,12 @@ def get_cron_strings(job):
     :rtype: dict
     """
     return {
-        'month': unicode(job.trigger.fields[1]),
-        'day': unicode(job.trigger.fields[2]),
-        'week': unicode(job.trigger.fields[3]),
-        'day_of_week': unicode(job.trigger.fields[4]),
-        'hour': unicode(job.trigger.fields[5]),
-        'minute': unicode(job.trigger.fields[6])}
+        'month': str(job.trigger.fields[1]),
+        'day': str(job.trigger.fields[2]),
+        'week': str(job.trigger.fields[3]),
+        'day_of_week': str(job.trigger.fields[4]),
+        'hour': str(job.trigger.fields[5]),
+        'minute': str(job.trigger.fields[6])}
 
 
 def get_datastore_instance():

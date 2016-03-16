@@ -1,5 +1,7 @@
 """Unit tests for scheduler_manager module."""
 
+from builtins import str
+
 import tornado.testing
 
 from ndscheduler import utils
@@ -43,21 +45,21 @@ class SchedulerManagerTest(tornado.testing.AsyncTestCase):
         self.assertEqual(utils.get_job_kwargs(job), {'languages': 'en-us'})
 
         # Year
-        self.assertEquals(unicode(job.trigger.fields[0]), '*')
+        self.assertEquals(str(job.trigger.fields[0]), '*')
         # Month
-        self.assertEquals(unicode(job.trigger.fields[1]), month)
+        self.assertEquals(str(job.trigger.fields[1]), month)
         # day of month
-        self.assertEquals(unicode(job.trigger.fields[2]), day)
+        self.assertEquals(str(job.trigger.fields[2]), day)
         # week
-        self.assertEquals(unicode(job.trigger.fields[3]), '*')
+        self.assertEquals(str(job.trigger.fields[3]), '*')
         # day of week
-        self.assertEquals(unicode(job.trigger.fields[4]), day_of_week)
+        self.assertEquals(str(job.trigger.fields[4]), day_of_week)
         # hour
-        self.assertEquals(unicode(job.trigger.fields[5]), hour)
+        self.assertEquals(str(job.trigger.fields[5]), hour)
         # minute
-        self.assertEquals(unicode(job.trigger.fields[6]), minute)
+        self.assertEquals(str(job.trigger.fields[6]), minute)
         # second
-        self.assertEquals(unicode(job.trigger.fields[7]), '0')
+        self.assertEquals(str(job.trigger.fields[7]), '0')
 
     @tornado.testing.gen_test
     def test_add_job_modify_job(self):
@@ -92,4 +94,4 @@ class SchedulerManagerTest(tornado.testing.AsyncTestCase):
         arguments = [job_class_string, job_id]
         arguments += args
         self.assertEquals(list(job.args), arguments)
-        self.assertEquals(unicode(job.trigger.fields[1]), month)
+        self.assertEquals(str(job.trigger.fields[1]), month)

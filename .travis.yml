@@ -2,7 +2,7 @@ language: python
 
 os:
   - linux
-  - osx
+  # - osx
   
 python:
   - "2.7"

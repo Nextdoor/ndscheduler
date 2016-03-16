@@ -2,6 +2,7 @@ language: python
 
 os:
   - linux
+  #
   # - osx
   
 python:

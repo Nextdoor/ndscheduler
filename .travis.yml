@@ -2,7 +2,7 @@ language: python
 
 os:
   - linux
-  #
+  # Travis-ci doesn't support osx + python yet.
   # - osx
   
 python:

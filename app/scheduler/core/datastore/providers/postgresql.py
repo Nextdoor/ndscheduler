@@ -1,7 +1,7 @@
 """Represents PostgreSQL datastore."""
 
-from ndscheduler import settings
-from ndscheduler.core.datastore.providers import base
+from .... import settings
+from . import base
 
 
 class DatastorePostgresql(base.DatastoreBase):

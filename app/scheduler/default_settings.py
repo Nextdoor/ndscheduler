@@ -54,22 +54,22 @@ AUDIT_LOGS_TABLENAME = 'scheduler_jobauditlog'
 
 # SQLite
 #
-DATABASE_CLASS = 'scheduler.core.datastore.providers.sqlite.DatastoreSqlite'
-DATABASE_CONFIG_DICT = {
-    'file_path': 'datastore.db'
-}
+# DATABASE_CLASS = 'scheduler.core.datastore.providers.sqlite.DatastoreSqlite'
+# DATABASE_CONFIG_DICT = {
+#     'file_path': 'datastore.db'
+# }
 
 # Postgres
 #
-# DATABASE_CLASS = 'ndscheduler.core.datastore.providers.postgresql.DatastorePostgresql'
-# DATABASE_CONFIG_DICT = {
-#     'user': 'username',
-#     'password': '',
-#     'hostname': 'localhost',
-#     'port': 5432,
-#     'database': 'scheduler',
-#     'sslmode': 'disable'
-# }
+DATABASE_CLASS = 'scheduler.core.datastore.providers.postgresql.DatastorePostgresql'
+DATABASE_CONFIG_DICT = {
+    'user': os.environ['POSTGRES_USER'],
+    'password': os.environ['POSTGRES_PASSWORD'],
+    'hostname': os.environ['POSTGRES_HOST'],
+    'port': int(os.environ['POSTGRES_PORT']),
+    'database': os.environ['POSTGRES_DB'],
+    'sslmode': 'disable'
+}
 
 # MySQL
 #

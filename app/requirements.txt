@@ -1,12 +1,8 @@
-# Additional dependencies for simple_scheduler only
-
+APScheduler == 3.0.0
+SQLAlchemy == 1.0.0
+future == 0.15.2
+tornado == 4.3.0
+python-dateutil == 2.2
 apns == 2.0.1
 requests == 2.9.1
-
-# Uncomment this if you want to use Postgres as datastore
-#
 psycopg2 == 2.6.1
-
-# Uncomment this if you want to use MySQL as datastore
-#
-# pymysql == 0.6.7

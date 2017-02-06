@@ -5,6 +5,7 @@ subclassed in the rest of the app for different URLs.
 """
 
 import json
+import logging
 
 from concurrent import futures
 
@@ -12,6 +13,9 @@ import tornado.ioloop
 import tornado.web
 
 from ... import settings
+
+
+logger = logging.getLogger(__name__)
 
 
 class BaseHandler(tornado.web.RequestHandler):
@@ -22,7 +26,8 @@ class BaseHandler(tornado.web.RequestHandler):
         """Preprocess requests."""
         try:
             if self.request.headers['Content-Type'].startswith('application/json'):
-                self.json_args = json.loads(self.request.body)
+                payload = self.request.body.decode('utf-8')
+                self.json_args = json.loads(payload)
         except KeyError:
             self.json_args = None
 

@@ -15,4 +15,4 @@ HTTP_ADDRESS = '0.0.0.0'
 #
 logging.getLogger().setLevel(logging.DEBUG)
 
-JOB_CLASS_PACKAGES = ['jobs']
+JOB_CLASS_PACKAGES = ['scheduler.jobs']

@@ -1,6 +1,6 @@
 """A sample job that prints string."""
 
-from ..scheduler import job
+from .. import job
 
 
 class AwesomeJob(job.JobBase):

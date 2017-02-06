@@ -39,6 +39,7 @@ class SingletonScheduler (apscheduler_tornado.TornadoScheduler):
                                 constants.EXECUTION_STATUS_SCHEDULED,
                                 description=job.JobBase.get_scheduled_description())
         try:
+            job_class_path = 'scheduler.%s' % (job_class_path,)
             job_class = utils.import_from_path(job_class_path)
             datastore.update_execution(execution_id, state=constants.EXECUTION_STATUS_SCHEDULED,
                                        description=job_class.get_scheduled_description())

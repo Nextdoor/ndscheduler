@@ -23,7 +23,8 @@ def import_from_path(path):
     :return: class object
     :rtype: class
     """
-
+    if path.startswith('scheduler.scheduler.'):
+        path = path.replace('scheduler.scheduler.', 'scheduler.')
     components = path.split('.')
     module = __import__('.'.join(components[:-1]))
     for comp in components[1:-1]:

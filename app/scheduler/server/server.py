@@ -31,9 +31,13 @@ class SchedulerServer:
         # Start scheduler
         self.scheduler_manager = scheduler_instance
 
+        URL_PREFIX = '%s/' % settings.URL_PREFIX
+        logger.info('URL_PREFIX=%s' % URL_PREFIX)
+
         self.tornado_settings = dict(
             debug=settings.DEBUG,
             static_path=settings.STATIC_DIR_PATH,
+            static_url_prefix=URL_PREFIX + 'static/',
             template_path=settings.TEMPLATE_DIR_PATH,
             scheduler_manager=self.scheduler_manager
         )
@@ -41,14 +45,14 @@ class SchedulerServer:
         # Setup server
         URLS = [
             # Index page
-            (r'/', index.Handler),
+            (r'%s' % URL_PREFIX, index.Handler),
 
             # APIs
-            (r'/api/%s/jobs' % self.VERSION, jobs.Handler),
-            (r'/api/%s/jobs/(.*)' % self.VERSION, jobs.Handler),
-            (r'/api/%s/executions' % self.VERSION, executions.Handler),
-            (r'/api/%s/executions/(.*)' % self.VERSION, executions.Handler),
-            (r'/api/%s/logs' % self.VERSION, audit_logs.Handler),
+            (r'%sapi/%s/jobs' % (URL_PREFIX, self.VERSION), jobs.Handler),
+            (r'%sapi/%s/jobs/(.*)' % (URL_PREFIX, self.VERSION), jobs.Handler),
+            (r'%sapi/%s/executions' % (URL_PREFIX, self.VERSION), executions.Handler),
+            (r'%sapi/%s/executions/(.*)' % (URL_PREFIX, self.VERSION), executions.Handler),
+            (r'%sapi/%s/logs' % (URL_PREFIX, self.VERSION), audit_logs.Handler),
         ]
         self.application = tornado.web.Application(URLS, **self.tornado_settings)
 

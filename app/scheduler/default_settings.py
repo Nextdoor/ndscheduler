@@ -19,6 +19,7 @@ DEBUG = True
 STATIC_DIR_PATH = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'static')
 TEMPLATE_DIR_PATH = STATIC_DIR_PATH
 APP_INDEX_PAGE = 'index.html'
+URL_PREFIX = os.environ.get('URL_PREFIX', '')
 
 #
 # Server setup

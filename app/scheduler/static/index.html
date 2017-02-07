@@ -9,12 +9,12 @@
 
     <title>Scheduler</title>
     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
-    <link href="static/css/vendor/bootstrap.css" rel="stylesheet" type="text/css">
-    <link href="static/css/vendor/bootstrap-switch.css" rel="stylesheet" type="text/css">
-    <link href="static/css/vendor/jquery.dataTables.css" rel="stylesheet" type="text/css">
-    <link href="static/css/vendor/select2.css" rel="stylesheet" type="text/css">
-    <link href="static/css/vendor/select2-bootstrap.css" rel="stylesheet" type="text/css">
-    <link href="static/css/main.css" rel="stylesheet" type="text/css">
+    <link href="{{url_prefix}}/static/css/vendor/bootstrap.css" rel="stylesheet" type="text/css">
+    <link href="{{url_prefix}}/static/css/vendor/bootstrap-switch.css" rel="stylesheet" type="text/css">
+    <link href="{{url_prefix}}/static/css/vendor/jquery.dataTables.css" rel="stylesheet" type="text/css">
+    <link href="{{url_prefix}}/static/css/vendor/select2.css" rel="stylesheet" type="text/css">
+    <link href="{{url_prefix}}/static/css/vendor/select2-bootstrap.css" rel="stylesheet" type="text/css">
+    <link href="{{url_prefix}}/static/css/main.css" rel="stylesheet" type="text/css">
 
     <script>
         var DEFAULT_CACHE_BUSTER = (new Date()).getTime();
@@ -33,7 +33,7 @@
             <i class="icon-bar"></i>
             <i class="icon-bar"></i>
           </button>
-          <span class="navbar-brand">Khronos Scheduler</span>
+          <span class="navbar-brand">khronos Scheduler</span>
         </div>
         <div class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
@@ -179,7 +179,7 @@
             </div>
         </div>
     </div>
-    <script data-main="/static/js/app" src="/static/js/vendor/require.js"></script>
+    <script data-main="{{url_prefix}}/static/js/app" src="{{url_prefix}}/static/js/vendor/require.js"></script>
 </body>
 
 <script id="jobs-meta-info" type="application/json">

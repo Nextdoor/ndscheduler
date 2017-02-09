@@ -1,0 +1,40 @@
+version: '2'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile-dev
+    image: &khronos
+      khronos:dev
+    env_file: &khronos_env
+      - dev.env
+    ports:
+      - "8888:8888"
+    volumes:
+      - ./app:/app
+    command:
+      ["python", "app.py"]
+
+  db:
+    image: postgres:9.6.1
+    restart: always
+    env_file: *khronos_env
+    # ports:
+    #   - "5432:5432"
+
+  redis:
+    image: redis:3.2.5
+    command: ["redis-server"]
+    ports:
+      - "6379:6379"
+
+ # Celery worker
+  worker:
+    image: *khronos
+    command: ["celery", "worker", "--app=tasks", "--concurrency=3", "--beat", "--loglevel=INFO"]
+    volumes:
+      - ./app:/app
+    depends_on:
+      - redis
+      - app

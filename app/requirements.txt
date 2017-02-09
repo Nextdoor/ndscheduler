@@ -6,3 +6,5 @@ python-dateutil == 2.2
 apns == 2.0.1
 requests == 2.9.1
 psycopg2 == 2.6.1
+celery == 4.0.2
+redis == 2.10.5

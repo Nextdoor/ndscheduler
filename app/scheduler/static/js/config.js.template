@@ -7,7 +7,7 @@ define([], function() {
 
   'use strict';
 
-  var urlPrefix = '/khronos/api/v1';
+  var urlPrefix = '{{URL_PREFIX}}/api/v1';
 
   return {
     'jobs_url': urlPrefix + '/jobs',

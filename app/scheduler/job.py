@@ -38,12 +38,10 @@ class JobBase:
         pid = os.getpid()
         return 'hostname: %s | pid: %s' % (hostname, pid)
 
-    @classmethod
-    def get_failed_description(cls):
+    def get_failed_description(self):
         return utils.get_stacktrace()
 
-    @classmethod
-    def get_succeeded_description(cls):
+    def get_succeeded_description(self):
         hostname = socket.gethostname()
         pid = os.getpid()
         return 'hostname: %s | pid: %s' % (hostname, pid)
@@ -99,12 +97,12 @@ class JobBase:
             job = cls(job_id, execution_id)
             job.run(*args, **kwargs)
             datastore.update_execution(execution_id, state=constants.EXECUTION_STATUS_SUCCEEDED,
-                                       description=cls.get_succeeded_description())
+                                       description=job.get_succeeded_description())
         except Exception as e:
             logger.exception(e)
             datastore.update_execution(execution_id,
                                        state=constants.EXECUTION_STATUS_FAILED,
-                                       description=cls.get_failed_description())
+                                       description=job.get_failed_description())
 
     def run(self, *args, **kwargs):
         """The "main" function for a job.

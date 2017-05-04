@@ -36,7 +36,7 @@ class ECSJob(job.JobBase):
     def _get_task_statuses(self, task_ids):
         """
         Retrieve task statuses from ECS API
-    
+
         Returns list of {RUNNING|PENDING|STOPPED} for each id in task_ids
         """
         logger.debug('Get status of task_ids: {}'.format(task_ids))

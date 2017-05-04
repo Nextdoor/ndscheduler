@@ -10,3 +10,7 @@ requests == 2.9.1
 # Uncomment this if you want to use MySQL as datastore
 #
 # pymysql == 0.6.7
+
+# Uncomment this if you want to use ECS Job
+#
+boto3

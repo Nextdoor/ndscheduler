@@ -26,9 +26,11 @@ class ECSJob(job.JobBase):
                 {'type': 'string', 'description': 'ECS Cluster to run on'},
                 {'type': 'string', 'description': 'task_def_arn'},
                 {'type': 'array[dict]', 'description': 'task_def'},
-                {'type': 'string', 'description': 'Directly corresponds to the `overrides` parameter of runTask API'}
+                {'type': 'string', 'description': 'Directly corresponds to the '
+                                                  '`overrides` parameter of runTask API'}
             ],
-            'example_arguments': '["ClusterName", None, "arn:aws:ecs:<region>:<user_id>:task-definition/<family>:<tag>", None]'
+            'example_arguments': '["ClusterName", None, "arn:aws:ecs:<region>'
+                                 ':<user_id>:task-definition/<family>:<tag>", None]'
         }
 
     def _get_task_statuses(self, task_ids):
@@ -103,8 +105,9 @@ class ECSJob(job.JobBase):
 if __name__ == "__main__":
     # You can easily test this job here
     job = ECSJob.create_test_instance()
-    job.run('ClusterName', "arn:aws:ecs:<region>:<user_id>:task-definition/<task_def_name>:<revision_number>")
-    job.run('ClusterName', None, {
+    job.run('ClusterName', "arn:aws:ecs:<region>:<user_id>:task-"
+                           "definition/<task_def_name>:<revision_number>")
+    job.run('DataETLCluster', None, {
         'family': 'hello-world',
         'volumes': [],
         'containerDefinitions': [

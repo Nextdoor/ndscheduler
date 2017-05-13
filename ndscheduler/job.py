@@ -1,5 +1,6 @@
 """Base class for a job."""
 
+import json
 import logging
 import os
 import socket
@@ -30,7 +31,9 @@ class JobBase:
 
     @classmethod
     def get_scheduled_error_description(cls):
-        return utils.get_stacktrace()
+        hostname = socket.gethostname()
+        pid = os.getpid()
+        return 'hostname: %s | pid: %s' % (hostname, pid)
 
     @classmethod
     def get_running_description(cls):
@@ -40,13 +43,23 @@ class JobBase:
 
     @classmethod
     def get_failed_description(cls):
-        return utils.get_stacktrace()
+        hostname = socket.gethostname()
+        pid = os.getpid()
+        return 'hostname: %s | pid: %s' % (hostname, pid)
 
     @classmethod
     def get_succeeded_description(cls):
         hostname = socket.gethostname()
         pid = os.getpid()
         return 'hostname: %s | pid: %s' % (hostname, pid)
+
+    @classmethod
+    def get_scheduled_error_result(cls):
+        return utils.get_stacktrace()
+
+    @classmethod
+    def get_failed_result(cls):
+        return utils.get_stacktrace()
 
     @classmethod
     def meta_info(cls):
@@ -97,14 +110,16 @@ class JobBase:
                                        hostname=socket.gethostname(), pid=os.getpid(),
                                        description=cls.get_running_description())
             job = cls(job_id, execution_id)
-            job.run(*args, **kwargs)
+            result = json.dumps(job.run(*args, **kwargs), indent=4, sort_keys=True)
             datastore.update_execution(execution_id, state=constants.EXECUTION_STATUS_SUCCEEDED,
-                                       description=cls.get_succeeded_description())
+                                       description=cls.get_succeeded_description(),
+                                       result=result)
         except Exception as e:
             logger.exception(e)
             datastore.update_execution(execution_id,
                                        state=constants.EXECUTION_STATUS_FAILED,
-                                       description=cls.get_failed_description())
+                                       description=cls.get_failed_description(),
+                                       result=cls.get_failed_result())
 
     def run(self, *args, **kwargs):
         """The "main" function for a job.

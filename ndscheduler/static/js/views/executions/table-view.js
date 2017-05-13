@@ -14,7 +14,7 @@ require.config({
 
     'utils': 'utils',
     'text': 'vendor/text',
-    'execution-stacktrace': 'templates/execution-stacktrace.html'
+    'execution-result': 'templates/execution-result.html'
   },
 
   shim: {
@@ -35,15 +35,15 @@ require.config({
 });
 
 define(['utils',
-        'text!execution-stacktrace',
+        'text!execution-result',
         'backbone',
         'bootstrap',
-        'datatables'], function(utils, ExecutionStacktraceHtml) {
+        'datatables'], function(utils, ExecutionResultHtml) {
   'use strict';
 
   return Backbone.View.extend({
     initialize: function() {
-      $('body').append(ExecutionStacktraceHtml);
+      $('body').append(ExecutionResultHtml);
 
       this.listenTo(this.collection, 'sync', this.render);
       this.listenTo(this.collection, 'request', this.requestRender);
@@ -51,7 +51,11 @@ define(['utils',
 
       this.table = $('#executions-table').dataTable({
         // Sorted by last updated time
-        'order': [[3, 'desc']]
+        'order': [[3, 'desc']],
+        // Disable sorting on result column
+        "columnDefs": [
+          { "orderable": false, "className": "table-result-column", "targets": 5 }
+        ]
       });
     },
 
@@ -88,7 +92,8 @@ define(['utils',
           execution.getStatusHTMLString(),
           execution.getScheduledAtString(),
           execution.getFinishedAtString(),
-          execution.getDescription()
+          execution.getDescription(),
+          execution.getResult()
         ]);
       });
 
@@ -96,18 +101,18 @@ define(['utils',
         this.table.fnClearTable();
         this.table.fnAddData(data);
 
-        var buttons = $('[data-action=show-full-stacktrace]');
+        var buttons = $('[data-action=show-result]');
         _.each(buttons, function(btn) {
           $(btn).on('click', _.bind(function(e) {
             e.preventDefault();
-            $('#stacktrace-box').text(decodeURI($(e.target).data('content')));
-            $('#execution-stacktrace-modal').modal();
+            $('#result-box').text(decodeURI($(btn).data('content')));
+            $('#execution-result-modal').modal();
           }, this));
 
-          // If there's a query parameter stacktrace, we'll display the stack trace.
-          if (!_.isUndefined(utils.getParameterByName('stacktrace'))) {
-            $('#stacktrace-box').text(executions[0].get('description'));
-            $('#execution-stacktrace-modal').modal();
+          // If there's a query parameter result, we'll display the result.
+          if (!_.isUndefined(utils.getParameterByName('result'))) {
+            $('#result-box').text(executions[0].get('result'));
+            $('#execution-result-modal').modal();
           }
         });
       }

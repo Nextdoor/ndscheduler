@@ -94,19 +94,28 @@ define(['config',
      * @return {string} html string for taskworker information.
      */
     getDescription: function() {
-      var state = this.get('state');
-      if (state === 'scheduled error') {
-        return ('<span class="italic"><a href="#" data-content="' +
-          encodeURI(this.get('description')) +
-          '" data-action="show-full-stacktrace">Full Stacktrace</a></span>');
-      } else if (state === 'failed') {
-        return ('hostname: ' + this.get('hostname') + 'pid:' + this.get('pid') +
-          '<br><span class="italic"><a href="#" data-content="' +
-          encodeURI(this.get('description')) +
-          '" data-action="show-full-stacktrace">Full Stacktrace</a></span>');
-      } else {
         return this.get('description');
+    },
+
+    /**
+     * Returns html string for execution result.
+     * 
+     * @return {string} html string for execution result.
+     */
+    getResult: function() {
+      var result = this.get('result');
+      if(result === 'null'){
+        return '';
       }
+
+      var state = this.get('state');
+      var color = (state === 'scheduled error' || state === 'failed') ? 
+                    'failed-color' : 'success-color';
+      return ('<span><a href="#" data-content="' +
+          encodeURI(result) +
+          '" data-action="show-result"><i class="fa fa-file-text-o fa-lg ' +
+          color + 
+          '"></i></a></span>');
     }
   });
 });

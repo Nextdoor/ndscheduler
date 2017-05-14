@@ -108,13 +108,22 @@ define(['config',
         return '';
       }
 
+      var style;
       var state = this.get('state');
-      var color = (state === 'scheduled error' || state === 'failed') ? 
-                    'failed-color' : 'success-color';
+      if(state === 'scheduled error'){
+        style = 'scheduled-error-color';
+      }else if(state === 'failed'){
+        style = 'failed-color';
+      }else if(state === 'succeeded'){
+        style = 'success-color';
+      }else{
+        return '';
+      }
+
       return ('<span><a href="#" data-content="' +
           encodeURI(result) +
           '" data-action="show-result"><i class="fa fa-file-text-o fa-lg ' +
-          color + 
+          style + 
           '"></i></a></span>');
     }
   });

@@ -110,10 +110,11 @@ class JobBase:
                                        hostname=socket.gethostname(), pid=os.getpid(),
                                        description=cls.get_running_description())
             job = cls(job_id, execution_id)
-            result = json.dumps(job.run(*args, **kwargs), indent=4, sort_keys=True)
+            result = job.run(*args, **kwargs)
+            result_json = json.dumps(result, indent=4, sort_keys=True)
             datastore.update_execution(execution_id, state=constants.EXECUTION_STATUS_SUCCEEDED,
                                        description=cls.get_succeeded_description(),
-                                       result=result)
+                                       result=result_json)
         except Exception as e:
             logger.exception(e)
             datastore.update_execution(execution_id,

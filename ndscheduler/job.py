@@ -48,7 +48,7 @@ class JobBase:
         return 'hostname: %s | pid: %s' % (hostname, pid)
 
     @classmethod
-    def get_succeeded_description(cls):
+    def get_succeeded_description(cls, result=None):
         hostname = socket.gethostname()
         pid = os.getpid()
         return 'hostname: %s | pid: %s' % (hostname, pid)
@@ -113,7 +113,7 @@ class JobBase:
             result = job.run(*args, **kwargs)
             result_json = json.dumps(result, indent=4, sort_keys=True)
             datastore.update_execution(execution_id, state=constants.EXECUTION_STATUS_SUCCEEDED,
-                                       description=cls.get_succeeded_description(),
+                                       description=cls.get_succeeded_description(result),
                                        result=result_json)
         except Exception as e:
             logger.exception(e)

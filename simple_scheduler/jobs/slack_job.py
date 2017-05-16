@@ -73,6 +73,7 @@ class SlackJob(job.JobBase):
                             headers={'content-type': 'application/json'},
                             data=json.dumps(payload))
 
+
 if __name__ == "__main__":
     # You can easily test this job here
     job = SlackJob.create_test_instance()

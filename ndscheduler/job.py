@@ -127,8 +127,11 @@ class JobBase:
 
         Any subclass has to implement this function.
 
+        The return value of this function will be stored in the database as json formatted string
+        and will be shown for each execution in web ui.
+
         :param args:
         :param kwargs:
-        :return:
+        :return: None or json serializable object.
         """
         raise NotImplementedError('Please implement this function')

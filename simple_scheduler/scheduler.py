@@ -15,5 +15,6 @@ class SimpleServer(server.SchedulerServer):
                 pub_args=['first parameter', {'second parameter': 'can be a dict'}],
                 minute='*/1')
 
+
 if __name__ == "__main__":
     SimpleServer.run()

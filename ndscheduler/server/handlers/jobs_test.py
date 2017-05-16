@@ -70,7 +70,7 @@ class JobsTest(tornado.testing.AsyncHTTPTestCase):
             'minute': '*/5'}
         response = self.fetch(self.JOBS_URL, method='POST', headers=headers,
                               body=json.dumps(data))
-        return_info = json.loads(response.body)
+        return_info = json.loads(response.body.decode())
         self.assertTrue('job_id' in return_info)
         self.assertEquals(len(return_info['job_id']), 32)
         job = self.scheduler.get_job(return_info['job_id'])
@@ -100,7 +100,7 @@ class JobsTest(tornado.testing.AsyncHTTPTestCase):
             'minute': '*/5'}
         response = self.fetch(self.JOBS_URL, method='POST', headers=headers,
                               body=json.dumps(data))
-        return_info = json.loads(response.body)
+        return_info = json.loads(response.body.decode())
         self.assertTrue('job_id' in return_info)
         self.assertEquals(len(return_info['job_id']), 32)
 
@@ -119,12 +119,12 @@ class JobsTest(tornado.testing.AsyncHTTPTestCase):
             'minute': '*/5'}
         response = self.fetch(self.JOBS_URL, method='POST', headers=headers,
                               body=json.dumps(data))
-        return_info = json.loads(response.body)
+        return_info = json.loads(response.body.decode())
         self.assertTrue('job_id' in return_info)
         self.assertEquals(len(return_info['job_id']), 32)
 
         response = self.fetch(self.JOBS_URL + '?sync=true')
-        return_info = json.loads(response.body)
+        return_info = json.loads(response.body.decode())
         self.assertEquals(len(return_info['jobs']), 1)
         job = return_info['jobs'][0]
         self.assertEquals(job['job_class_string'], data['job_class_string'])
@@ -139,7 +139,7 @@ class JobsTest(tornado.testing.AsyncHTTPTestCase):
             'minute': '*/5'}
         response = self.fetch(self.JOBS_URL, method='POST', headers=headers,
                               body=json.dumps(data))
-        return_info = json.loads(response.body)
+        return_info = json.loads(response.body.decode())
         self.assertTrue('job_id' in return_info)
         self.assertEquals(len(return_info['job_id']), 32)
 
@@ -148,7 +148,7 @@ class JobsTest(tornado.testing.AsyncHTTPTestCase):
         self.assertEquals(response.code, 200)
 
         response = self.fetch(self.JOBS_URL + '?sync=true')
-        return_info = json.loads(response.body)
+        return_info = json.loads(response.body.decode())
         self.assertEquals(len(return_info['jobs']), 0)
 
     def test_modify_job(self):
@@ -159,7 +159,7 @@ class JobsTest(tornado.testing.AsyncHTTPTestCase):
             'minute': '*/5'}
         response = self.fetch(self.JOBS_URL, method='POST', headers=headers,
                               body=json.dumps(data))
-        return_info = json.loads(response.body)
+        return_info = json.loads(response.body.decode())
         self.assertTrue('job_id' in return_info)
         self.assertEquals(len(return_info['job_id']), 32)
         job = self.scheduler.get_job(return_info['job_id'])

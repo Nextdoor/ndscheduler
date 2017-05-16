@@ -11,7 +11,7 @@ init:
 	@echo "Install pre-commit hook for git."
 	@echo "$(FLAKE8_CHECKING)" > .git/hooks/pre-commit && chmod 755 .git/hooks/pre-commit
 	@echo "Setup python virtual environment."
-	virtualenv .venv
+	if [ ! -d ".venv" ]; then virtualenv .venv; fi
 	$(SOURCE_VENV) && $(PIP) install flake8
 	@echo "All Done."
 

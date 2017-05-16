@@ -2,21 +2,27 @@
 
 import time
 import logging
+import boto3
 from ndscheduler import job
 
 logger = logging.getLogger(__name__)
 
-try:
-    import boto3
-
-    client = boto3.client('ecs')
-except ImportError:
-    logger.warning('boto3 is not installed. ECSTasks require boto3')
+client = boto3.client('ecs')
 
 POLL_TIME = 2
 
 
+class ECSFailureException(BaseException):
+    pass
+
+
+class ECSResponseException(BaseException):
+    pass
+
+
 class ECSJob(job.JobBase):
+    retry_count = 3
+
     @classmethod
     def meta_info(cls):
         return {
@@ -44,25 +50,39 @@ class ECSJob(job.JobBase):
 
         # Error checking
         if response['failures']:
-            raise Exception('There were some failures:\n{0}'.format(
+            raise ECSFailureException('There were some failures:\n{0}'.format(
                 response['failures']))
         status_code = response['ResponseMetadata']['HTTPStatusCode']
         if status_code != 200:
             msg = 'Task status request received status code {0}:\n{1}'
-            raise Exception(msg.format(status_code, response))
+            raise ECSResponseException(msg.format(status_code, response))
 
         return [t['lastStatus'] for t in response['tasks']]
+
+    def get_task_statuses(self, task_ids):
+        retries = 0
+        while True:
+            try:
+                return self._get_task_statuses(task_ids)
+            except ECSResponseException as e:
+                if retries <= self.retry_count:
+                    msg = 'Response failed retry attempt {}/{}'.format(retries, self.retry_count)
+                    logger.warning(msg)
+                    time.sleep(POLL_TIME)
+                else:
+                    raise
 
     def _track_tasks(self, task_ids):
         """Poll task status until STOPPED"""
         while True:
-            statuses = self._get_task_statuses(task_ids)
+            statuses = self.get_task_statuses(task_ids)
+
             if all([status == 'STOPPED' for status in statuses]):
                 logger.info('ECS tasks {0} STOPPED'.format(','.join(task_ids)))
                 break
-            time.sleep(POLL_TIME)
-            logger.debug('ECS task status for tasks {0}: {1}'.format(
-                ','.join(task_ids), statuses))
+        time.sleep(POLL_TIME)
+        logger.debug('ECS task status for tasks {0}: {1}'.format(
+            ','.join(task_ids), statuses))
 
     @property
     def cluster(self):
@@ -76,7 +96,7 @@ class ECSJob(job.JobBase):
         self._cluster = cluster
         logger.debug('Set Cluster: {}'.format(cluster))
 
-    def run(self, cluster, task_def_arn=None, task_def=None, command=None):
+    def run(self, cluster, task_def_arn=None, task_def=None, command=None, *args, **kwargs):
         self.cluster = cluster
         if (not task_def and not task_def_arn) or \
                 (task_def and task_def_arn):

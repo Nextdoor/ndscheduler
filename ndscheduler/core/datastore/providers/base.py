@@ -94,6 +94,7 @@ class DatastoreBase(sched_sqlalchemy.SQLAlchemyJobStore):
             'pid': row.pid,
             'task_id': row.task_id,
             'description': row.description,
+            'result': row.result,
             'scheduled_time': self.get_time_isoformat_from_db(row.scheduled_time),
             'updated_time': self.get_time_isoformat_from_db(row.updated_time)}
         job = self.lookup_job(row.job_id)

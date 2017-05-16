@@ -21,7 +21,7 @@ class ShellJob(job.JobBase):
         }
 
     def run(self, *args, **kwargs):
-        call(args)
+        return {'returncode': call(args)}
 
 
 if __name__ == "__main__":

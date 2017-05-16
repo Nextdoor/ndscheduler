@@ -26,6 +26,7 @@ EXECUTIONS = sqlalchemy.Table(
     sqlalchemy.Column('updated_time', sqlalchemy.DateTime(timezone=True),
                       default=utils.get_current_datetime, onupdate=utils.get_current_datetime),
     sqlalchemy.Column('description', sqlalchemy.Text, nullable=True),
+    sqlalchemy.Column('result', sqlalchemy.Text, nullable=True),
     sqlalchemy.Column('job_id', sqlalchemy.Text, nullable=False),
     sqlalchemy.Column('task_id', sqlalchemy.Text, nullable=True))
 

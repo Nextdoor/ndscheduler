@@ -37,7 +37,7 @@ class CurlJob(job.JobBase):
                                  timeout=self.TIMEOUT,
                                  headers=None,
                                  data=None)
-        print(result.text)
+        return result.text
 
 
 if __name__ == "__main__":

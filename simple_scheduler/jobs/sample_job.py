@@ -22,6 +22,7 @@ class AwesomeJob(job.JobBase):
 
     def run(self, argument1, argument2, *args, **kwargs):
         print('Hello from AwesomeJob! Argument1: %s, Argument2: %s' % (argument1, argument2))
+        return [argument1, argument2]
 
 
 if __name__ == "__main__":

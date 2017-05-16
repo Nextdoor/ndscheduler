@@ -176,7 +176,17 @@ body {
  * Modal styling
  */
 
-.stacktrace-box {
+.result-box {
     max-height: 600px;
     font-size: 10px;
+}
+
+/*
+ * Table styling
+ */
+
+.table-result-column {
+  width: 16px !important;
+  padding-right: 10px !important;
+  padding-left: 10px !important;
 }

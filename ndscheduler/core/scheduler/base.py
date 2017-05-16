@@ -47,7 +47,9 @@ class SingletonScheduler (apscheduler_tornado.TornadoScheduler):
             logger.exception(e)
             datastore.update_execution(execution_id,
                                        state=constants.EXECUTION_STATUS_SCHEDULED_ERROR,
-                                       description=job.JobBase.get_scheduled_error_description())
+                                       description=job.JobBase.get_scheduled_error_description(),
+                                       result=job.JobBase.get_scheduled_error_result()
+                                       )
             return None
         return execution_id
 

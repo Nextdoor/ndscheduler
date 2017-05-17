@@ -27,7 +27,7 @@ install:
 
 flake8:
 	if [ ! -d ".venv" ]; then make init; fi
-	$(SOURCE_VENV) && $(FLAKE8_CHECKING)
+	$(FLAKE8_CHECKING)
 
 clean:
 	@($(SOURCE_VENV) && $(PYTHON) setup.py clean) >& /dev/null || python setup.py clean

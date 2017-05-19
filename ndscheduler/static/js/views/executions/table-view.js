@@ -58,7 +58,7 @@ define(['utils',
         ]
       });
 
-      $('#executions-table tbody').on('click', '[data-action=show-result]', function(e){
+      $('#executions-table tbody').on('click', '[data-action=show-result]', function(e) {
           e.preventDefault();
           $('#result-box').text(decodeURI($(this).data('content')));
           $('#execution-result-modal').modal();

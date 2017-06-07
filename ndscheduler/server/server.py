@@ -5,6 +5,7 @@ How to use:
     SchedulerServer.run()
 """
 
+import base64
 import logging
 import signal
 import sys
@@ -19,6 +20,36 @@ from ndscheduler.server.handlers import index
 from ndscheduler.server.handlers import jobs
 
 logger = logging.getLogger(__name__)
+
+
+def require_basic_auth(handler_class, config=None):
+    config = config or dict()
+    config.setdefault('user', '')
+    config.setdefault('pass', '')
+    config.setdefault('realm', 'Next Scheduler')
+
+    if config['user'] and config['pass']:
+        def wrap_execute(handler_execute):
+            def check_auth(handler):
+                auth_header = handler.request.headers.get('Authorization')
+                if auth_header and auth_header.startswith('Basic '):
+                    auth_decoded = base64.decodestring(auth_header[6:])
+                    if '%s:%s' % (config['user'], config['pass']) == auth_decoded:
+                        return True
+                handler.set_status(401)
+                handler.set_header('WWW-Authenticate', 'Basic realm=%s' % config['realm'])
+                handler._transforms = []
+                handler.finish()
+                return False
+
+            def _execute(self, transforms, *args, **kwargs):
+                if not check_auth(self):
+                    return False
+                return handler_execute(self, transforms, *args, **kwargs)
+            return _execute
+
+        handler_class._execute = wrap_execute(handler_class._execute)
+    return handler_class
 
 
 class SchedulerServer:
@@ -41,7 +72,7 @@ class SchedulerServer:
         # Setup server
         URLS = [
             # Index page
-            (r'/', index.Handler),
+            (r'/', require_basic_auth(index.Handler, settings.BASIC_AUTH_CONFIG)),
 
             # APIs
             (r'/api/%s/jobs' % self.VERSION, jobs.Handler),

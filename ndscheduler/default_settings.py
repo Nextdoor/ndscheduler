@@ -92,5 +92,12 @@ SCHEDULER_CLASS = 'ndscheduler.core.scheduler.base.SingletonScheduler'
 logging.getLogger().setLevel(logging.INFO)
 
 
+# To enable basic authentication, define the 'user' and 'pass'
+BASIC_AUTH_CONFIG = {
+    'user': '',
+    'pass': '',
+    'realm': 'Next Scheduler'
+}
+
 # Packages that contains job classes, e.g., simple_scheduler.jobs
 JOB_CLASS_PACKAGES = []

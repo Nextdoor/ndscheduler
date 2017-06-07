@@ -96,7 +96,7 @@ logging.getLogger().setLevel(logging.INFO)
 BASIC_AUTH_CONFIG = {
     'user': '',
     'pass': '',
-    'realm': 'Next Scheduler'
+    'realm': 'Nextdoor Scheduler'
 }
 
 # Packages that contains job classes, e.g., simple_scheduler.jobs

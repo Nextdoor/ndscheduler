@@ -44,7 +44,7 @@ define(['config',
 
       var jobLink = '';
       try {
-        var jobId = this.get('job')['name'];
+        var jobId = this.get('job')['job_id'];
         jobLink = '<a href="/#jobs/' + jobId + '">' + jobName + '</a>';
       } catch (e) {
         jobLink = jobName;

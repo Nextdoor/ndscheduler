@@ -27,8 +27,18 @@ class SchedulerServer:
 
     singleton = None
 
-    def __init__(self, scheduler_instance):
-        # Start scheduler
+    def __init__(self, scheduler_instance, custom_tornado_settings=None):
+        """
+        Start scheduler
+
+        Pass:
+          scheduler_instance - instance of the `SchedulerManager` class
+          custom_tornado_settings - optional dictionary of settings, to
+                                    be merged if present with the defaults
+                                    set below, adding to and/or replacing
+                                    the settings in `self.tornado_settings`
+        """
+
         self.scheduler_manager = scheduler_instance
 
         self.tornado_settings = dict(
@@ -37,6 +47,8 @@ class SchedulerServer:
             template_path=settings.TEMPLATE_DIR_PATH,
             scheduler_manager=self.scheduler_manager
         )
+        if custom_tornado_settings is not None:
+            self.tornado_settings.update(custom_tornado_settings)
 
         # Setup server
         URLS = [

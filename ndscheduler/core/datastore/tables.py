@@ -42,3 +42,15 @@ AUDIT_LOGS = sqlalchemy.Table(
     sqlalchemy.Column('created_time', sqlalchemy.DateTime(timezone=True), nullable=False,
                       default=utils.get_current_datetime),
     sqlalchemy.Column('description', sqlalchemy.Text, nullable=True))
+
+#
+# KVStore
+#
+KV_STORE = sqlalchemy.Table(
+    settings.KV_STORE_TABLENAME, METADATA,
+    sqlalchemy.Column('name', sqlalchemy.Integer, nullable=False),
+    sqlalchemy.Column('key', sqlalchemy.Text, nullable=True),
+    sqlalchemy.Column('val', sqlalchemy.Text, nullable=True),
+    sqlalchemy.Column('created_time', sqlalchemy.DateTime(timezone=True), nullable=False,
+                      default=utils.get_current_datetime)
+)

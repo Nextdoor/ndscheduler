@@ -1,6 +1,5 @@
 """Represents the core scheduler instance that actually schedules jobs."""
 
-
 import logging
 
 from apscheduler.executors import pool
@@ -8,12 +7,10 @@ from apscheduler.executors import pool
 from ndscheduler import settings
 from ndscheduler import utils
 
-
 logger = logging.getLogger(__name__)
 
 
 class SchedulerManager:
-
     instance = None
 
     @classmethod

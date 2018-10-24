@@ -49,6 +49,7 @@ JOB_MISFIRE_GRACE_SEC = 3600
 JOBS_TABLENAME = 'scheduler_jobs'
 EXECUTIONS_TABLENAME = 'scheduler_execution'
 AUDIT_LOGS_TABLENAME = 'scheduler_jobauditlog'
+KV_STORE_TABLENAME = 'scheduler_keyvaluestore'
 
 # See different database providers in ndscheduler/core/datastore/providers/
 

@@ -12,15 +12,13 @@ RUN pip install --upgrade pip
 # for local development only!
 RUN mkdir -p /tmp/nds
 COPY . /tmp/nds
+RUN rm -rf /tmp/nds/simple_scheduler
 RUN pip install --no-cache-dir -e /tmp/nds
 
 ADD ${LOCAL_APPDIR}/requirements.txt /tmp/requirements.txt
 RUN pip install --no-cache-dir -r /tmp/requirements.txt
 
 COPY ${LOCAL_APPDIR} /${WORK_APPDIR}
-
-RUN mkdir -p /root/.config/
-COPY docker/${LOCAL_APPDIR}/telegram-send.conf /root/.config/
 
 WORKDIR /${WORK_APPDIR}
 ENTRYPOINT ["/bin/bash", "docker/run_scheduler"]

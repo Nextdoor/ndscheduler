@@ -4,7 +4,7 @@ from ndscheduler import job
 from ndscheduler.utils import get_datastore_instance
 
 
-class AwesomeJob(job.JobBase):
+class KVStoreJob(job.JobBase):
 
     @classmethod
     def meta_info(cls):
@@ -30,5 +30,5 @@ class AwesomeJob(job.JobBase):
 
 if __name__ == "__main__":
     # You can easily test this job here
-    job = AwesomeJob.create_test_instance()
+    job = KVStoreJob.create_test_instance()
     job.run(123, 456)

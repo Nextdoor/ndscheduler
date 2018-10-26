@@ -81,7 +81,7 @@ class SchedulerManagerTest(tornado.testing.AsyncTestCase):
         job_class_string = 'hello.world1234'
         args = ['5', '6', '7']
         name = 'hello world 3'
-        month = '*/12'
+        month = '*/11'
 
         # non-blocking operation
         self.scheduler.modify_job(job_id, name=name, job_class_string=job_class_string,

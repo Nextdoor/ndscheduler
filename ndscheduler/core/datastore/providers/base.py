@@ -23,6 +23,7 @@ class DatastoreBase(sched_sqlalchemy.SQLAlchemyJobStore):
             cls.instance = cls(url=cls.get_db_url(),
                                tablename=settings.JOBS_TABLENAME)
             tables.METADATA.create_all(cls.instance.engine)
+            cls.instance.jobs_t.create(cls.instance.engine, True)
         return cls.instance
 
     @classmethod

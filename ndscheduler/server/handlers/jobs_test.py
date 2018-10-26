@@ -170,7 +170,7 @@ class JobsTest(tornado.testing.AsyncHTTPTestCase):
         data = {
             'job_class_string': 'hello.world!!!!',
             'name': 'hello world job~~~~',
-            'minute': '*/100'}
+            'minute': '*/59'}
         response = self.fetch(self.JOBS_URL + '/' + return_info['job_id'] + '?sync=true',
                               method='PUT', headers=headers, body=json.dumps(data))
         self.assertEquals(response.code, 200)

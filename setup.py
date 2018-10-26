@@ -51,6 +51,7 @@ classes = """
     Programming Language :: Python :: 3.3
     Programming Language :: Python :: 3.4
     Programming Language :: Python :: 3.5
+    Programming Language :: Python :: 3.6
     Programming Language :: Python :: Implementation :: CPython
     Operating System :: OS Independent
 """
@@ -76,15 +77,15 @@ setup(
     },
     tests_require=[
         'funcsigs',
-        'mock == 1.1.2',
+        'mock == 2.0.0',
         'nose',
     ],
     test_suite='nose.collector',
     install_requires=[
-        'APScheduler == 3.0.0',
-        'SQLAlchemy == 1.0.0',
-        'future == 0.15.2',
-        'tornado == 4.3.0',
+        'APScheduler == 3.5.3',
+        'SQLAlchemy == 1.2.12',
+        'future == 0.16',
+        'tornado == 5.1.1',
         'python-dateutil == 2.2',
     ],
     classifiers=classifiers,

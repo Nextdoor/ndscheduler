@@ -81,7 +81,7 @@ setup(
     ],
     test_suite='nose.collector',
     install_requires=[
-        'APScheduler ==3.0,==3.1',
+        'APScheduler == 3.0',
         'SQLAlchemy',
         'future',
         'tornado',

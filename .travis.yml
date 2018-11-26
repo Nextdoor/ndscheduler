@@ -1,4 +1,5 @@
 language: python
+dist: xenial
 
 os:
   - linux
@@ -7,9 +8,9 @@ os:
   
 python:
   - "2.7"
-  - "3.3"
-  - "3.4"
   - "3.5"
+  - "3.6"
+  - "3.7"
 
 install:
   - make init
@@ -19,3 +20,14 @@ before_script:
   - make flake8
 
 script: make test
+
+deploy:
+  - provider: pypi
+    user: nextdoor
+    password:
+      secure: "PASS"
+    on:
+      tags: true
+      all_branches: true
+      condition: $TRAVIS_TAG =~ ^v[0-9]+.[0-9]+.[0-9]+[a-z]?$
+    distributions: "sdist bdist_wheel"

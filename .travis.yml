@@ -31,3 +31,5 @@ deploy:
       all_branches: true
       condition: $TRAVIS_TAG =~ ^v[0-9]+.[0-9]+.[0-9]+[a-z]?$
     distributions: "sdist bdist_wheel"
+    skip_cleanup: true
+    python: "3.6"

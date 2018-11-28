@@ -1,18 +1,26 @@
 language: python
 dist: xenial
+
 os:
-- linux
+  - linux
+  # Travis-ci doesn't support osx + python yet.
+  # - osx
+  
 python:
-- '2.7'
-- '3.4'
-- '3.5'
-- '3.6'
+  - "2.7"
+  - "3.4"
+  - "3.5"
+  - "3.6"
+
 install:
-- make init
-- make install
+  - make init
+  - make install
+
 before_script:
-- make flake8
+  - make flake8
+
 script: make test
+
 deploy:
   matrix:
   - provider: pypi

@@ -1,4 +1,5 @@
 language: python
+dist: xenial
 
 os:
   - linux
@@ -7,9 +8,9 @@ os:
   
 python:
   - "2.7"
-  - "3.3"
   - "3.4"
   - "3.5"
+  - "3.6"
 
 install:
   - make init
@@ -19,3 +20,16 @@ before_script:
   - make flake8
 
 script: make test
+
+deploy:
+  - provider: pypi
+    user: nextdoor
+    password:
+      secure: EwW1NDigDCzui3fhNW/iiM8uQd0FNgQWXnJlgSnDMDrtJ2xKgy/JnOQktGVIkVAXL6qQ1VGZg2IBpz+cW+M7z+aoLjm4kvET7LmBMM9fuXpxP+m6LUyxOlGM+RzFw33aqtRoonwQyS0CXuY4+oKpUe1RP3Nze0L30w44RSmBS4z5J1KqB98piXx3aJhxI9ijafdHS7YAYymE7LR2eo6TQGVKuUQGDgz0X+RvRqwN3NrQ6tH0cKTFNbwD/tnojK6jSzNGeeYF0loON7pNCKaMt9cZwoEFK5xtx5Bky8vGOpM2NSmgobh1g368DRLZgba4iwdlFlxtgdyBzM8pi/os3nre/Z66+NFWOb3x7//xctqVzjN+O84J9BGv9ZlFMESu+xArWIbjItQUToeDHMa2LhxPsFC4BRLyH7LM2eFqQygFcErO8qs5jBNr12SuZdkKBXpn8FiL7nrYEW88Lm8HJKQRybcAQnNb9yRmAxPwKjEArGk9FiJD56fMzqIzybT9oBt4VQZlRsaX454Gay4EoY1aD/lvpIbh+58VJvWMss1I9jD9PqlN5jDXgDVUk7NzGwz9HNZHV/1Y16iNu6a4j7Rftu+M9zES++C0OyKdL7ehyxV13CHgXZiWRinmzKSpYaTxw+IgVGrbFdyFO6YScTIagbbrV3i2ImmGfEw9wR8=
+    on:
+      tags: true
+      all_branches: true
+      condition: $TRAVIS_TAG =~ ^v[0-9]+.[0-9]+.[0-9]+[a-z]?$
+      python: "3.6"
+    distributions: "sdist bdist_wheel"
+    skip_cleanup: true

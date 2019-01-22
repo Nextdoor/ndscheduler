@@ -3,7 +3,7 @@
 ![Apache](https://img.shields.io/hexpm/l/plug.svg) 
 [![Build Status](https://travis-ci.org/Nextdoor/ndscheduler.svg)](https://travis-ci.org/Nextdoor/ndscheduler)
 
-``ndscheduler`` is a flexible python library for building your own cron-like system to schedule jobs, which is to run a tornado process to serve REST APIs and a web ui. It's like [LLVM](http://llvm.org/) that provides modular and reusable components for building a compiler. 
+``ndscheduler`` is a flexible python library for building your own cron-like system to schedule jobs, which is to run a tornado process to serve REST APIs and a web ui.
 
 Check out our blog post - [We Don't Run Cron Jobs at Nextdoor](https://engblog.nextdoor.com/we-don-t-run-cron-jobs-at-nextdoor-6f7f9cc62040#.d2erw1pl6)
 

@@ -72,9 +72,7 @@ setup(
     keywords='scheduler nextdoor cron python',
     packages=find_packages(),
     include_package_data=True,
-    extras_require={
-    'python_version<"3.3"': ['funcsigs']
-    },
+    extras_require={'python_version<"3.3"': ['funcsigs']},
     tests_require=[
         'funcsigs',
         'mock == 2.0.0',
@@ -86,7 +84,7 @@ setup(
         'SQLAlchemy == 1.2.12',
         'future == 0.16',
         'tornado == 5.1.1',
-        'python-dateutil == 2.2',
+        'python-dateutil == 2.2'
     ],
     classifiers=classifiers,
     cmdclass={'clean': CleanHook},

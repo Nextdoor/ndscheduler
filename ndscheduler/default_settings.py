@@ -59,6 +59,10 @@ DATABASE_CONFIG_DICT = {
     'file_path': 'datastore.db'
 }
 
+
+# Basic Auth
+BASIC_AUTH_CREDENTIALS = {'username': 'password'}
+
 # Postgres
 #
 # DATABASE_CLASS = 'ndscheduler.core.datastore.providers.postgresql.DatastorePostgresql'

@@ -87,6 +87,7 @@ setup(
         'future == 0.15.2',
         'tornado == 4.3.0',
         'python-dateutil == 2.2',
+        'tornado-http-auth= = 1.1.1',
     ],
     classifiers=classifiers,
     cmdclass={'clean': CleanHook},

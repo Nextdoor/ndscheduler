@@ -13,11 +13,14 @@ import tornado.web
 
 from ndscheduler import settings
 
+from tornado_http_auth import DigestAuthMixin, auth_required
 
-class BaseHandler(tornado.web.RequestHandler):
+
+class BaseHandler(tornado.web.RequestHandler, DigestAuthMixin):
 
     executor = futures.ThreadPoolExecutor(max_workers=settings.TORNADO_MAX_WORKERS)
 
+    @auth_required(realm='Protected', auth_func=settings.BASIC_AUTH_CREDENTIALS.get)
     def prepare(self):
         """Preprocess requests."""
         try:

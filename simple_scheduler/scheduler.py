@@ -9,7 +9,7 @@ class SimpleServer(server.SchedulerServer):
 
     def post_scheduler_start(self):
         pass
-        #New user experience! Make sure we have at least 1 job to demo!
+        # New user experience! Make sure we have at least 1 job to demo!
         # jobs = self.scheduler_manager.get_jobs()
         # if len(jobs) == 0:
         #     self.scheduler_manager.add_job(

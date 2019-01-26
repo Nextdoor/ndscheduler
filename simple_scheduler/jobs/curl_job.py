@@ -2,8 +2,6 @@
 
 import logging
 import requests
-import ptvsd
-
 from ndscheduler import job
 
 logger = logging.getLogger(__name__)

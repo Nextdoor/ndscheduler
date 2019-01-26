@@ -1,6 +1,7 @@
 """A job to run executable programs."""
 
-from subprocess import call
+from subprocess import Popen
+import subprocess
 
 from ndscheduler import job
 
@@ -21,7 +22,11 @@ class ShellJob(job.JobBase):
         }
 
     def run(self, *args, **kwargs):
-        return {'returncode': call(args)}
+        process = Popen(args, stdout=subprocess.PIPE)
+        out, err = process.communicate()
+        if err is not None:
+            raise OSError(f"Process returned {out.decode('utf-8')}")
+        return {'result': 0}
 
 
 if __name__ == "__main__":

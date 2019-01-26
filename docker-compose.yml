@@ -1,4 +1,22 @@
-ndscheduler:
-  build: .
-  ports: 
-    - "8888:8888"
+version: '3'
+services:
+  ndscheduler:
+    image: ndscheduler
+    command: ["./node_modules/nodemon/bin/nodemon.js", "-L", "-u", "simple_scheduler/scheduler.py"]
+    ports: 
+      - "8888:8888"
+      - "5861:5861"
+    volumes:
+      - .:/usr/src/app/ndscheduler
+      - ndscheduler_modules:/usr/src/app/ndscheduler/node_modules/
+    environment:
+      - NDSCHEDULER_SETTINGS_MODULE=simple_scheduler.settings
+      - DEBUG=${DEBUG}
+    networks:
+      - in2it_ndscheduler
+networks:
+  in2it_ndscheduler:
+    external:
+      name: in2it
+volumes:
+  ndscheduler_modules:

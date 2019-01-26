@@ -2,6 +2,7 @@
 
 import logging
 import requests
+import ptvsd
 
 from ndscheduler import job
 
@@ -28,7 +29,7 @@ class CurlJob(job.JobBase):
                                   '["http://localhost:8888/api/v1/jobs/ba12e", "DELETE"]')
         }
 
-    def run(self, url, request_type,  *args, **kwargs):
+    def run(self, url, request_type, data):
         print('Calling GET on url: %s' % (url))
 
         session = requests.Session()
@@ -36,10 +37,10 @@ class CurlJob(job.JobBase):
                                  url,
                                  timeout=self.TIMEOUT,
                                  headers=None,
-                                 data=None)
+                                 data=data)
         return result.text
 
 
 if __name__ == "__main__":
     job = CurlJob.create_test_instance()
-    job.run('http://localhost:888/api/v1/jobs')
+    job.run('http://localhost:8888/api/v1/jobs')

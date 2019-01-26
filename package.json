@@ -1,0 +1,9 @@
+{
+    "name": "event-processor",
+    "version": "1.0.0",
+    "description": "event processor",
+    "private": true,
+    "dependencies": {
+        "nodemon": "^1.18.9"
+    }
+}

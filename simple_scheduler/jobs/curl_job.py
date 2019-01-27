@@ -27,18 +27,24 @@ class CurlJob(job.JobBase):
                                   '["http://localhost:8888/api/v1/jobs/ba12e", "DELETE"]')
         }
 
-    def run(self, url, request_type, data):
-        print('Calling GET on url: %s' % (url))
+    def run(self, url, request_type, data={}):
+        print('Calling %s on url: %s' % (request_type, url))
 
         session = requests.Session()
-        result = session.request(request_type,
-                                 url,
-                                 timeout=self.TIMEOUT,
-                                 headers=None,
-                                 data=data)
-        return result.text
+        if request_type == 'POST':
+            result = session.request(request_type,
+                                    url,
+                                    timeout=self.TIMEOUT,
+                                    headers={'Content-Type': 'application/json'},
+                                    json=data)
+            return result.text
+        else:
+            result = session.request(request_type,
+                                    url,
+                                    timeout=self.TIMEOUT)
+            return result.text
 
 
 if __name__ == "__main__":
     job = CurlJob.create_test_instance()
-    job.run('http://localhost:8888/api/v1/jobs')
+    job.run('http://localhost:8888/api/v1/jobs', 'GET', {})

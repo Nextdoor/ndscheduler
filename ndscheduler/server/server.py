@@ -17,6 +17,7 @@ from ndscheduler.server.handlers import audit_logs
 from ndscheduler.server.handlers import executions
 from ndscheduler.server.handlers import index
 from ndscheduler.server.handlers import jobs
+from ndscheduler.server.handlers import scrapy_response
 
 logger = logging.getLogger(__name__)
 
@@ -49,6 +50,7 @@ class SchedulerServer:
             (r'/api/%s/executions' % self.VERSION, executions.Handler),
             (r'/api/%s/executions/(.*)' % self.VERSION, executions.Handler),
             (r'/api/%s/logs' % self.VERSION, audit_logs.Handler),
+            (r'/api/%s/spiderComplete' % self.VERSION, scrapy_response.TestHandler)
         ]
         self.application = tornado.web.Application(URLS, **self.tornado_settings)
 

@@ -32,16 +32,13 @@ class CurlJob(job.JobBase):
 
         session = requests.Session()
         if request_type == 'POST':
-            result = session.request(request_type,
-                                    url,
-                                    timeout=self.TIMEOUT,
-                                    headers={'Content-Type': 'application/json'},
-                                    json=data)
+            result = session.request(request_type, url,
+                                     timeout=self.TIMEOUT,
+                                     headers={'Content-Type': 'application/json'},
+                                     json=data)
             return result.text
         else:
-            result = session.request(request_type,
-                                    url,
-                                    timeout=self.TIMEOUT)
+            result = session.request(request_type, url, timeout=self.TIMEOUT)
             return result.text
 
 

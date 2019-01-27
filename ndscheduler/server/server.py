@@ -50,7 +50,7 @@ class SchedulerServer:
             (r'/api/%s/executions' % self.VERSION, executions.Handler),
             (r'/api/%s/executions/(.*)' % self.VERSION, executions.Handler),
             (r'/api/%s/logs' % self.VERSION, audit_logs.Handler),
-            (r'/api/%s/spiderComplete' % self.VERSION, scrapy_response.TestHandler)
+            (r'/api/%s/spiderComplete' % self.VERSION, scrapy_response.Handler)
         ]
         self.application = tornado.web.Application(URLS, **self.tornado_settings)
 

@@ -3,6 +3,7 @@
 import logging
 import requests
 from ndscheduler import job
+from ndscheduler.pubsub import PubSub
 
 logger = logging.getLogger(__name__)
 
@@ -28,10 +29,15 @@ class ScrapyJob(job.JobBase):
         }
 
     def run(self, spider_name):
-        result = requests.post('http://event_processor:6800/schedule.json', data={'project': 'In2ItChicago', 'spider': spider_name});
-        return result.text
+        result = requests.post('http://event_processor:6800/schedule.json',
+                               data={'project': 'In2ItChicago', 'spider': spider_name})
+        json = result.json()
+        if 'status' not in json or json['status'] != 'ok':
+            raise Exception('scrapy job failed: ' + json)
+        
+        return PubSub.subscribe(json['jobid'], lambda result: result)
 
 
 if __name__ == "__main__":
     job = ScrapyJob.create_test_instance()
-    job.run('http://localhost:8888/api/v1/jobs', 'GET', {})
+    job.run('history')

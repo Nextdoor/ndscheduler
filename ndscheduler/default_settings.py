@@ -97,4 +97,7 @@ JOB_CLASS_PACKAGES = []
 
 # Basic Auth
 #
-BASIC_AUTH_CREDENTIALS = {'username': 'password'}
+# If needs basic auth, modify the dict below
+# e.g. BASIC_AUTH_CREDENTIALS = {'username': 'password'}
+#
+BASIC_AUTH_CREDENTIALS = {}

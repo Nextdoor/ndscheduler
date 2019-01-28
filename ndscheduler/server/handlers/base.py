@@ -19,7 +19,7 @@ class BaseHandler(tornado.web.RequestHandler):
 
     executor = futures.ThreadPoolExecutor(max_workers=settings.TORNADO_MAX_WORKERS)
 
-    basic_auth_credentials_func = settings.BASIC_AUTH_CREDENTIALS.get
+    basic_auth_credentials = settings.BASIC_AUTH_CREDENTIALS
     basic_auth_realm = 'Scheduler'
 
     def send_challenge(self):
@@ -40,13 +40,14 @@ class BaseHandler(tornado.web.RequestHandler):
         auth_data = base64.b64decode(auth_data).decode('utf-8')
         username, password = auth_data.split(':')
 
-        challenge = self.basic_auth_credentials_func(username)
+        challenge = self.basic_auth_credentials.get(username)
         if challenge != password:
             self.send_challenge()
 
     def prepare(self):
         """Preprocess requests."""
-        self.get_basic_auth_result()
+        if len(self.basic_auth_credentials) > 0:
+            self.get_basic_auth_result()
 
         try:
             if self.request.headers['Content-Type'].startswith('application/json'):

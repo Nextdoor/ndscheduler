@@ -16,6 +16,7 @@ class Handler(base.BaseHandler):
         website_info = {
             'title': settings.WEBSITE_TITLE,
         }
+
         meta_info = utils.get_all_available_jobs()
         self.render(settings.APP_INDEX_PAGE,
                     jobs_meta_info=json.dumps(meta_info),

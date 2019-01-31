@@ -34,8 +34,11 @@ class ScrapyJob(job.JobBase):
         json = result.json()
         if 'status' not in json or json['status'] != 'ok':
             raise Exception('scrapy job failed: ' + json)
-        
-        return PubSub.subscribe(json['jobid'], lambda result: result)
+
+        result = PubSub.subscribe(json['jobid'], lambda result: result)
+        if result['status'] == 'failure':
+            raise Exception('Failure during scrapy processing: ' + str(result))
+        return result
 
 
 if __name__ == "__main__":

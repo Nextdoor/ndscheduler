@@ -10,7 +10,7 @@ class Handler(base.BaseHandler):
     @tornado.web.removeslash
     def post(self):
         jobid = self.json_args['jobid']
-        PubSub.publish(jobid, jobid)
+        PubSub.publish(jobid, self.json_args)
         self.set_status(200)
         self.write({'result': 'success'})
 

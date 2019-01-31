@@ -1,0 +1,9 @@
+{
+    "ignore": [
+        ".git",
+        "node_modules/",
+        "datastore.db"
+      ],
+      "ext": "py",
+      "delay": "3000"
+}

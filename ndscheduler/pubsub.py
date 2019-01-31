@@ -1,8 +1,10 @@
 from threading import Event
 from functools import partial
 
+
 class PubSub:
     _events = {}
+
     @staticmethod
     def subscribe(key, func, unsubscribe_after=True):
         event = Event()
@@ -13,14 +15,14 @@ class PubSub:
             response['result'] = func(data)
 
         PubSub._events[key] = partial(callback, event=event, response=response)
-        
+
         event.wait()
         print('awaited event')
         if unsubscribe_after:
             PubSub.unsubscribe(key)
-        print('resturning ' + str(response))    
-        return response
-    
+        print('resturning ' + str(response))
+        return response['result']
+
     @staticmethod
     def publish(key, data=None):
         print('publishing ' + key)

@@ -29,14 +29,23 @@ class ScrapyJob(job.JobBase):
         }
 
     def run(self, spider_name):
-        result = requests.post('http://event_processor:6800/schedule.json',
+        create_job_result = requests.post('http://event_processor:6800/schedule.json',
                                data={'project': 'In2ItChicago', 'spider': spider_name})
-        json = result.json()
-        if 'status' not in json or json['status'] != 'ok':
-            raise Exception('scrapy job failed: ' + json)
+        create_job_json = create_job_result.json()
+        jobid = create_job_json['jobid']
 
-        result = PubSub.subscribe(json['jobid'], lambda result: result)
-        if result['status'] == 'failure':
+        def timeout_callback():
+            job_results = requests.get('http://event_processor:6800/listjobs.json', params={'project': 'In2ItChicago'})
+            jobs_json = job_results.json()
+            possible_states = ['pending', 'running', 'finished']
+            job_state = next((state for state in possible_states for job in jobs_json[state] if job['id'] == jobid), 'not found')
+            return {'errored': True, 'response': f'Timed out waiting for response from scrapy for job {jobid}. Scrapyd job status = {job_state}'}
+
+        if 'status' not in create_job_json or create_job_json['status'] != 'ok':
+            raise Exception('scrapy job failed: ' + create_job_json)
+
+        result = PubSub.subscribe(jobid, lambda result: result, timeout=5*60, timeout_func=timeout_callback)
+        if result['errored'] == True:
             raise Exception('Failure during scrapy processing: ' + str(result))
         return result
 

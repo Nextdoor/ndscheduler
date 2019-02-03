@@ -13,6 +13,3 @@ class Handler(base.BaseHandler):
         PubSub.publish(jobid, self.json_args)
         self.set_status(200)
         self.write({'result': 'success'})
-
-    def add_callback(self, callback):
-        self._callback = callback

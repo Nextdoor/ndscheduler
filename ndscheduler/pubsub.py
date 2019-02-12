@@ -28,9 +28,8 @@ class PubSub:
             timeout_timer = Timer(timeout, timeout_callback)
             timeout_timer.start()
 
-        PubSub._events[key] = partial(callback, event=event, response=response, 
+        PubSub._events[key] = partial(callback, event=event, response=response,
                                       timeout_timer=timeout_timer)
-        
 
         event.wait()
         if unsubscribe_after:
@@ -43,8 +42,8 @@ class PubSub:
             PubSub._events[key](data=data)
         else:
             raise Exception(f'Tried to publish key {key} but no subscribers were found. '
-                            'It''s possible that the subscriber timeout value needs to be increased '
-                            'if one was supplied.')
+                            'It''s possible that the subscriber timeout value needs to be '
+                            'increased f one was supplied.')
 
     @staticmethod
     def unsubscribe(key):

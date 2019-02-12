@@ -7,13 +7,12 @@ class PubSub:
 
     @staticmethod
     def subscribe(key, func, unsubscribe_after=True, timeout=None, timeout_func=None):
-        event = Event()
-        response = dict()
-
         if timeout is not None and not unsubscribe_after:
             raise ValueError('timeout can not be used if unsubsubscribe_after == False')
 
-        def callback(event, response, data):
+        def callback(event, response, data, timeout_timer):
+            if timeout_timer is not None:
+                timeout_timer.cancel()
             event.set()
             response['result'] = func(data)
 
@@ -22,9 +21,16 @@ class PubSub:
             if key in PubSub._events:
                 PubSub._events[key](data=timeout_data)
 
-        PubSub._events[key] = partial(callback, event=event, response=response)
+        event = Event()
+        response = dict()
+        timeout_timer = None
         if timeout is not None:
-            Timer(timeout, timeout_callback).start()
+            timeout_timer = Timer(timeout, timeout_callback)
+            timeout_timer.start()
+
+        PubSub._events[key] = partial(callback, event=event, response=response, 
+                                      timeout_timer=timeout_timer)
+        
 
         event.wait()
         if unsubscribe_after:
@@ -33,7 +39,12 @@ class PubSub:
 
     @staticmethod
     def publish(key, data=None):
-        PubSub._events[key](data=data)
+        if key in PubSub._events:
+            PubSub._events[key](data=data)
+        else:
+            raise Exception(f'Tried to publish key {key} but no subscribers were found. '
+                            'It''s possible that the subscriber timeout value needs to be increased '
+                            'if one was supplied.')
 
     @staticmethod
     def unsubscribe(key):

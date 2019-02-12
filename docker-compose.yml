@@ -14,9 +14,34 @@ services:
       - DEBUG=${DEBUG}
     networks:
       - in2it_ndscheduler
+  postgres:
+    image: postgres:11.1
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - in2it_ndscheduler
+  pgadmin:
+    image: dpage/pgadmin4:4.2
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=user@domain.com
+      - PGADMIN_DEFAULT_PASSWORD=pgadmin
+      - PGADMIN_LISTEN_PORT=7000
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    ports:
+      - "7000:7000"
+    networks:
+      - in2it_ndscheduler
 networks:
   in2it_ndscheduler:
     external:
       name: in2it
 volumes:
   ndscheduler_modules:
+  postgres_data:
+  pgadmin_data:

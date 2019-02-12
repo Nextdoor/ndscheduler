@@ -3,12 +3,12 @@
 # This apns library's release version still doesn't support python 3.5!
 #git+git://github.com/djacobs/PyAPNs.git#egg=PyAPNs
 
-requests == 2.20.0
+requests #== 2.20.0
 ptvsd
 
 # Uncomment this if you want to use Postgres as datastore
 #
-# psycopg2 == 2.6.1
+psycopg2 #== 2.6.1
 
 # Uncomment this if you want to use MySQL as datastore
 #

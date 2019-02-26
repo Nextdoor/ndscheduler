@@ -15,3 +15,4 @@ dist/
 *.db
 *.egg-info/
 *.egg/
+.DS_Store

@@ -11,6 +11,7 @@ require.config({
     'backbone': 'vendor/backbone',
     'bootstrap': 'vendor/bootstrap',
     'bootstrapswitch': 'vendor/bootstrap-switch',
+    'ace': 'vendor/ace',
 
     'utils': 'utils',
 
@@ -38,8 +39,9 @@ require.config({
 define(['utils',
         'text!edit-job-modal',
         'text!job-class-notes',
+        'ace/ace',
         'backbone',
-        'bootstrapswitch'], function(utils, EditJobModalHtml, JobClassNotesHtml) {
+        'bootstrapswitch'], function(utils, EditJobModalHtml, JobClassNotesHtml, ace) {
 
   'use strict';
 
@@ -67,6 +69,9 @@ define(['utils',
       this.bindEditJobConfirmClickEvent();
       this.bindDeleteJobConfirmClickEvent();
       this.bindModalPopupEvent();
+
+      this.editor = ace.edit("edit-input-job-task-args");
+      this.editor.session.setMode("ace/mode/json");
     },
 
     /**
@@ -95,13 +100,13 @@ define(['utils',
 
         $('#edit-input-job-name').val($button.data('job-name'));
         $('#edit-input-job-task-class').val($button.data('job-task')).trigger('change');
-        $('#edit-input-job-task-args').val($button.attr('data-job-pubargs'));
         $('#edit-input-job-month').val($button.data('job-month'));
         $('#edit-input-job-day-of-week').val($button.data('job-day-of-week'));
         $('#edit-input-job-day').val($button.data('job-day'));
         $('#edit-input-job-hour').val($button.data('job-hour'));
         $('#edit-input-job-minute').val($button.data('job-minute'));
         $('#edit-input-job-id').val(jobId);
+        this.editor.setValue($button.attr('data-job-pubargs'));
 
         var $checkbox = $('<input>', {
           type: 'checkbox',
@@ -144,7 +149,7 @@ define(['utils',
         var day = $('#edit-input-job-day').val();
         var hour = $('#edit-input-job-hour').val();
         var minute = $('#edit-input-job-minute').val();
-        var args = $('#edit-input-job-task-args').val();
+        var args = this.editor.getValue();
 
         if (jobName.trim() === '') {
           utils.alertError('Please fill in job name');

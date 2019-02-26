@@ -11,6 +11,7 @@ require.config({
     'backbone': 'vendor/backbone',
     'bootstrap': 'vendor/bootstrap',
     'select2': 'vendor/select2',
+    'ace': 'vendor/ace',
 
     'utils': 'utils',
 
@@ -40,7 +41,7 @@ define(['utils',
   'text!job-class-notes',
   'backbone',
   'bootstrap',
-  'select2'], function(utils, AddJobModalHtml, JobClassNotesHtml) {
+  'select2', 'ace/ace'], function(utils, AddJobModalHtml, JobClassNotesHtml, foo, bar, baz, ace) {
 
   'use strict';
 
@@ -68,6 +69,8 @@ define(['utils',
         );
       });
 
+      this.editor = ace.edit("input-job-task-args");
+      this.editor.session.setMode("ace/mode/json");
     },
 
     bindAddJobConfirmClickEvent: function() {
@@ -82,7 +85,7 @@ define(['utils',
         var day = $('#input-job-day').val();
         var hour = $('#input-job-hour').val();
         var minute = $('#input-job-minute').val();
-        var args = $('#input-job-task-args').val();
+        var args = this.editor.getValue();
 
         if (!$.trim(jobName)) {
           utils.alertError('Please fill in job name');

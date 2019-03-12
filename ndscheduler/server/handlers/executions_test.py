@@ -55,8 +55,8 @@ class ExecutionsTest(tornado.testing.AsyncHTTPTestCase):
         datastore.add_execution(execution1['eid'], execution1['job_id'], execution1['state'])
         response = self.fetch(self.EXECUTIONS_URL + '/%s?sync=true' % execution1['eid'])
         return_info = json.loads(response.body.decode())
-        self.assertEquals(return_info['execution_id'], execution1['eid'])
-        self.assertEquals(return_info['state'],
+        self.assertEqual(return_info['execution_id'], execution1['eid'])
+        self.assertEqual(return_info['state'],
                           constants.EXECUTION_STATUS_DICT[execution1['state']])
 
     def test_get_execution1(self):
@@ -73,4 +73,4 @@ class ExecutionsTest(tornado.testing.AsyncHTTPTestCase):
         response = self.fetch(self.EXECUTIONS_URL + '?time_range_end=%s' % (
             two_minutes_later.isoformat()))
         return_info = json.loads(response.body.decode())
-        self.assertEquals(return_info['executions'][0]['execution_id'], execution1['eid'])
+        self.assertEqual(return_info['executions'][0]['execution_id'], execution1['eid'])

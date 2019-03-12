@@ -5,7 +5,7 @@ import unittest
 
 from ndscheduler import constants
 from ndscheduler.core.datastore.providers import base
-
+from apscheduler.schedulers.blocking import BlockingScheduler
 
 class SimpleDatastore(base.DatastoreBase):
 
@@ -20,7 +20,9 @@ class SimpleDatastore(base.DatastoreBase):
 class DatastoreBaseTest(unittest.TestCase):
 
     def setUp(self):
+        fake_scheduler = BlockingScheduler()
         self.store = SimpleDatastore.get_instance()
+        self.store.start(fake_scheduler, None)
 
     def test_add_execution_get_execution(self):
         eid = '12345'

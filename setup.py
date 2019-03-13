@@ -80,12 +80,10 @@ setup(
     ],
     test_suite='nose.collector',
     install_requires=[
-        # Note ndscheduler *only* works with 3.0.x.  See the docs for more detail.
-        # https://apscheduler.readthedocs.io/en/latest/migration.html#from-v3-0-to-v3-2
         'APScheduler >= 3.0.0',
         'SQLAlchemy >= 1.0.0',
         'future >= 0.15.2',
-        'tornado >= 4.3.0',
+        'tornado < 6',
         'python-dateutil >= 2.2',
     ],
     classifiers=classifiers,

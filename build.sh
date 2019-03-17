@@ -1,1 +1,1 @@
-docker build -t ndscheduler .
+docker build -t ndscheduler $(dirname $0)

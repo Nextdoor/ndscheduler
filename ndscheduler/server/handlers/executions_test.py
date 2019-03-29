@@ -57,7 +57,7 @@ class ExecutionsTest(tornado.testing.AsyncHTTPTestCase):
         return_info = json.loads(response.body.decode())
         self.assertEqual(return_info['execution_id'], execution1['eid'])
         self.assertEqual(return_info['state'],
-                          constants.EXECUTION_STATUS_DICT[execution1['state']])
+                         constants.EXECUTION_STATUS_DICT[execution1['state']])
 
     def test_get_execution1(self):
         datastore = self.scheduler.get_datastore()

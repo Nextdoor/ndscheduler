@@ -7,6 +7,7 @@ from ndscheduler import constants
 from ndscheduler.core.datastore.providers import base
 from apscheduler.schedulers.blocking import BlockingScheduler
 
+
 class SimpleDatastore(base.DatastoreBase):
 
     @classmethod

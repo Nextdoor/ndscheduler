@@ -28,7 +28,8 @@ EXECUTIONS = sqlalchemy.Table(
     sqlalchemy.Column('description', sqlalchemy.Text, nullable=True),
     sqlalchemy.Column('result', sqlalchemy.Text, nullable=True),
     sqlalchemy.Column('job_id', sqlalchemy.Text, nullable=False),
-    sqlalchemy.Column('task_id', sqlalchemy.Text, nullable=True))
+    sqlalchemy.Column('task_id', sqlalchemy.Text, nullable=True),
+    schema='scheduler')
 
 #
 # Audit logs
@@ -41,4 +42,5 @@ AUDIT_LOGS = sqlalchemy.Table(
     sqlalchemy.Column('user', sqlalchemy.Text, nullable=True),
     sqlalchemy.Column('created_time', sqlalchemy.DateTime(timezone=True), nullable=False,
                       default=utils.get_current_datetime),
-    sqlalchemy.Column('description', sqlalchemy.Text, nullable=True))
+    sqlalchemy.Column('description', sqlalchemy.Text, nullable=True),
+    schema='scheduler')

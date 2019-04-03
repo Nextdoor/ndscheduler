@@ -46,9 +46,9 @@ JOB_MISFIRE_GRACE_SEC = 3600
 #
 # Database settings
 #
-JOBS_TABLENAME = 'scheduler_jobs'
-EXECUTIONS_TABLENAME = 'scheduler_execution'
-AUDIT_LOGS_TABLENAME = 'scheduler_jobauditlog'
+JOBS_TABLENAME = 'jobs'
+EXECUTIONS_TABLENAME = 'execution'
+AUDIT_LOGS_TABLENAME = 'jobauditlog'
 
 # See different database providers in ndscheduler/core/datastore/providers/
 
@@ -61,7 +61,7 @@ DATABASE_CONFIG_DICT = {
 
 # Postgres
 #
-# DATABASE_CLASS = 'ndscheduler.core.datastore.providers.postgresql.DatastorePostgresql'
+# DATABASE_CLASS = 'ndscheduler.core.datastore.providers.postgresqlDatastorePostgresql'
 # DATABASE_CONFIG_DICT = {
 #     'user': 'username',
 #     'password': '',

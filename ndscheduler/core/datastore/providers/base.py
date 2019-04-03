@@ -21,6 +21,7 @@ class DatastoreBase(sched_sqlalchemy.SQLAlchemyJobStore):
     def get_instance(cls):
         if not cls.instance:
             cls.instance = cls(url=cls.get_db_url(),
+                               tableschema='scheduler',
                                tablename=settings.JOBS_TABLENAME)
             tables.METADATA.create_all(cls.instance.engine)
             cls.instance.start(None, None)

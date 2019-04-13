@@ -6,6 +6,7 @@ import dateutil.tz
 from apscheduler.jobstores import sqlalchemy as sched_sqlalchemy
 from sqlalchemy import select
 from sqlalchemy import desc
+from sqlalchemy.exc import OperationalError
 
 from ndscheduler import constants
 from ndscheduler import settings
@@ -20,11 +21,17 @@ class DatastoreBase(sched_sqlalchemy.SQLAlchemyJobStore):
     @classmethod
     def get_instance(cls):
         if not cls.instance:
-            cls.instance = cls(url=cls.get_db_url(),
-                               tableschema='scheduler',
-                               tablename=settings.JOBS_TABLENAME)
-            tables.METADATA.create_all(cls.instance.engine)
-            cls.instance.start(None, None)
+            num_attempts = 100
+            for _ in range(num_attempts):
+                try:
+                    cls.instance = cls(url=cls.get_db_url(),
+                                    tableschema='scheduler',
+                                    tablename=settings.JOBS_TABLENAME)
+                    tables.METADATA.create_all(cls.instance.engine)
+                    cls.instance.start(None, None)
+                    break
+                except OperationalError:
+                    continue
         return cls.instance
 
     @classmethod

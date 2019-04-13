@@ -2,6 +2,7 @@
 
 import dateutil.parser
 import dateutil.tz
+import time
 
 from apscheduler.jobstores import sqlalchemy as sched_sqlalchemy
 from sqlalchemy import select
@@ -31,6 +32,7 @@ class DatastoreBase(sched_sqlalchemy.SQLAlchemyJobStore):
                     cls.instance.start(None, None)
                     break
                 except OperationalError:
+                    time.sleep(5)
                     continue
         return cls.instance
 

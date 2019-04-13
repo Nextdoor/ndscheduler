@@ -9,7 +9,8 @@ logger = logging.getLogger(__name__)
 
 
 class ScrapyJob(job.JobBase):
-    TIMEOUT = 10
+    # 30 minute timeout for jobs
+    TIMEOUT = 30
 
     @classmethod
     def meta_info(cls):
@@ -50,7 +51,7 @@ class ScrapyJob(job.JobBase):
         if 'status' not in create_job_json or create_job_json['status'] != 'ok':
             raise Exception('scrapy job failed: ' + create_job_json)
 
-        result = PubSub.subscribe(jobid, lambda result: result, timeout=5*60,
+        result = PubSub.subscribe(jobid, lambda result: result, timeout=TIMEOUT*60,
                                   timeout_func=timeout_callback)
         if result['errored']:
             raise Exception('Failure during scrapy processing: ' + str(result))

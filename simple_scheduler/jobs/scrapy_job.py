@@ -7,11 +7,11 @@ from ndscheduler.pubsub import PubSub
 
 logger = logging.getLogger(__name__)
 
+# 30 minute timeout for jobs
+TIMEOUT = 30
+
 
 class ScrapyJob(job.JobBase):
-    # 30 minute timeout for jobs
-    TIMEOUT = 30
-
     @classmethod
     def meta_info(cls):
         return {

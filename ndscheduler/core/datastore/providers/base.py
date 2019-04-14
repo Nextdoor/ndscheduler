@@ -26,8 +26,8 @@ class DatastoreBase(sched_sqlalchemy.SQLAlchemyJobStore):
             for _ in range(num_attempts):
                 try:
                     cls.instance = cls(url=cls.get_db_url(),
-                                    tableschema='scheduler',
-                                    tablename=settings.JOBS_TABLENAME)
+                                       tableschema='scheduler',
+                                       tablename=settings.JOBS_TABLENAME)
                     tables.METADATA.create_all(cls.instance.engine)
                     cls.instance.start(None, None)
                     break

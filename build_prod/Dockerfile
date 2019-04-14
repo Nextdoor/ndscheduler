@@ -10,3 +10,4 @@ RUN apk update && apk add --no-cache postgresql-libs && \
     apk --purge del .build-deps
 
 FROM ndscheduler_common AS ndscheduler_prod
+COPY . ./

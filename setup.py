@@ -75,18 +75,16 @@ setup(
     extras_require={'python_version<"3.3"': ['funcsigs']},
     tests_require=[
         'funcsigs',
-        'mock == 1.1.2',
+        'mock >= 1.1.2',
         'nose',
     ],
     test_suite='nose.collector',
     install_requires=[
-        # Note ndscheduler *only* works with 3.0.x.  See the docs for more detail.
-        # https://apscheduler.readthedocs.io/en/latest/migration.html#from-v3-0-to-v3-2
-        'APScheduler == 3.0.0',
-        'SQLAlchemy == 1.0.0',
-        'future == 0.15.2',
-        'tornado == 4.3.0',
-        'python-dateutil == 2.2',
+        'APScheduler >= 3.0.0',
+        'SQLAlchemy >= 1.0.0',
+        'future >= 0.15.2',
+        'tornado < 6',
+        'python-dateutil >= 2.2',
     ],
     classifiers=classifiers,
     cmdclass={'clean': CleanHook},

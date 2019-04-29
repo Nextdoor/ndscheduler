@@ -80,11 +80,11 @@ class Settings(object):
                 error = ImportError(
                     'Could not import settings "%s" (Is it on sys.path?): %s' %
                     (settings_module_path, e))
-                logger.warn(error)
+                logger.warning(error)
         except KeyError:
             # NOTE: This is arguably an EnvironmentError, but that causes
             # problems with Python's interactive help.
-            logger.warn(
+            logger.warning(
                 ('Environment variable %s is undefined. '
                  'Use default settings for now.') % ENVIRONMENT_VARIABLE)
 

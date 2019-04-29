@@ -100,6 +100,10 @@ After you set up ``Settings``, ``Server`` and ``Jobs``, you can run the whole th
     NDSCHEDULER_SETTINGS_MODULE=simple_scheduler.settings \
     PYTHONPATH=.:$(PYTHONPATH) \
 		    python simple_scheduler/scheduler.py
+		  
+### Upgrading
+
+It is best practice to backup your database before doing any upgrade. ndscheduler relies on [apscheduler](https://apscheduler.readthedocs.io/en/latest/) to serialize jobs to the database, and while it is usually backwards-compatible (i.e. jobs created with an older version of apscheduler will continue to work after upgrading apscheduler) this is not guaranteed, and it is known that downgrading apscheduler can cause issues. See [this PR comment](https://github.com/Nextdoor/ndscheduler/pull/54#issue-262152050) for more details.
 
 ### Reference Implementation
 

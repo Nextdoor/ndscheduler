@@ -14,7 +14,6 @@ from ndscheduler.core.datastore import tables
 
 
 class DatastoreBase(sched_sqlalchemy.SQLAlchemyJobStore):
-
     instance = None
 
     @classmethod
@@ -212,4 +211,70 @@ class DatastoreBase(sched_sqlalchemy.SQLAlchemyJobStore):
             'user': row.user,
             'created_time': self.get_time_isoformat_from_db(row.created_time),
             'description': row.description}
+        return return_dict
+
+    def add_keyvalue(self, name, key, val, **kwargs):
+        """Insert a key/value pair.
+
+        :param str name: string for the name of the key/value pair.
+        :param str key: string for key.
+        :param int val: string for value.
+        """
+        kv = {
+            'name': name,
+            'key': key,
+            'val': val
+        }
+        kv.update(kwargs)
+
+        kv_insert = tables.KV_STORE.insert().values(**kv)
+        self.engine.execute(kv_insert)
+
+    def del_keyvalue(self, name, key, val, **kwargs):
+        """Deletes a key/value pair.
+
+        :param str name: string for the name of the key/value pair.
+        :param str key: string for key.
+        :param int val: string for value.
+        """
+        kv = {
+            'name': name,
+            'key': key,
+            'val': val
+        }
+        kv.update(kwargs)
+
+        kv_delete = tables.KV_STORE.delete().values(**kv)
+        self.engine.execute(kv_delete)
+
+    def get_keyvalue_by_name(self, name):
+        """Returns a list of key/value pairs.
+
+        :param str name: string for the name of the key/value pair.
+        :return: A dictionary of multiple key/value pairs. Sorted by created_time.
+        :rtype: dict
+        """
+        selectable = select('*').where(tables.KV_STORE.c.name == name). \
+            order_by(desc(tables.KV_STORE.c.created_time))
+        rows = self.engine.execute(selectable)
+
+        for row in rows:
+            return self._build_keyvalue(row)
+
+    def update_keyvalue(self, name, **kwargs):
+        """Update a key/value pair.
+
+        :param str name: string for the name of the key/value pair.
+        """
+        kv_update = tables.KV_STORE.update().where(tables.KV_STORE.c.name == name).values(**kwargs)
+        self.engine.execute(kv_update)
+
+    def _build_keyvalue(self, row):
+        return_dict = {
+            'name': row.name,
+            'key': row.key,
+            'val': row.val,
+            'created_time': self.get_time_isoformat_from_db(row.created_time)
+        }
+
         return return_dict

@@ -1,19 +1,24 @@
-FROM ubuntu:14.04
+FROM python:3.6
 
-MAINTAINER Wenbin Fang <wenbin@nextdoor.com>
+# set vars
+ENV LOCAL_APPDIR simple_scheduler
+ENV WORK_APPDIR app
+RUN mkdir -p /${WORK_APPDIR}
 
-RUN apt-get -qq update && \
-    apt-get -qq install python-virtualenv git && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+# install deps
+WORKDIR /
+RUN pip install --upgrade pip
 
-RUN virtualenv /mnt/scheduler && \
-    . /mnt/scheduler/bin/activate && \
-    pip install -e git+https://github.com/Nextdoor/ndscheduler.git#egg=ndscheduler && \
-    pip install -r /mnt/scheduler/src/ndscheduler/simple_scheduler/requirements.txt
+# for local development only!
+RUN mkdir -p /tmp/nds
+COPY . /tmp/nds
+RUN rm -rf /tmp/nds/simple_scheduler
+RUN pip install --no-cache-dir -e /tmp/nds
 
-ADD apns.pem /mnt/scheduler/
-ADD run_scheduler /mnt/scheduler/bin/run_scheduler
-RUN chmod 755 /mnt/scheduler/bin/run_scheduler
+ADD ${LOCAL_APPDIR}/requirements.txt /tmp/requirements.txt
+RUN pip install --no-cache-dir -r /tmp/requirements.txt
 
-CMD ["/mnt/scheduler/bin/run_scheduler"]
+COPY ${LOCAL_APPDIR} /${WORK_APPDIR}
+
+WORKDIR /${WORK_APPDIR}
+ENTRYPOINT ["/bin/bash", "docker/run_scheduler"]

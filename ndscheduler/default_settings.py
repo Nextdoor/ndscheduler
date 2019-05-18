@@ -1,8 +1,6 @@
 """Default settings."""
 
-import logging
 import os
-
 
 #
 # Development mode or production mode

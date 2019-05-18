@@ -29,7 +29,6 @@ class DatastorePostgresql(base.DatastoreBase):
         else:
             db_wrapper = 'postgresql'
 
-
         return '%s://%s:%s@%s:%d/%s?sslmode=%s' % (
                 db_wrapper,
                 settings.DATABASE_CONFIG_DICT['user'],

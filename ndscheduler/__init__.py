@@ -17,11 +17,11 @@ import sys
 
 from ndscheduler import default_settings
 
-logger = logging.getLogger()
-ch = logging.StreamHandler(sys.stdout)
-formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-ch.setFormatter(formatter)
-logger.addHandler(ch)
+# logger = logging.getLogger()
+# ch = logging.StreamHandler(sys.stdout)
+# formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+# ch.setFormatter(formatter)
+# logger.addHandler(ch)
 
 
 ENVIRONMENT_VARIABLE = 'NDSCHEDULER_SETTINGS_MODULE'

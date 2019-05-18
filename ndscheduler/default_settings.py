@@ -86,11 +86,5 @@ DATABASE_CONFIG_DICT = {
 # Please see ndscheduler/core/scheduler/base.py
 SCHEDULER_CLASS = 'ndscheduler.core.scheduler.base.SingletonScheduler'
 
-#
-# Set logging level
-#
-logging.getLogger().setLevel(logging.INFO)
-
-
 # Packages that contains job classes, e.g., simple_scheduler.jobs
 JOB_CLASS_PACKAGES = []

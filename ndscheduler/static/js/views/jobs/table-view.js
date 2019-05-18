@@ -66,7 +66,8 @@ define(['utils',
       // Initialize data table
       this.table = $('#jobs-table').dataTable({
         // Sorted by job name
-        'order': [[0, 'asc']]
+        'order': [[0, 'asc']],
+        "iDisplayLength": 50
       });
     },
 

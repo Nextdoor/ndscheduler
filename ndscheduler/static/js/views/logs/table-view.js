@@ -48,6 +48,7 @@ define(['utils',
 
       // Initialize data table
       this.table = $('#logs-table').dataTable({
+        "iDisplayLength": 50,
         // Sorted by job name
         'order': [[3, 'desc']]
       });

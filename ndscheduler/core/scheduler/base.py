@@ -103,6 +103,46 @@ class SingletonScheduler (apscheduler_tornado.TornadoScheduler):
                      minute=minute, args=arguments, kwargs=kwargs, name=name, id=job_id)
         return job_id
 
+    def add_trigger_scheduler_job(self, job_class_string, name, pub_args, trigger,
+                          **kwargs):
+        """Add a job. Job infomation will be persistent in postgres.
+
+        This is a NON-BLOCKING operation, as internally, apscheduler calls wakeup()
+        that is async.
+
+        :param str job_class_string: String for job class, e.g., myscheduler.jobs.a_job.NiceJob
+        :param str name: String for job name, e.g., Check Melissa job.
+        :param str pub_args: List for arguments passed to publish method of a task.
+        :param str month: String for month cron string, e.g., */10
+        :param str day_of_week: String for day of week cron string, e.g., 1-6
+        :param str day: String for day cron string, e.g., */1
+        :param str hour: String for hour cron string, e.g., */2
+        :param str minute: String for minute cron string, e.g., */3
+        :param dict kwargs: Other keyword arguments passed to run_job function.
+        :return: String of job id, e.g., 6bca19736d374ef2b3df23eb278b512e
+        :rtype: str
+
+        Returns:
+            String of job id, e.g., 6bca19736d374ef2b3df23eb278b512e
+        """
+        if not pub_args:
+            pub_args = []
+
+        job_id = utils.generate_uuid()
+
+        arguments = [job_class_string, job_id]
+        arguments.extend(pub_args)
+
+        scheduler_class = utils.import_from_path(settings.SCHEDULER_CLASS)
+        self.add_job(scheduler_class.run_job,
+                     trigger = trigger,
+                     args    = arguments,
+                     kwargs  = kwargs,
+                     name    = name,
+                     id      = job_id
+                 )
+        return job_id
+
     def modify_scheduler_job(self, job_id, **kwargs):
         """Modifies a job.
 

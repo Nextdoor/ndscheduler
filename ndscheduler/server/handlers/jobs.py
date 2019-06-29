@@ -6,6 +6,9 @@ import tornado.concurrent
 import tornado.gen
 import tornado.web
 
+import apscheduler.triggers.cron
+import apscheduler.triggers.interval
+
 from ndscheduler import constants
 from ndscheduler import utils
 from ndscheduler.server.handlers import base
@@ -42,7 +45,15 @@ class Handler(base.BaseHandler):
             'job_class_string': utils.get_job_name(job),
             'pub_args': utils.get_job_args(job)}
 
-        return_dict.update(utils.get_cron_strings(job))
+        if isinstance(job.trigger, apscheduler.triggers.cron.CronTrigger):
+            return_dict.update(utils.get_cron_strings(job))
+            return_dict["trigger_type"] = "cron"
+        elif isinstance(job.trigger, apscheduler.triggers.interval.IntervalTrigger):
+            return_dict["interval"] = job.trigger.interval.total_seconds()
+            return_dict["trigger_type"] = "interval"
+        else:
+            return_dict["trigger_type"] = "unknown"
+
         return return_dict
 
     @tornado.concurrent.run_on_executor

@@ -18,45 +18,45 @@ class JobBase:
         return cls(None, None)
 
     @classmethod
-    def get_scheduled_description(cls) -> str:
+    def get_scheduled_description(cls):
         hostname = socket.gethostname()
         pid = os.getpid()
         return 'hostname: %s | pid: %s' % (hostname, pid)
 
     @classmethod
-    def get_scheduled_error_description(cls) -> str:
+    def get_scheduled_error_description(cls):
         hostname = socket.gethostname()
         pid = os.getpid()
         return 'hostname: %s | pid: %s' % (hostname, pid)
 
     @classmethod
-    def get_running_description(cls) -> str:
+    def get_running_description(cls):
         hostname = socket.gethostname()
         pid = os.getpid()
         return 'hostname: %s | pid: %s' % (hostname, pid)
 
     @classmethod
-    def get_failed_description(cls) -> str:
+    def get_failed_description(cls):
         hostname = socket.gethostname()
         pid = os.getpid()
         return 'hostname: %s | pid: %s' % (hostname, pid)
 
     @classmethod
-    def get_succeeded_description(cls, result=None) -> str:
+    def get_succeeded_description(cls, result=None):
         hostname = socket.gethostname()
         pid = os.getpid()
         return 'hostname: %s | pid: %s' % (hostname, pid)
 
     @classmethod
-    def get_scheduled_error_result(cls) -> str:
+    def get_scheduled_error_result(cls):
         return utils.get_stacktrace()
 
     @classmethod
-    def get_failed_result(cls) -> str:
+    def get_failed_result(cls):
         return utils.get_stacktrace()
 
     @classmethod
-    def meta_info(cls) -> dict:
+    def meta_info(cls):
         """Returns meta info for this job class.
         For example:
             {

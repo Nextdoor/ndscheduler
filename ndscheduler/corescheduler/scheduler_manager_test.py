@@ -12,8 +12,8 @@ class SchedulerManagerTest(tornado.testing.AsyncTestCase):
     def setUp(self, *args, **kwargs):
         super(SchedulerManagerTest, self).setUp(*args, **kwargs)
 
-        scheduler_class = 'core.base.BaseScheduler'
-        datastore_class = 'datastore.providers.sqlite.DatastoreSqlite'
+        scheduler_class = 'ndscheduler.corescheduler.core.base.BaseScheduler'
+        datastore_class = 'ndscheduler.corescheduler.datastore.providers.sqlite.DatastoreSqlite'
 
         self.scheduler = scheduler_manager.SchedulerManager(scheduler_class, datastore_class)
         self.scheduler.start()

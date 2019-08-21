@@ -1,43 +1,39 @@
 """Represents the core scheduler instance that actually schedules jobs."""
 
 
-from typing import Optional
-
 from apscheduler.executors import pool
-from apscheduler.job import Job
 
 from ndscheduler.corescheduler import constants
 from ndscheduler.corescheduler import utils
-from ndscheduler.corescheduler.datastore.base import DatastoreBase
 
 
 class SchedulerManager:
 
-    def __init__(self, scheduler_class_path: str,
-                 datastore_class_path: str,
-                 db_config: Optional[dict] = None,
-                 db_tablenames: Optional[dict] = None,
-                 job_coalesce: bool = constants.DEFAULT_JOB_COALESCE,
-                 job_misfire_grace_sec: int = constants.DEFAULT_JOB_MISFIRE_GRACE_SEC,
-                 job_max_instances: int = constants.DEFAULT_JOB_MAX_INSTANCES,
-                 thread_pool_size: int = constants.DEFAULT_THREAD_POOL_SIZE,
-                 timezone: str = constants.DEFAULT_TIMEZONE):
+    def __init__(self, scheduler_class_path,
+                 datastore_class_path,
+                 db_config=None,
+                 db_tablenames=None,
+                 job_coalesce=constants.DEFAULT_JOB_COALESCE,
+                 job_misfire_grace_sec=constants.DEFAULT_JOB_MISFIRE_GRACE_SEC,
+                 job_max_instances=constants.DEFAULT_JOB_MAX_INSTANCES,
+                 thread_pool_size=constants.DEFAULT_THREAD_POOL_SIZE,
+                 timezone=constants.DEFAULT_TIMEZONE):
         """
-        :param scheduler_class_path: string path for scheduler class, e.g. 'mysched.FancyScheduler'
-        :param datastore_class_path: string path for datastore class, e.g. 'datastore.SQLDatastore'
-        :param db_config: dictionary containing values for db connection
-        :param db_tablenames: dictionary containing the names for the jobs,
+        :param str scheduler_class_path: string path for scheduler, e.g. 'mysched.FancyScheduler'
+        :param str datastore_class_path: string path for datastore, e.g. 'datastore.SQLDatastore'
+        :param dict db_config: dictionary containing values for db connection
+        :param dict db_tablenames: dictionary containing the names for the jobs,
         executions, or audit logs table, e.g. {
             'executions_tablename': 'scheduler_executions',
             'jobs_tablename': 'scheduler_jobs',
             'auditlogs_tablename': 'scheduler_auditlogs'
         }
         If any of these keys is not provided, the default table name is selected from constants.py
-        :param job_coalesce: True by default
-        :param job_misfire_grace_sec: Integer number of seconds
-        :param job_max_instances: Int number of instances
-        :param thread_pool_size: Int thread pool size
-        :param timezone: str timezone to schedule jobs in, e.g. 'UTC'
+        :param bool job_coalesce: True by default
+        :param int job_misfire_grace_sec: Integer number of seconds
+        :param int job_max_instances: Int number of instances
+        :param int thread_pool_size: Int thread pool size
+        :param str timezone: str timezone to schedule jobs in, e.g. 'UTC'
         """
         datastore = utils.get_datastore_instance(datastore_class_path, db_config, db_tablenames)
         job_stores = {
@@ -59,7 +55,7 @@ class SchedulerManager:
                                      executors=executors, job_defaults=job_default,
                                      timezone=timezone)
 
-    def get_datastore(self) -> DatastoreBase:
+    def get_datastore(self):
         return self.sched._lookup_jobstore('default')
 
     #
@@ -83,15 +79,14 @@ class SchedulerManager:
     #
     # Manage jobs
     #
-    def add_job(self, job_class_string: str, name: str, pub_args: list = None, month: str = None,
-                day_of_week: str = None, day: str = None, hour: str = None, minute: str = None,
-                **kwargs) -> str:
+    def add_job(self, job_class_string, name, pub_args=None, month=None,
+                day_of_week=None, day=None, hour=None, minute=None, **kwargs):
         """Add a job. Job infomation will be persistent in the datastore.
         This is a NON-BLOCKING operation, as internally, apscheduler calls wakeup()
         that is async.
         :param str job_class_string: String for job class, e.g., myscheduler.jobs.a_job.NiceJob
         :param str name: String for job name, e.g., Check Melissa job.
-        :param str pub_args: List for arguments passed to publish method of a task.
+        :param pub_args: List for arguments passed to publish method of a task.
         :param str month: String for month cron string, e.g., */10
         :param str day_of_week: String for day of week cron string, e.g., 1-6
         :param str day: String for day cron string, e.g., */1
@@ -104,7 +99,7 @@ class SchedulerManager:
         return self.sched.add_scheduler_job(job_class_string, name, pub_args, month, day_of_week,
                                             day, hour, minute, **kwargs)
 
-    def pause_job(self, job_id: str):
+    def pause_job(self, job_id):
         """Pauses the schedule of a job.
         This is a NON-BLOCKING operation, as internally, apscheduler calls wakeup()
         that is async.
@@ -112,7 +107,7 @@ class SchedulerManager:
         """
         self.sched.pause_job(job_id)
 
-    def get_job(self, job_id: str) -> Job:
+    def get_job(self, job_id):
         """Returns an apscheduler.job.Job instance.
         This is a BLOCKING operation, as internally, apscheduler doesn't
         call wakeup() that is async.
@@ -122,7 +117,7 @@ class SchedulerManager:
         """
         return self.sched.get_job(job_id)
 
-    def get_jobs(self) -> list:
+    def get_jobs(self):
         """Returns a list of apscheduler.job.Job instances.
         This is a BLOCKING operation, as internally, apscheduler doesn't
         call wakeup() that is async.
@@ -131,7 +126,7 @@ class SchedulerManager:
         """
         return self.sched.get_jobs()
 
-    def get_job_task_class(self, job: Job) -> str:
+    def get_job_task_class(self, job):
         """Shortcut to get task class.
         :param Job job: Instance of apscheduler.job.Job.
         :return: String for task class of this job.
@@ -139,7 +134,7 @@ class SchedulerManager:
         """
         return job.args[0]
 
-    def remove_job(self, job_id: str):
+    def remove_job(self, job_id):
         """Removes a job.
         This is a BLOCKING operation, as internally, apscheduler doesn't
         call wakeup() that is async.
@@ -147,7 +142,7 @@ class SchedulerManager:
         """
         self.sched.remove_job(job_id)
 
-    def resume_job(self, job_id: str):
+    def resume_job(self, job_id):
         """Removes a job.
         This is a NON-BLOCKING operation, as internally, apscheduler calls wakeup()
         that is async.
@@ -155,7 +150,7 @@ class SchedulerManager:
         """
         self.sched.resume_job(job_id)
 
-    def modify_job(self, job_id: str, **kwargs):
+    def modify_job(self, job_id, **kwargs):
         """Modifies a job.
         This is a BLOCKING operation, because it calls get_job() that is blocking, even though
         reschedule() and modify() are both non-blocking.

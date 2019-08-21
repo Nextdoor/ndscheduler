@@ -1,13 +1,11 @@
 """Ensure there's only one scheduler instancing running."""
 
 import json
-from typing import Optional
 
 from apscheduler.schedulers import tornado as apscheduler_tornado
 
 from ndscheduler.corescheduler import constants
 from ndscheduler.corescheduler import utils
-from ndscheduler.corescheduler.datastore.base import DatastoreBase
 from ndscheduler.corescheduler.job import JobBase
 
 
@@ -22,7 +20,7 @@ class BaseScheduler (apscheduler_tornado.TornadoScheduler):
         super(BaseScheduler, self).__init__(*args, **kwargs)
 
     @classmethod
-    def is_okay_to_run(cls, datastore: DatastoreBase) -> bool:
+    def is_okay_to_run(cls, datastore):
         """Determine if it's okay to schedule jobs.
         Could override this function to dynamically decide whether to run jobs by current process.
         Typically, we try to avoid running multiple scheduler processes that schedule same jobs.
@@ -33,9 +31,8 @@ class BaseScheduler (apscheduler_tornado.TornadoScheduler):
         return True
 
     @classmethod
-    def run_job(cls, job_class_path: str, job_id: str, db_class_path: str,
-                db_config: Optional[dict], db_tablenames: Optional[dict],
-                *args, **kwargs) -> str:
+    def run_job(cls, job_class_path, job_id, db_class_path, db_config,
+                db_tablenames, *args, **kwargs):
         """
         :param str job_class_path: String for job class, e.g., 'myscheduler.jobs.a_job.NiceJob'
         :param str job_id: Job id
@@ -67,36 +64,34 @@ class BaseScheduler (apscheduler_tornado.TornadoScheduler):
         return execution_id
 
     @classmethod
-    def pre_run(cls, job_class: JobBase, job_id: str, execution_id: str, *args, **kwargs):
+    def pre_run(cls, job_class, job_id, execution_id, *args, **kwargs):
         """Do any preprocessing before running the job.
         Override this function for your own implementation.
-        :param job_class: Instance of job class
-        :param job_id: Job id
-        :param execution_id: Execution id
+        :param JobBase job_class: Instance of job class
+        :param str job_id: Job id
+        :param str execution_id: Execution id
         :param args: List of args
         :param kwargs: Keyword Arguments
         """
         pass
 
     @classmethod
-    def post_run(cls, job_class: JobBase, job_id: str, execution_id: str,
-                 result_json: str, *args, **kwargs):
+    def post_run(cls, job_class, job_id, execution_id, result_json, *args, **kwargs):
         """Do any postprocessing after running the job.
         Override this function for your own implementation.
-        :param job_class: Instance of job class
-        :param job_id: Job id
-        :param execution_id: Execution id
-        :param result_json: JSON result from job run
+        :param JobBase job_class: Instance of job class
+        :param str job_id: Job id
+        :param str execution_id: Execution id
+        :param str result_json: JSON result from job run
         :param args: List of args
         :param kwargs: Keyword Arguments
         """
         pass
 
     @classmethod
-    def run_scheduler_job(cls, job_class: JobBase, job_id: str, execution_id: str,
-                          datastore: DatastoreBase, *args, **kwargs):
+    def run_scheduler_job(cls, job_class, job_id, execution_id, datastore, *args, **kwargs):
         """Run a job.
-        :param str job_class: An instance of the job to be run, e.g. myscheduler.jobs.a_job.NiceJob
+        :param JobBase job_class: An instance of the job to run, e.g. myscheduler.jobs.a_job.NiceJob
         :param str job_id: Job id
         :param str execution_id: Execution id
         :param DatastoreBase datastore: a datastore instance
@@ -120,9 +115,9 @@ class BaseScheduler (apscheduler_tornado.TornadoScheduler):
                                        description=job_class.get_failed_description(),
                                        result=job_class.get_failed_result())
 
-    def add_scheduler_job(self, job_class_string: str, name: str, pub_args: list = None,
-                          month: str = None, day_of_week: str = None, day: str = None,
-                          hour: str = None, minute: str = None, **kwargs) -> str:
+    def add_scheduler_job(self, job_class_string, name, pub_args=None,
+                          month=None, day_of_week=None, day=None,
+                          hour=None, minute=None, **kwargs):
         """Add a job. Job information will be persistent in postgres.
         This is a NON-BLOCKING operation, as internally, apscheduler calls wakeup()
         that is async.
@@ -154,12 +149,12 @@ class BaseScheduler (apscheduler_tornado.TornadoScheduler):
                      minute=minute, args=arguments, kwargs=kwargs, name=name, id=job_id)
         return job_id
 
-    def modify_scheduler_job(self, job_id: str, **kwargs):
+    def modify_scheduler_job(self, job_id, **kwargs):
         """Modifies a job.
         This is a BLOCKING operation, because it calls get_job() that is blocking, even though
         reschedule() and modify() are both non-blocking.
         :param str job_id: String for job id to be modified.
-        :param dict kwargs: keyword arguments, including:
+        :param kwargs: keyword arguments, including:
             - name: String for job name
             - job_class_string: String for job class string, e.g.,
                 myscheduler.jobs.a_job.NiceJob
@@ -207,7 +202,7 @@ class BaseScheduler (apscheduler_tornado.TornadoScheduler):
         if not job.next_run_time:
             job.pause()
 
-    def _process_jobs(self) -> int:
+    def _process_jobs(self):
         """
         :return: Integer for seconds to wake up in next processing cycle.
             If it isn't currently ok to run, it'll just return

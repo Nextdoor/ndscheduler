@@ -5,7 +5,7 @@ from ndscheduler.corescheduler.datastore import base
 
 class DatastoreMySQL(base.DatastoreBase):
 
-    def get_db_url(self) -> str:
+    def get_db_url(self):
         """Returns the db url to establish a MySQL connection, where db_config is passed in
         on initialization as:
         {

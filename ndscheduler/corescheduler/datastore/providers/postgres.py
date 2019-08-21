@@ -5,7 +5,7 @@ from ndscheduler.corescheduler.datastore import base
 
 class DatastorePostgres(base.DatastoreBase):
 
-    def get_db_url(self) -> str:
+    def get_db_url(self):
         """Returns the db url to establish a Postgres connection, where db_config is passed in
         on initialization as:
         {

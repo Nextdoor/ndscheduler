@@ -1,7 +1,5 @@
 """Base class to represent datastore."""
 
-from typing import Optional
-
 import dateutil.tz
 import dateutil.parser
 from apscheduler.jobstores import sqlalchemy as sched_sqlalchemy
@@ -17,7 +15,7 @@ class DatastoreBase(sched_sqlalchemy.SQLAlchemyJobStore):
     instance = None
 
     @classmethod
-    def get_instance(cls, db_config: Optional[dict] = None, table_names: Optional[dict] = None):
+    def get_instance(cls, db_config=None, table_names=None):
         if not cls.instance:
             cls.instance = cls(db_config, table_names)
         return cls.instance
@@ -26,7 +24,7 @@ class DatastoreBase(sched_sqlalchemy.SQLAlchemyJobStore):
     def destroy_instance(cls):
         cls.instance = None
 
-    def __init__(self, db_config: Optional[dict], table_names: Optional[dict]):
+    def __init__(self, db_config, table_names):
         """
         :param dict db_config: dictionary containing values for db connection
         :param dict table_names: dictionary containing the names for the jobs,
@@ -61,14 +59,14 @@ class DatastoreBase(sched_sqlalchemy.SQLAlchemyJobStore):
 
         self.metadata.create_all(self.engine)
 
-    def get_db_url(self) -> str:
+    def get_db_url(self):
         """We can use the dict passed from db_config_dict to construct a db url.
         :return: Database url. See: http://docs.sqlalchemy.org/en/latest/core/engines.html
         :rtype: str
         """
         raise NotImplementedError('Please implement this function.')
 
-    def add_execution(self, execution_id: str, job_id: str, state: int, **kwargs):
+    def add_execution(self, execution_id, job_id, state, **kwargs):
         """Insert a record of execution to database.
         :param str execution_id: Execution id.
         :param str job_id: Job id.
@@ -83,7 +81,7 @@ class DatastoreBase(sched_sqlalchemy.SQLAlchemyJobStore):
         execution_insert = self.executions_table.insert().values(**execution)
         self.engine.execute(execution_insert)
 
-    def get_execution(self, execution_id: str) -> dict:
+    def get_execution(self, execution_id):
         """Returns execution dict.
         :param str execution_id: Execution id.
         :return: Diction for execution info.
@@ -95,7 +93,7 @@ class DatastoreBase(sched_sqlalchemy.SQLAlchemyJobStore):
         for row in rows:
             return self._build_execution(row)
 
-    def update_execution(self, execution_id: str, **kwargs):
+    def update_execution(self, execution_id, **kwargs):
         """Update execution in database.
         :param str execution_id: Execution id.
         :param kwargs: Keyword arguments.
@@ -104,7 +102,7 @@ class DatastoreBase(sched_sqlalchemy.SQLAlchemyJobStore):
             self.executions_table.c.eid == execution_id).values(**kwargs)
         self.engine.execute(execution_update)
 
-    def _build_execution(self, row) -> dict:
+    def _build_execution(self, row):
         """Return job execution info from a row of scheduler_execution table.
         :param obj row: A row instance of scheduler_execution table.
         :return: A dictionary of job execution info.
@@ -130,7 +128,7 @@ class DatastoreBase(sched_sqlalchemy.SQLAlchemyJobStore):
             return_json['job'].update(utils.get_cron_strings(job))
         return return_json
 
-    def get_time_isoformat_from_db(self, time_object) -> str:
+    def get_time_isoformat_from_db(self, time_object):
         """Convert time object from database to iso 8601 format.
         :param object time_object: a time object from database, which is different on different
             databases. Subclass of this class for specific database has to override this function.
@@ -139,7 +137,7 @@ class DatastoreBase(sched_sqlalchemy.SQLAlchemyJobStore):
         """
         return time_object.isoformat()
 
-    def get_executions(self, time_range_start: str, time_range_end: str) -> dict:
+    def get_executions(self, time_range_start, time_range_end):
         """Returns info for multiple job executions.
         :param str time_range_start: ISO format for time range starting point.
         :param str time_range_end: ISO for time range ending point.
@@ -164,7 +162,7 @@ class DatastoreBase(sched_sqlalchemy.SQLAlchemyJobStore):
 
         return return_json
 
-    def add_audit_log(self, job_id: str, job_name: str, event: int, **kwargs):
+    def add_audit_log(self, job_id, job_name, event, **kwargs):
         """Insert an audit log.
         :param str job_id: string for job id.
         :param str job_name: string for job name.
@@ -179,7 +177,7 @@ class DatastoreBase(sched_sqlalchemy.SQLAlchemyJobStore):
         log_insert = self.auditlogs_table.insert().values(**audit_log)
         self.engine.execute(log_insert)
 
-    def get_audit_logs(self, time_range_start: str, time_range_end: str) -> dict:
+    def get_audit_logs(self, time_range_start, time_range_end):
         """Returns a list of audit logs.
         :param str time_range_start: ISO format for time range starting point.
         :param str time_range_end: ISO for time range ending point.
@@ -211,7 +209,7 @@ class DatastoreBase(sched_sqlalchemy.SQLAlchemyJobStore):
 
         return return_json
 
-    def _build_audit_log(self, row) -> dict:
+    def _build_audit_log(self, row):
         """Return audit_log from a row of scheduler_auditlog table.
         :param obj row: A row instance of scheduler_auditlog table.
         :return: A dictionary of audit log.

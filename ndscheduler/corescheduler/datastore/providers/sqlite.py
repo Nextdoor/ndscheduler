@@ -9,7 +9,7 @@ from ndscheduler.corescheduler.datastore import base
 
 class DatastoreSqlite(base.DatastoreBase):
 
-    def get_db_url(self) -> str:
+    def get_db_url(self):
         """Returns the db url to establish a SQLite connection, where db_config is passed in
         on initialization as:
         {

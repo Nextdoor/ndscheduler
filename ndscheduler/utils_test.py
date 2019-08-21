@@ -2,7 +2,7 @@
 
 import unittest
 
-from ndscheduler import utils
+from ndscheduler.corescheduler import utils
 
 
 class UtilsTest(unittest.TestCase):

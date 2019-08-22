@@ -2,7 +2,7 @@
 
 from subprocess import call
 
-from ndscheduler import job
+from ndscheduler.corescheduler import job
 
 
 class ShellJob(job.JobBase):

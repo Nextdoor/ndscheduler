@@ -67,7 +67,7 @@ DATABASE_CONFIG_DICT = {
 
 # Postgres
 #
-# DATABASE_CLASS = 'ndscheduler.corescheduler.datastore.providers.postgresql.DatastorePostgres'
+# DATABASE_CLASS = 'ndscheduler.corescheduler.datastore.providers.postgres.DatastorePostgres'
 # DATABASE_CONFIG_DICT = {
 #     'user': 'username',
 #     'password': '',

@@ -67,7 +67,7 @@ DATABASE_CONFIG_DICT = {
 
 # Postgres
 #
-# DATABASE_CLASS = 'ndscheduler.corescheduler.datastore.providers.postgresql.DatastorePostgresql'
+# DATABASE_CLASS = 'ndscheduler.corescheduler.datastore.providers.postgresql.DatastorePostgres'
 # DATABASE_CONFIG_DICT = {
 #     'user': 'username',
 #     'password': '',
@@ -79,7 +79,7 @@ DATABASE_CONFIG_DICT = {
 
 # MySQL
 #
-# DATABASE_CLASS = 'ndscheduler.corescheduler.datastore.providers.mysql.DatastoreMysql'
+# DATABASE_CLASS = 'ndscheduler.corescheduler.datastore.providers.mysql.DatastoreMySQL'
 # DATABASE_CONFIG_DICT = {
 #     'user': 'username',
 #     'password': '',

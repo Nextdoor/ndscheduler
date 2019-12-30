@@ -9,9 +9,9 @@ import tornado.web
 import apscheduler.triggers.cron
 import apscheduler.triggers.interval
 
-from ndscheduler import constants
-from ndscheduler import utils
 from ndscheduler.server.handlers import base
+from ndscheduler.corescheduler import utils
+from ndscheduler.corescheduler import constants
 
 
 class Handler(base.BaseHandler):

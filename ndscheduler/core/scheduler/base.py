@@ -134,12 +134,12 @@ class SingletonScheduler (apscheduler_tornado.TornadoScheduler):
         arguments.extend(pub_args)
 
         scheduler_class = utils.import_from_path(settings.SCHEDULER_CLASS)
-        self.add_job(scheduler_class.run_job,
-                     trigger = trigger,
-                     args    = arguments,
-                     kwargs  = kwargs,
-                     name    = name,
-                     id      = job_id
+        self.add_job(scheduler_class.run_job,   # noqa
+                     trigger = trigger,         # noqa
+                     args    = arguments,       # noqa
+                     kwargs  = kwargs,          # noqa
+                     name    = name,            # noqa
+                     id      = job_id           # noqa
                  )
         return job_id
 

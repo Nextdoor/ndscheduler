@@ -92,8 +92,8 @@ class SchedulerManager:
                                             day, hour, minute, **kwargs)
 
     def add_trigger_job(self, job_class_string, name, pub_args=None,
-                trigger=None,
-                **kwargs):
+                        trigger=None,
+                        **kwargs):
         """Add a job. Job infomation will be persistent in postgres.
 
         This is a NON-BLOCKING operation, as internally, apscheduler calls wakeup()
@@ -111,7 +111,11 @@ class SchedulerManager:
         :return: String of job id, e.g., 6bca19736d374ef2b3df23eb278b512e
         :rtype: str
         """
-        return self.sched.add_trigger_scheduler_job(job_class_string, name, pub_args, trigger, **kwargs)
+        return self.sched.add_trigger_scheduler_job(job_class_string,
+                                                    name,
+                                                    pub_args,
+                                                    trigger,
+                                                    **kwargs)
 
     def pause_job(self, job_id):
         """Pauses the schedule of a job.

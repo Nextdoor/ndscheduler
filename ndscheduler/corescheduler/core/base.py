@@ -2,6 +2,7 @@
 
 import json
 
+from ndscheduler import settings
 from apscheduler.schedulers import tornado as apscheduler_tornado
 
 from ndscheduler.corescheduler import constants
@@ -150,7 +151,7 @@ class BaseScheduler (apscheduler_tornado.TornadoScheduler):
         return job_id
 
     def add_trigger_scheduler_job(self, job_class_string, name, pub_args, trigger,
-                          **kwargs):
+                                  **kwargs):
         """Add a job. Job infomation will be persistent in postgres.
 
         This is a NON-BLOCKING operation, as internally, apscheduler calls wakeup()

@@ -14,6 +14,8 @@ class BaseScheduler (apscheduler_tornado.TornadoScheduler):
 
     # Seconds to wake up to see if it's okay to run.
     DEFAULT_WAIT_SECONDS = 60
+    # Number of args in self.run_job
+    RUN_JOB_ARGS = 5
 
     def __init__(self, datastore_class_path, *args, **kwargs):
         self.datastore_class_path = datastore_class_path
@@ -177,8 +179,7 @@ class BaseScheduler (apscheduler_tornado.TornadoScheduler):
                 # 'task_name' is not an argument for modify_job.
                 del kwargs['job_class_string']
             if 'pub_args' in kwargs:
-                # Number of args before pub_args should match those in self.run_job
-                args = args[:5] + kwargs['pub_args']
+                args = args[:self.RUN_JOB_ARGS] + kwargs['pub_args']
                 del kwargs['pub_args']
             kwargs['args'] = args
 

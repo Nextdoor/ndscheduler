@@ -58,6 +58,23 @@ define(['utils',
           { "orderable": false, "className": "table-result-column", "targets": 5 }
         ]
       });
+      
+      $('#executions-table').on('draw.dt', function () {
+        var buttons = $('[data-action=show-result]');
+        _.each(buttons, function(btn) {
+          $(btn).on('click', _.bind(function(e) {
+            e.preventDefault();
+            $('#result-box').text(decodeURI($(btn).data('content')));
+            $('#execution-result-modal').modal();
+          }, this));
+
+          // If there's a query parameter result, we'll display the result.
+          if (!_.isUndefined(utils.getParameterByName('result'))) {
+            $('#result-box').text(executions[0].get('result'));
+            $('#execution-result-modal').modal();
+          }
+        });
+      });
     },
 
     /**
@@ -101,21 +118,6 @@ define(['utils',
       if (data.length) {
         this.table.fnClearTable();
         this.table.fnAddData(data);
-
-        var buttons = $('[data-action=show-result]');
-        _.each(buttons, function(btn) {
-          $(btn).on('click', _.bind(function(e) {
-            e.preventDefault();
-            $('#result-box').text(decodeURI($(btn).data('content')));
-            $('#execution-result-modal').modal();
-          }, this));
-
-          // If there's a query parameter result, we'll display the result.
-          if (!_.isUndefined(utils.getParameterByName('result'))) {
-            $('#result-box').text(executions[0].get('result'));
-            $('#execution-result-modal').modal();
-          }
-        });
       }
 
       utils.stopSpinner(this.spinner);

@@ -144,7 +144,7 @@ class Handler(base.BaseHandler):
 
         # Blocking operation.
         self.datastore.add_audit_log(job_id, self.json_args['name'],
-                                     constants.AUDIT_LOG_ADDED, self.username)
+                                     constants.AUDIT_LOG_ADDED, user=self.username)
 
         response = {
             'job_id': job_id}
@@ -164,7 +164,7 @@ class Handler(base.BaseHandler):
         self.scheduler_manager.remove_job(job_id)
 
         self.datastore.add_audit_log(job_id, job['name'], constants.AUDIT_LOG_DELETED,
-                                     self.username, json.dumps(job))
+                                     user=self.username, description=json.dumps(job))
 
     @tornado.concurrent.run_on_executor
     def delete_job(self, job_id):
@@ -248,7 +248,7 @@ class Handler(base.BaseHandler):
         # Audit log
         self.datastore.add_audit_log(
             job_id, job['name'], constants.AUDIT_LOG_MODIFIED,
-            self.username, self._generate_description_for_modify(old_job, job))
+            user=self.username, description=self._generate_description_for_modify(old_job, job))
 
     @tornado.concurrent.run_on_executor
     def modify_job(self, job_id):
@@ -304,7 +304,8 @@ class Handler(base.BaseHandler):
         # Blocking operation.
         job = self._get_job(job_id)
 
-        self.datastore.add_audit_log(job_id, job['name'], constants.AUDIT_LOG_PAUSED, self.username)
+        self.datastore.add_audit_log(job_id, job['name'],
+                                     constants.AUDIT_LOG_PAUSED, user=self.username)
 
         response = {
             'job_id': job_id}
@@ -330,7 +331,7 @@ class Handler(base.BaseHandler):
         # Blocking operation.
         job = self._get_job(job_id)
         self.datastore.add_audit_log(job_id, job['name'], constants.AUDIT_LOG_RESUMED,
-                                     self.username)
+                                     user=self.username)
 
         response = {
             'job_id': job_id}

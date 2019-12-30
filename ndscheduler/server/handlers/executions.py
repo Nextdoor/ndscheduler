@@ -3,12 +3,12 @@
 from datetime import datetime
 from datetime import timedelta
 
-import tornado.web
 import tornado.gen
+import tornado.web
 
-from ndscheduler import constants
-from ndscheduler import utils
-from ndscheduler.core.scheduler import base as scheduler_base
+from ndscheduler import settings
+from ndscheduler.corescheduler import constants
+from ndscheduler.corescheduler import utils
 from ndscheduler.server.handlers import base
 
 
@@ -122,12 +122,14 @@ class Handler(base.BaseHandler):
         job_name = utils.get_job_name(job)
         args = utils.get_job_args(job)
         kwargs = job.kwargs
-        execution_id = scheduler_base.SingletonScheduler.run_job(job_name,
-                                                                 job_id, *args, **kwargs)
+        scheduler = utils.import_from_path(settings.SCHEDULER_CLASS)
+        execution_id = scheduler.run_job(job_name, job_id, settings.DATABASE_CLASS,
+                                         self.datastore.db_config, self.datastore.table_names,
+                                         *args, **kwargs)
 
         # Audit log
         self.datastore.add_audit_log(job_id, job.name, constants.AUDIT_LOG_CUSTOM_RUN,
-                                     self.username, execution_id)
+                                     user=self.username, description=execution_id)
 
         response = {
             'execution_id': execution_id}

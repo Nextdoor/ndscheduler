@@ -4,8 +4,8 @@ import json
 
 import tornado.testing
 
-from ndscheduler import utils
-from ndscheduler.core import scheduler_manager
+from ndscheduler.corescheduler import scheduler_manager
+from ndscheduler.corescheduler import utils
 from ndscheduler.server import server
 from ndscheduler.server.handlers import jobs
 
@@ -58,7 +58,12 @@ class JobsTest(tornado.testing.AsyncHTTPTestCase):
         """This is required by tornado.testing."""
         # Shouldn't use singleton here. Or the test will reuse IOLoop and cause
         #   RuntimeError: IOLoop is closing
-        self.scheduler = scheduler_manager.SchedulerManager()
+        scp = 'ndscheduler.corescheduler.core.base.BaseScheduler'
+        dcp = 'ndscheduler.corescheduler.datastore.providers.sqlite.DatastoreSqlite'
+        self.scheduler = scheduler_manager.SchedulerManager(
+            scheduler_class_path=scp,
+            datastore_class_path=dcp
+        )
         self.server = server.SchedulerServer(self.scheduler)
         return self.server.application
 

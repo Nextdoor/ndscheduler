@@ -48,18 +48,24 @@ JOBS_TABLENAME = 'scheduler_jobs'
 EXECUTIONS_TABLENAME = 'scheduler_execution'
 AUDIT_LOGS_TABLENAME = 'scheduler_jobauditlog'
 
+DATABASE_TABLENAMES = {
+    'jobs_tablename': JOBS_TABLENAME,
+    'executions_tablename': EXECUTIONS_TABLENAME,
+    'auditlogs_tablename': AUDIT_LOGS_TABLENAME
+}
+
 # See different database providers in ndscheduler/core/datastore/providers/
 
 # SQLite
 #
-DATABASE_CLASS = 'ndscheduler.core.datastore.providers.sqlite.DatastoreSqlite'
+DATABASE_CLASS = 'ndscheduler.corescheduler.datastore.providers.sqlite.DatastoreSqlite'
 DATABASE_CONFIG_DICT = {
     'file_path': 'datastore.db'
 }
 
 # Postgres
 #
-# DATABASE_CLASS = 'ndscheduler.core.datastore.providers.postgresql.DatastorePostgresql'
+# DATABASE_CLASS = 'ndscheduler.corescheduler.datastore.providers.postgres.DatastorePostgres'
 # DATABASE_CONFIG_DICT = {
 #     'user': 'username',
 #     'password': '',
@@ -71,7 +77,7 @@ DATABASE_CONFIG_DICT = {
 
 # MySQL
 #
-# DATABASE_CLASS = 'ndscheduler.core.datastore.providers.mysql.DatastoreMysql'
+# DATABASE_CLASS = 'ndscheduler.corescheduler.datastore.providers.mysql.DatastoreMySQL'
 # DATABASE_CONFIG_DICT = {
 #     'user': 'username',
 #     'password': '',
@@ -82,7 +88,7 @@ DATABASE_CONFIG_DICT = {
 
 # ndschedule is based on apscheduler. Here we can customize the apscheduler's main scheduler class
 # Please see ndscheduler/core/scheduler/base.py
-SCHEDULER_CLASS = 'ndscheduler.core.scheduler.base.SingletonScheduler'
+SCHEDULER_CLASS = 'ndscheduler.corescheduler.core.base.BaseScheduler'
 
 # Packages that contains job classes, e.g., simple_scheduler.jobs
 JOB_CLASS_PACKAGES = []

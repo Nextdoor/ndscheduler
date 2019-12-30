@@ -1,6 +1,6 @@
 """A sample job that prints string."""
 
-from ndscheduler import job
+from ndscheduler.corescheduler import job
 
 
 class AwesomeJob(job.JobBase):

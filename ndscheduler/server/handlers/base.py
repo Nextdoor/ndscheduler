@@ -8,7 +8,6 @@ import json
 
 from concurrent import futures
 
-import tornado.ioloop
 import tornado.web
 
 from ndscheduler import settings

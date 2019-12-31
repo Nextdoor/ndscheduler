@@ -145,9 +145,19 @@ class BaseScheduler (apscheduler_tornado.TornadoScheduler):
                      datastore.db_config, datastore.table_names]
         arguments.extend(pub_args)
 
-        self.add_job(self.run_job,
-                     'cron', month=month, day=day, day_of_week=day_of_week, hour=hour,
-                     minute=minute, args=arguments, kwargs=kwargs, name=name, id=job_id)
+        self.add_job(
+                     func        = self.run_job,   # noqa
+                     trigger     = 'cron',         # noqa
+                     month       = month,          # noqa
+                     day         = day,            # noqa
+                     day_of_week = day_of_week,    # noqa
+                     hour        = hour,           # noqa
+                     minute      = minute,         # noqa
+                     args        = arguments,      # noqa
+                     kwargs      = kwargs,         # noqa
+                     name        = name,           # noqa
+                     id          = job_id          # noqa
+                 )
         return job_id
 
     def add_trigger_scheduler_job(self, job_class_string, name, pub_args, trigger,
@@ -177,11 +187,13 @@ class BaseScheduler (apscheduler_tornado.TornadoScheduler):
 
         job_id = utils.generate_uuid()
 
-        arguments = [job_class_string, job_id]
+        datastore = self._lookup_jobstore('default')
+        arguments = [job_class_string, job_id, self.datastore_class_path,
+                     datastore.db_config, datastore.table_names]
         arguments.extend(pub_args)
 
-        scheduler_class = utils.import_from_path(settings.SCHEDULER_CLASS)
-        self.add_job(scheduler_class.run_job,   # noqa
+        self.add_job(
+                     func    = self.run_job,    # noqa
                      trigger = trigger,         # noqa
                      args    = arguments,       # noqa
                      kwargs  = kwargs,          # noqa

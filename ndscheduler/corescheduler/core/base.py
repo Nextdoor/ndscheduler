@@ -177,7 +177,7 @@ class BaseScheduler (apscheduler_tornado.TornadoScheduler):
                 # 'task_name' is not an argument for modify_job.
                 del kwargs['job_class_string']
             if 'pub_args' in kwargs:
-                args = args[:2] + kwargs['pub_args']
+                args = args[:constants.JOB_ARGS] + kwargs['pub_args']
                 del kwargs['pub_args']
             kwargs['args'] = args
 

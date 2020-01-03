@@ -9,6 +9,8 @@ import uuid
 
 import pytz
 
+from ndscheduler.corescheduler import constants
+
 
 def import_from_path(path):
     """Import a module / class from a path string.
@@ -47,7 +49,7 @@ def get_job_args(job):
     :return: task arguments
     :rtype: list of str
     """
-    return job.args[5:]
+    return job.args[constants.JOB_ARGS:]
 
 
 def get_job_kwargs(job):

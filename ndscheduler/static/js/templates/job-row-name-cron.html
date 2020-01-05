@@ -1,0 +1,18 @@
+<a href="/#jobs/<%= job_id %>"><i class="fa fa-link fa-lg"></i></a>
+
+<a href="#" title="<%= job_class %>(<%= job_pubargs %>)"
+   data-toggle="modal"
+   data-target="#edit-job-modal"
+   data-id="<%= job_id %>"
+   data-job-name="<%= job_name %>"
+   data-job-trigtype="cron"
+   data-job-month="<%= job_month %>"
+   data-job-day-of-week="<%= job_day_of_week %>"
+   data-job-day="<%= job_day %>"
+   data-job-hour="<%= job_hour %>"
+   data-job-minute="<%= job_minute %>"
+   data-job-task="<%= job_class %>"
+   data-job-active="<%= job_active %>"
+   data-job-pubargs='<%= job_pubargs %>'>
+    <%= job_name %>
+</a>

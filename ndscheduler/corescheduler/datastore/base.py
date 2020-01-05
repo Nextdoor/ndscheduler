@@ -2,6 +2,9 @@
 
 import dateutil.tz
 import dateutil.parser
+import apscheduler.triggers.cron
+import apscheduler.triggers.interval
+
 from apscheduler.jobstores import sqlalchemy as sched_sqlalchemy
 from sqlalchemy import desc, select, MetaData
 
@@ -125,7 +128,16 @@ class DatastoreBase(sched_sqlalchemy.SQLAlchemyJobStore):
                 'name': job.name,
                 'task_name': utils.get_job_name(job),
                 'pub_args': utils.get_job_args(job)}
-            return_json['job'].update(utils.get_cron_strings(job))
+
+            if isinstance(job.trigger, apscheduler.triggers.cron.CronTrigger):
+                return_json.update(utils.get_cron_strings(job))
+                return_json["trigger_type"] = "cron"
+            elif isinstance(job.trigger, apscheduler.triggers.interval.IntervalTrigger):
+                return_json["interval"] = job.trigger.interval.total_seconds()
+                return_json["trigger_type"] = "interval"
+            else:
+                return_json["trigger_type"] = "unknown"
+
         return return_json
 
     def get_time_isoformat_from_db(self, time_object):

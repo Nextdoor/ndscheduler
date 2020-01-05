@@ -20,6 +20,26 @@ require.config({
   }
 });
 
+function secondsToStr( seconds_in ) {
+    let temp = seconds_in;
+    const years = Math.floor( temp / 31536000 ),
+          days = Math.floor( ( temp %= 31536000 ) / 86400 ),
+          hours = Math.floor( ( temp %= 86400 ) / 3600 ),
+          minutes = Math.floor( ( temp %= 3600 ) / 60 ),
+          seconds = temp % 60;
+
+    if ( days || hours || seconds || minutes ) {
+      return ( years ? years + "y " : "" ) +
+      ( days ? days + "d " : "" ) +
+      ( hours ? hours + "h " : ""  ) +
+      ( minutes ? minutes + "m " : "" ) +
+      Number.parseFloat( seconds ).toFixed( 2 ) + "s";
+    }
+
+    return "< 1s";
+}
+
+
 define(['backbone', 'vendor/moment-timezone-with-data'], function(backbone, moment) {
   'use strict';
 
@@ -31,9 +51,18 @@ define(['backbone', 'vendor/moment-timezone-with-data'], function(backbone, mome
      * @return {string} schedule string for this job.
      */
     getScheduleString: function() {
-      return 'minute: ' + this.get('minute') + ', hour: ' + this.get('hour') +
-          ', day: ' + this.get('day') + ', month: ' + this.get('month') +
-          ', day of week: ' + this.get('day_of_week');
+      var trig = this.get('trigger_type');
+
+      if (trig == 'cron')
+        return 'Cron: minute: ' + this.get('minute') + ', hour: ' + this.get('hour') +
+            ', day: ' + this.get('day') + ', month: ' + this.get('month') +
+            ', day of week: ' + this.get('day_of_week');
+      else if (trig == 'interval')
+        return 'Interval: ' + secondsToStr(this.get('interval'));
+      else
+        return 'Unknown trigger type!';
+
+
     },
 
     /**

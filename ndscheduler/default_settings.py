@@ -1,8 +1,6 @@
 """Default settings."""
 
-import logging
 import os
-
 
 #
 # Development mode or production mode
@@ -91,12 +89,6 @@ DATABASE_CONFIG_DICT = {
 # ndschedule is based on apscheduler. Here we can customize the apscheduler's main scheduler class
 # Please see ndscheduler/core/scheduler/base.py
 SCHEDULER_CLASS = 'ndscheduler.corescheduler.core.base.BaseScheduler'
-
-#
-# Set logging level
-#
-logging.getLogger().setLevel(logging.INFO)
-
 
 # Packages that contains job classes, e.g., simple_scheduler.jobs
 JOB_CLASS_PACKAGES = []

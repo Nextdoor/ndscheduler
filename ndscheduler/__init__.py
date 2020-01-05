@@ -11,17 +11,17 @@ will raise an exception.
 """
 
 import importlib
-import logging
 import os
-import sys
+import logging
 
 from ndscheduler import default_settings
 
+# import sys
 logger = logging.getLogger()
-ch = logging.StreamHandler(sys.stdout)
-formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-ch.setFormatter(formatter)
-logger.addHandler(ch)
+# ch = logging.StreamHandler(sys.stdout)
+# formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+# ch.setFormatter(formatter)
+# logger.addHandler(ch)
 
 
 ENVIRONMENT_VARIABLE = 'NDSCHEDULER_SETTINGS_MODULE'

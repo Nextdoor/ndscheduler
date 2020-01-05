@@ -2,6 +2,7 @@
 
 import json
 
+from ndscheduler import settings
 from apscheduler.schedulers import tornado as apscheduler_tornado
 
 from ndscheduler.corescheduler import constants
@@ -144,9 +145,61 @@ class BaseScheduler (apscheduler_tornado.TornadoScheduler):
                      datastore.db_config, datastore.table_names]
         arguments.extend(pub_args)
 
-        self.add_job(self.run_job,
-                     'cron', month=month, day=day, day_of_week=day_of_week, hour=hour,
-                     minute=minute, args=arguments, kwargs=kwargs, name=name, id=job_id)
+        self.add_job(
+                     func        = self.run_job,   # noqa
+                     trigger     = 'cron',         # noqa
+                     month       = month,          # noqa
+                     day         = day,            # noqa
+                     day_of_week = day_of_week,    # noqa
+                     hour        = hour,           # noqa
+                     minute      = minute,         # noqa
+                     args        = arguments,      # noqa
+                     kwargs      = kwargs,         # noqa
+                     name        = name,           # noqa
+                     id          = job_id          # noqa
+                 )
+        return job_id
+
+    def add_trigger_scheduler_job(self, job_class_string, name, pub_args, trigger,
+                                  **kwargs):
+        """Add a job. Job infomation will be persistent in postgres.
+
+        This is a NON-BLOCKING operation, as internally, apscheduler calls wakeup()
+        that is async.
+
+        :param str job_class_string: String for job class, e.g., myscheduler.jobs.a_job.NiceJob
+        :param str name: String for job name, e.g., Check Melissa job.
+        :param str pub_args: List for arguments passed to publish method of a task.
+        :param str month: String for month cron string, e.g., */10
+        :param str day_of_week: String for day of week cron string, e.g., 1-6
+        :param str day: String for day cron string, e.g., */1
+        :param str hour: String for hour cron string, e.g., */2
+        :param str minute: String for minute cron string, e.g., */3
+        :param dict kwargs: Other keyword arguments passed to run_job function.
+        :return: String of job id, e.g., 6bca19736d374ef2b3df23eb278b512e
+        :rtype: str
+
+        Returns:
+            String of job id, e.g., 6bca19736d374ef2b3df23eb278b512e
+        """
+        if not pub_args:
+            pub_args = []
+
+        job_id = utils.generate_uuid()
+
+        datastore = self._lookup_jobstore('default')
+        arguments = [job_class_string, job_id, self.datastore_class_path,
+                     datastore.db_config, datastore.table_names]
+        arguments.extend(pub_args)
+
+        self.add_job(
+                     func    = self.run_job,    # noqa
+                     trigger = trigger,         # noqa
+                     args    = arguments,       # noqa
+                     kwargs  = kwargs,          # noqa
+                     name    = name,            # noqa
+                     id      = job_id           # noqa
+                 )
         return job_id
 
     def modify_scheduler_job(self, job_id, **kwargs):

@@ -99,6 +99,32 @@ class SchedulerManager:
         return self.sched.add_scheduler_job(job_class_string, name, pub_args, month, day_of_week,
                                             day, hour, minute, **kwargs)
 
+    def add_trigger_job(self, job_class_string, name, pub_args=None,
+                        trigger=None,
+                        **kwargs):
+        """Add a job. Job infomation will be persistent in postgres.
+
+        This is a NON-BLOCKING operation, as internally, apscheduler calls wakeup()
+        that is async.
+
+        :param str job_class_string: String for job class, e.g., myscheduler.jobs.a_job.NiceJob
+        :param str name: String for job name, e.g., Check Melissa job.
+        :param str pub_args: List for arguments passed to publish method of a task.
+        :param str month: String for month cron string, e.g., */10
+        :param str day_of_week: String for day of week cron string, e.g., 1-6
+        :param str day: String for day cron string, e.g., */1
+        :param str hour: String for hour cron string, e.g., */2
+        :param str minute: String for minute cron string, e.g., */3
+        :param dict kwargs: Other keyword arguments passed to run_job function.
+        :return: String of job id, e.g., 6bca19736d374ef2b3df23eb278b512e
+        :rtype: str
+        """
+        return self.sched.add_trigger_scheduler_job(job_class_string,
+                                                    name,
+                                                    pub_args,
+                                                    trigger,
+                                                    **kwargs)
+
     def pause_job(self, job_id):
         """Pauses the schedule of a job.
         This is a NON-BLOCKING operation, as internally, apscheduler calls wakeup()

@@ -1,5 +1,5 @@
 """Represents Postgres datastore."""
-
+import sys
 from ndscheduler.corescheduler.datastore import base
 
 
@@ -18,7 +18,15 @@ class DatastorePostgres(base.DatastoreBase):
         }
         :return: string db url
         """
-        return 'postgresql://%s:%s@%s:%d/%s?sslmode=%s' % (
+
+        # Work under Pypy, which doesn't have the default psycopg2
+        if '__pypy__' in sys.builtin_module_names:
+            db_wrapper = 'postgresql+psycopg2cffi'
+        else:
+            db_wrapper = 'postgresql'
+
+        return '%s://%s:%s@%s:%d/%s?sslmode=%s' % (
+            db_wrapper,
             self.db_config['user'],
             self.db_config['password'],
             self.db_config['hostname'],

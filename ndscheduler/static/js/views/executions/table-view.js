@@ -52,6 +52,7 @@ define(['utils',
       this.table = $('#executions-table').dataTable({
         // Sorted by last updated time
         'order': [[3, 'desc']],
+        "iDisplayLength": 50,
         // Disable sorting on result column
         "columnDefs": [
           { "orderable": false, "className": "table-result-column", "targets": 5 }

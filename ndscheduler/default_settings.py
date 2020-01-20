@@ -98,5 +98,12 @@ SCHEDULER_CLASS = 'ndscheduler.corescheduler.core.base.BaseScheduler'
 logging.getLogger().setLevel(logging.INFO)
 
 
+# To enable basic authentication, define the 'user' and 'pass'
+BASIC_AUTH_CONFIG = {
+    'user': '',
+    'pass': '',
+    'realm': 'Nextdoor Scheduler'
+}
+
 # Packages that contains job classes, e.g., simple_scheduler.jobs
 JOB_CLASS_PACKAGES = []

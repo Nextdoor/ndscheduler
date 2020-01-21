@@ -66,7 +66,8 @@ define(['utils',
       // Initialize data table
       this.table = $('#jobs-table').dataTable({
         // Sorted by job name
-        'order': [[0, 'asc']]
+        'order': [[0, 'asc']],
+        "iDisplayLength": 25,
       });
     },
 
@@ -113,34 +114,61 @@ define(['utils',
 
       var data = [];
 
-      // Build up data to pass to data tables
-      _.each(jobs, function(job) {
-        var jobObj = job.toJSON();
-        data.push([
-          _.template(JobRowNameHtml)({
+// Build up data to pass to data tables
+				_.each(jobs, function(job) {
+					var jobObj = job.toJSON();
+
+					console.log("Job:", jobObj)
+
+
+          var jobRowNameArguments = {
             'job_name': _.escape(jobObj.name),
             'job_schedule': job.getScheduleString(),
             'next_run_at': job.getNextRunTimeHTMLString(),
             'job_id': jobObj.job_id,
             'job_class': _.escape(jobObj.job_class_string),
-            'job_month': _.escape(jobObj.month),
-            'job_day_of_week': _.escape(jobObj.day_of_week),
-            'job_day': _.escape(jobObj.day),
-            'job_hour': _.escape(jobObj.hour),
-            'job_minute': _.escape(jobObj.minute),
             'job_active': job.getActiveString(),
-            'job_pubargs': _.escape(job.getPubArgsString())
-          }),
-          job.getScheduleString(),
-          job.getNextRunTimeHTMLString(),
-          _.template(JobRowActionHtml)({
-            'job_name': _.escape(jobObj.name),
-            'job_id': jobObj.job_id,
-            'job_class': _.escape(jobObj.job_class_string),
-            'job_pubargs': _.escape(job.getPubArgsString())
-          })
-        ]);
-      });
+            'job_pubargs': _.escape(job.getPubArgsString()),
+            'job_sched_type': _.escape("Unknown"),
+            'job_month': "",
+            'job_day_of_week': "",
+            'job_day': "",
+            'job_hour': "",
+            'job_minute': "",
+            'job_interval': ""
+          }
+
+          if (jobObj.trigger_type == 'cron') {
+            jobRowNameArguments['job_sched_type'] = _.escape("Cron");
+            jobRowNameArguments['job_month'] = _.escape(jobObj.month);
+            jobRowNameArguments['job_day_of_week'] = _.escape(jobObj.day_of_week);
+            jobRowNameArguments['job_day'] = _.escape(jobObj.day);
+            jobRowNameArguments['job_hour'] = _.escape(jobObj.hour);
+            jobRowNameArguments['job_minute'] = _.escape(jobObj.minute);
+          }
+
+          else if (jobObj.trigger_type == 'interval')	{
+            jobRowNameArguments['job_sched_type'] = _.escape("Interval");
+            jobRowNameArguments['job_interval'] = _.escape(jobObj.interval);
+          }
+          else
+					{
+            jobRowNameArguments['job_sched_type'] = _.escape("Unknown");
+          }
+
+
+						data.push([
+							_.template(JobRowNameHtml)(jobRowNameArguments),
+							job.getScheduleString(),
+							job.getNextRunTimeHTMLString(),
+							_.template(JobRowActionHtml)({
+								'job_name': _.escape(jobObj.name),
+								'job_id': jobObj.job_id,
+								'job_class': _.escape(jobObj.job_class_string),
+								'job_pubargs': _.escape(job.getPubArgsString())
+							})
+						]);
+				});
 
       if (data.length) {
         this.table.fnClearTable();

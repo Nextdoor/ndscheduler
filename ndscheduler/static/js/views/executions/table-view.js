@@ -52,12 +52,13 @@ define(['utils',
       this.table = $('#executions-table').dataTable({
         // Sorted by last updated time
         'order': [[3, 'desc']],
+        "iDisplayLength": 25,
         // Disable sorting on result column
         "columnDefs": [
           { "orderable": false, "className": "table-result-column", "targets": 5 }
         ]
       });
-      
+
       $('#executions-table').on('draw.dt', function () {
         var buttons = $('[data-action=show-result]');
         _.each(buttons, function(btn) {

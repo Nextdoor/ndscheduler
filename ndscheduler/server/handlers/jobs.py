@@ -224,13 +224,13 @@ class Handler(base.BaseHandler):
 
 
         if trigger == 'cron':
-            descr = f"{trigger}: minute=\"{trigger_params['minute']}\" "\
-                    f"hour=\"{trigger_params['hour']}\" " \
-                    f"day=\"{trigger_params['day']}\" " \
-                    f"month=\"{trigger_params['month']}\" " \
-                    f"minute=\"{trigger_params['day_of_week']}\""
+            descr = "%s: minute=\"%s\" hour=\"%s\" day=\"%s\" month=\"%s\" " \
+                    "day_of_week=\"%s\"" % (trigger, trigger_params['minute'],
+                                            trigger_params['hour'], trigger_params['day'],
+                                            trigger_params['month'], trigger_params['day_of_week']
+                                            )
         elif trigger == 'interval':
-            descr = f"{trigger}: interval=\"{trigger_params['interval']}\""
+            descr = "%s: interval=\"%d\"" % (trigger, trigger_params['interval'])
         else:
             descr = "unknown"
 

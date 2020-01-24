@@ -393,6 +393,7 @@ class Handler(base.BaseHandler):
                 raise tornado.web.HTTPError(400, reason='Require this parameter: %s' % field)
 
         #TODO better validating
+<<<<<<< HEAD
         if self.json_args['trigger'] == 'cron':
             valid_cron_string = False
             at_least_one_required_fields = ['month', 'day', 'hour', 'minute', 'day_of_week']
@@ -403,6 +404,19 @@ class Handler(base.BaseHandler):
 
             if not valid_cron_string:
                 raise tornado.web.HTTPError(400, reason=('Require at least one of following parameters in "trigger_params":'
+=======
+        at_least_one_required_fields = ['month', 'day', 'hour', 'minute', 'day_of_week']
+        valid_cron_string = False
+        for field in at_least_one_required_fields:
+            if field in self.json_args:
+                valid_cron_string = True
+                break
+        #TODO ignore validating
+        valid_cron_string = True
+
+        if not valid_cron_string:
+            raise tornado.web.HTTPError(400, reason=('Require at least one of following parameters:'
+>>>>>>> 0e97202313da110e8feb57e5e50c2367ff4a286c
                                                      ' %s' % str(at_least_one_required_fields)))
 
         if self.json_args['trigger'] == 'interval':

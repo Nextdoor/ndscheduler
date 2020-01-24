@@ -27,15 +27,17 @@ class SchedulerManagerTest(tornado.testing.AsyncTestCase):
         task_name = 'hello.world'
         name = 'it is hello world'
         pub_args = ('1', '2', '3')
-        month = '*/1'
-        day_of_week = 'sat'
-        day = '*/2'
-        hour = '*/3'
-        minute = '*/4'
+        trigger_params = dict(
+            month = '*/1',
+            day_of_week = 'sat',
+            day = '*/2',
+            hour = '*/3',
+            minute = '*/4'
+            )
+        trigger = 'cron'
 
         # non-blocking operation
-        job_id = self.scheduler.add_job(task_name, name, pub_args, month, day_of_week, day,
-                                        hour, minute, languages='en-us')
+        job_id = self.scheduler.add_job(task_name, name, trigger, pub_args, trigger_params, languages='en-us')
 
         self.assertTrue(len(job_id), 32)
 
@@ -50,17 +52,17 @@ class SchedulerManagerTest(tornado.testing.AsyncTestCase):
         # Year
         self.assertEqual(str(job.trigger.fields[0]), '*')
         # Month
-        self.assertEqual(str(job.trigger.fields[1]), month)
+        self.assertEqual(str(job.trigger.fields[1]), trigger_params['month'])
         # day of month
-        self.assertEqual(str(job.trigger.fields[2]), day)
+        self.assertEqual(str(job.trigger.fields[2]), trigger_params['day'])
         # week
         self.assertEqual(str(job.trigger.fields[3]), '*')
         # day of week
-        self.assertEqual(str(job.trigger.fields[4]), day_of_week)
+        self.assertEqual(str(job.trigger.fields[4]), trigger_params['day_of_week'])
         # hour
-        self.assertEqual(str(job.trigger.fields[5]), hour)
+        self.assertEqual(str(job.trigger.fields[5]), trigger_params['hour'])
         # minute
-        self.assertEqual(str(job.trigger.fields[6]), minute)
+        self.assertEqual(str(job.trigger.fields[6]), trigger_params['minute'])
         # second
         self.assertEqual(str(job.trigger.fields[7]), '0')
 
@@ -69,26 +71,31 @@ class SchedulerManagerTest(tornado.testing.AsyncTestCase):
         job_class_string = 'hello.world2'
         name = 'it is hello world 2'
         pub_args = ('1', '2', '3')
-        month = '*/1'
-        day_of_week = 'sat'
-        day = '*/2'
-        hour = '*/3'
-        minute = '*/4'
+        trigger_params = dict(
+            month = '*/1',
+            day_of_week = 'sat',
+            day = '*/2',
+            hour = '*/3',
+            minute = '*/4'
+            )
+        trigger = 'cron'
 
         # non-blocking operation
-        job_id = self.scheduler.add_job(job_class_string, name, pub_args, month, day_of_week,
-                                        day, hour, minute)
+        job_id = self.scheduler.add_job(job_class_string, name, trigger, pub_args, trigger_params)
 
         self.assertTrue(len(job_id), 32)
 
         job_class_string = 'hello.world1234'
         args = ['5', '6', '7']
         name = 'hello world 3'
-        month = '*/6'
+        trigger = 'cron'
+        trigger_params = dict(
+            month = '*/6'
+            )
 
         # non-blocking operation
-        self.scheduler.modify_job(job_id, name=name, job_class_string=job_class_string,
-                                  pub_args=args, month=month)
+        self.scheduler.modify_job(job_id, name=name, job_class_string=job_class_string, trigger=trigger,
+                                  pub_args=args, trigger_params=trigger_params)
 
         # blocking operation
         job = self.scheduler.get_job(job_id)
@@ -99,4 +106,4 @@ class SchedulerManagerTest(tornado.testing.AsyncTestCase):
                      None, None]
         arguments += args
         self.assertEqual(list(job.args), arguments)
-        self.assertEqual(str(job.trigger.fields[1]), month)
+        self.assertEqual(str(job.trigger.fields[1]), trigger_params['month'])

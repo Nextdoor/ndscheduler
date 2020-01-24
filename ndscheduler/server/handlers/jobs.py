@@ -387,21 +387,24 @@ class Handler(base.BaseHandler):
 
         :raises: HTTPError(400: Bad arguments).
         """
-        all_required_fields = ['name', 'job_class_string']
+        all_required_fields = ['name', 'job_class_string','trigger','trigger_params']
         for field in all_required_fields:
             if field not in self.json_args:
                 raise tornado.web.HTTPError(400, reason='Require this parameter: %s' % field)
 
         #TODO better validating
-        at_least_one_required_fields = ['month', 'day', 'hour', 'minute', 'day_of_week']
-        valid_cron_string = False
-        for field in at_least_one_required_fields:
-            if field in self.json_args:
-                valid_cron_string = True
-                break
-        #TODO ignore validating
-        valid_cron_string = True
+        if self.json_args['trigger'] == 'cron':
+            valid_cron_string = False
+            at_least_one_required_fields = ['month', 'day', 'hour', 'minute', 'day_of_week']
+            for field in at_least_one_required_fields:
+                if field in self.json_args['trigger_params']:
+                    valid_cron_string = True
+                    break
 
-        if not valid_cron_string:
-            raise tornado.web.HTTPError(400, reason=('Require at least one of following parameters:'
+            if not valid_cron_string:
+                raise tornado.web.HTTPError(400, reason=('Require at least one of following parameters in "trigger_params":'
                                                      ' %s' % str(at_least_one_required_fields)))
+
+        if self.json_args['trigger'] == 'interval':
+            if 'interval' not in self.json_args['trigger_params']:
+                raise tornado.web.HTTPError(400, reason=('Require the parameter "interval" in "trigger_params".'))

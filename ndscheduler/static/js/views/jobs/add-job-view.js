@@ -103,10 +103,14 @@ define(['utils',
           trigger_params.hour = $('#input-job-hour').val();
           trigger_params.minute = $('#input-job-minute').val();
         } else if(trigger.toLowerCase() == "interval"){
-          trigger_params.days = parseInt($('#input-job-days').val());
-          trigger_params.hours = parseInt($('#input-job-hours').val());
-          trigger_params.minutes = parseInt($('#input-job-minutes').val());
-          trigger_params.seconds = parseInt($('#input-job-seconds').val());
+          var seconds = parseInt($('#input-job-seconds').val());
+          var minutes = parseInt($('#input-job-minutes').val());
+          var hours = parseInt($('#input-job-hours').val());
+          var days = parseInt($('#input-job-days').val());
+
+          var interval_seconds = 86400 * days + 3600 * hours + 60 * minutes + seconds;
+
+          trigger_params.interval = interval_seconds;
         }
 
 

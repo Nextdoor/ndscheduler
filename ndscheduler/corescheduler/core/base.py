@@ -141,6 +141,10 @@ class BaseScheduler (apscheduler_tornado.TornadoScheduler):
                      datastore.db_config, datastore.table_names]
         arguments.extend(pub_args)
 
+        # Rename interval to seconds for calling apscheduler's reschedule API
+        if 'interval' in trigger_params:
+            trigger_params['seconds'] = int(trigger_params.pop('interval'))
+
         job = self.add_job(func=self.run_job,
                            trigger=trigger,
                            args=arguments,

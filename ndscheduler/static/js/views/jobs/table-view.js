@@ -118,9 +118,6 @@ define(['utils',
 				_.each(jobs, function(job) {
 					var jobObj = job.toJSON();
 
-					console.log("Job:", jobObj)
-
-
           var jobRowNameArguments = {
             'job_name': _.escape(jobObj.name),
             'job_schedule': job.getScheduleString(),
@@ -129,35 +126,11 @@ define(['utils',
             'job_class': _.escape(jobObj.job_class_string),
             'job_active': job.getActiveString(),
             'job_pubargs': _.escape(job.getPubArgsString()),
-            'job_sched_type': _.escape("Unknown"),
-            'job_month': "",
-            'job_day_of_week': "",
-            'job_day': "",
-            'job_hour': "",
-            'job_minute': "",
-            'job_interval': ""
+            'job_trigger': _.escape(jobObj.trigger),
+            'job_trigger_params': _.escape(JSON.stringify(jobObj.trigger_params)),
           }
 
-          if (jobObj.trigger_type == 'cron') {
-            jobRowNameArguments['job_sched_type'] = _.escape("Cron");
-            jobRowNameArguments['job_month'] = _.escape(jobObj.month);
-            jobRowNameArguments['job_day_of_week'] = _.escape(jobObj.day_of_week);
-            jobRowNameArguments['job_day'] = _.escape(jobObj.day);
-            jobRowNameArguments['job_hour'] = _.escape(jobObj.hour);
-            jobRowNameArguments['job_minute'] = _.escape(jobObj.minute);
-          }
-
-          else if (jobObj.trigger_type == 'interval')	{
-            jobRowNameArguments['job_sched_type'] = _.escape("Interval");
-            jobRowNameArguments['job_interval'] = _.escape(jobObj.interval);
-          }
-          else
-					{
-            jobRowNameArguments['job_sched_type'] = _.escape("Unknown");
-          }
-
-
-						data.push([
+					data.push([
 							_.template(JobRowNameHtml)(jobRowNameArguments),
 							job.getScheduleString(),
 							job.getNextRunTimeHTMLString(),

@@ -13,7 +13,8 @@ class SimpleServer(server.SchedulerServer):
                 job_class_string='simple_scheduler.jobs.sample_job.AwesomeJob',
                 name='My Awesome Job',
                 pub_args=['first parameter', {'second parameter': 'can be a dict'}],
-                minute='*/1')
+                trigger='cron',
+                trigger_params={'minute': '*/1'})
 
 
 if __name__ == "__main__":

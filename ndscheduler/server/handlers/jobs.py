@@ -6,6 +6,9 @@ import tornado.concurrent
 import tornado.gen
 import tornado.web
 
+import apscheduler.triggers.cron
+import apscheduler.triggers.interval
+
 from ndscheduler.corescheduler import constants
 from ndscheduler.corescheduler import utils
 from ndscheduler.server.handlers import base
@@ -42,7 +45,19 @@ class Handler(base.BaseHandler):
             'job_class_string': utils.get_job_name(job),
             'pub_args': utils.get_job_args(job)}
 
-        return_dict.update(utils.get_cron_strings(job))
+        if isinstance(job.trigger, apscheduler.triggers.cron.CronTrigger):
+            return_dict["trigger"] = "cron"
+            return_dict["trigger_params"] = utils.get_cron_strings(job)
+        elif isinstance(job.trigger, apscheduler.triggers.interval.IntervalTrigger):
+            return_dict["trigger"] = "interval"
+            trigger_params = {
+                'interval': job.trigger.interval.total_seconds()
+            }
+            return_dict["trigger_params"] = trigger_params
+        else:
+            return_dict["trigger"] = "unknown"
+            return_dict["trigger_params"] = {}
+
         return return_dict
 
     @tornado.concurrent.run_on_executor
@@ -182,20 +197,59 @@ class Handler(base.BaseHandler):
         self.set_status(200)
         self.finish(response)
 
-    def _generate_description_for_item(self, old_job, new_job, item):
+    def _generate_description_for_item(self, item_name, old_item, new_item):
         """Returns a diff for one field of a job.
 
-
-        :param dict old_job: Dict for old job.
-        :param dict new_job: Dict for new job after modification.
+        :param str item_name: Description of the item
+        :param old_item: Item of old job.
+        :param new_item: Item of modified job.
 
         :return: String for description.
         :rtype: str
         """
-        if old_job[item] != new_job[item]:
+        if old_item != new_item:
             return ('<b>%s</b>: <font color="red">%s</font> =>'
-                    ' <font color="green">%s</font><br>') % (item, old_job[item], new_job[item])
+                    ' <font color="green">%s</font><br>') % (item_name, old_item, new_item)
         return ''
+
+    def _generate_trigger_description(self, trigger, trigger_params):
+        """Returns a trigger description for the job
+
+        :param str trigger: Trigger of the job
+        :param dict trigger_params: Parameters of the trigger
+
+        :return: Description of the trigger
+        :rtype: str
+        """
+
+
+        if trigger == 'cron':
+            descr = f"{trigger}: minute=\"{trigger_params['minute']}\" "\
+                    f"hour=\"{trigger_params['hour']}\" " \
+                    f"day=\"{trigger_params['day']}\" " \
+                    f"month=\"{trigger_params['month']}\" " \
+                    f"minute=\"{trigger_params['day_of_week']}\""
+        elif trigger == 'interval':
+            descr = f"{trigger}: interval=\"{trigger_params['interval']}\""
+        else:
+            descr = "unknown"
+
+        return descr
+
+    def _generate_pubargs_description(self, pub_args):
+        """Generates description text for pub_args.
+
+        :param pub_args: List or tuple of pup_args.
+
+        :return: String description of pup_args.
+        :rtype: str
+        """
+
+        if isinstance(pub_args, tuple):
+            return str(list(pub_args))
+        else:
+            return str(pub_args)
+
 
     def _generate_description_for_modify(self, old_job, new_job):
         """Generates description text after modifying a job.
@@ -206,19 +260,16 @@ class Handler(base.BaseHandler):
         :return: String for description.
         :rtype: str
         """
-        description = ''
-        items = [
-            'name',
-            'job_class_string',
-            'pub_args',
-            'minute',
-            'hour',
-            'day',
-            'month',
-            'day_of_week'
-        ]
-        for item in items:
-            description += self._generate_description_for_item(old_job, new_job, item)
+
+        description = self._generate_description_for_item('Name', old_job['name'], new_job['name'])
+        description += self._generate_description_for_item('Job Class', old_job['job_class_string'], new_job['job_class_string'])
+        description += self._generate_description_for_item('Trigger',
+            self._generate_trigger_description(old_job['trigger'], old_job['trigger_params']),
+            self._generate_trigger_description(new_job['trigger'], new_job['trigger_params']))
+        description += self._generate_description_for_item('Arguments',
+            self._generate_pubargs_description(old_job['pub_args']),
+            self._generate_pubargs_description(new_job['pub_args']))
+
         return description
 
     def _modify_job(self, job_id):
@@ -341,12 +392,15 @@ class Handler(base.BaseHandler):
             if field not in self.json_args:
                 raise tornado.web.HTTPError(400, reason='Require this parameter: %s' % field)
 
+        #TODO better validating
         at_least_one_required_fields = ['month', 'day', 'hour', 'minute', 'day_of_week']
         valid_cron_string = False
         for field in at_least_one_required_fields:
             if field in self.json_args:
                 valid_cron_string = True
                 break
+        #TODO ignore validating
+        valid_cron_string = True
 
         if not valid_cron_string:
             raise tornado.web.HTTPError(400, reason=('Require at least one of following parameters:'

@@ -28,7 +28,8 @@
     $ curl -X POST localhost:8888/api/v1/jobs \
        --header "Content-Type:application/json" \
        -d "{\"job_class_string\": \"simple_scheduler.jobs.sample_job.AwesomeJob\", \
-            \"name\": \"My first job\", \"minute\": \"*/1\", \"pub_args\": [\"arg1\", 2]}"
+            \"name\": \"My first job\", \"pub_args\": [\"arg1\", 2], \
+            \"trigger\": \"cron\", \"trigger_params\": {\"minute\": \"*/1\"}}"
    
     # Get all jobs
     $ curl localhost:8888/api/v1/jobs
@@ -36,6 +37,50 @@
 
 ## REST APIs      
 ### Jobs
+
+#### Difference between a Cron job and an Interval job
+
+Version 2 of the API supports next to the already existing Cron jobs also
+Interval jobs. Therefore the API of the jobs has to be changed. A job uses the
+string parameter ```trigger``` that indicates the job type. Possible values are
+ ```cron``` or ```interval```. The parameters for the chosen job type can be set
+by the ```trigger_params```.   
+
+* **Cron Job**
+
+  A cron job is defined by the ```trigger``` = ```cron```. A cron
+  job needs the parameters ```month```, ```day_of_week```, ```day```,
+  ```hour```, ```minute``` parameters within the ```trigger_params```.
+
+      {
+      "job_id": "d8f376e858a411e4b6ae22000ac58d05",
+      "job_class_string": "simple_scheduler.jobs.clean_apns.CleanAPNsJob",
+      "name": "Clean APNs",
+      "pub_args": ["arg1": 1, "arg2": 2],
+      "trigger": "cron",
+      "trigger_params": {
+        "month": "*",
+        "day_of_week": "*",
+        "day": "*",
+        "hour": "*/1",
+        "minute": "*"}
+
+
+* **Interval Job**
+
+  An interval job is defined by the ```trigger``` = ```interval```. An interval
+  job needs the ```interval``` parameter within the ```trigger_params```. The
+  interval is defined in seconds.
+
+      {
+      "job_id": "d8f376e858a411e4b6ae22000ac58d05",
+      "job_class_string": "simple_scheduler.jobs.clean_apns.CleanAPNsJob",
+      "name": "Clean APNs",
+      "pub_args": ["arg1": 1, "arg2": 2],
+      "trigger": "interval",
+      "trigger_params": {
+        "interval": 3600}
+
 
 #### Get all jobs
 
@@ -68,15 +113,17 @@
                 "job_class_string": "simple_scheduler.jobs.clean_apns.CleanAPNsJob",
                 "name": "Clean APNs",
                 "pub_args": ["arg1": 1, "arg2": 2],
-                "month": "*",
-                "day_of_week": "*",
-                "day": "*",
-                "hour": "*/1",
-                "minute": "*"
+                "trigger": "cron",
+                "trigger_params": {
+                  "month": "*",
+                  "day_of_week": "*",
+                  "day": "*",
+                  "hour": "*/1",
+                  "minute": "*"}
             },
             ...]
         }
-    
+
 * **Error Response:**
 
   * **Code:** 400 Bad Request <br />
@@ -126,7 +173,8 @@
 
 * **Success Response:**
 
-  * **Code:** 200 OK <br />
+  * **Return for a Cron job**  
+    **Code:** 200 OK <br />
     **Content:** 
 
         {
@@ -134,12 +182,29 @@
           "job_class_string": "simple_scheduler.jobs.clean_apns.CleanAPNsJob",
           "name": "Clean APNs",
           "pub_args": ["arg1": 1, "arg2": 2],
-          "month": "*",
-          "day_of_week": "*",
-          "day": "*",
-          "hour": "*/1",
-          "minute": "*"
+          "trigger": "cron",
+          "trigger_params": {
+            "month": "*",
+            "day_of_week": "*",
+            "day": "*",
+            "hour": "*/1",
+            "minute": "*"}
         }
+
+  * **Return for an Interval job**  
+    **Code:** 200 OK <br />
+    **Content:** 
+
+        {
+          "job_id": "d8f376e858a411e4b6ae22000ac58d05",
+          "job_class_string": "simple_scheduler.jobs.clean_apns.CleanAPNsJob",
+          "name": "Clean APNs",
+          "pub_args": ["arg1": 1, "arg2": 2],
+          "trigger": "interval",
+          "trigger_params": {
+            "interval": 3600}
+        }
+
     
 * **Error Response:**
 
@@ -184,18 +249,32 @@
 
    None
 
-* **Data Params**
+* **Data Params for a Cron job**
 
         {
             "job_class_string": "simple_scheduler.jobs.clean_apns.CleanAPNsJob",
             "name": "Clean APNs",
             "pub_args": ["arg1": 1, "arg2": 2],
-            "month": "*",
-            "day_of_week": "*",
-            "day": "*",
-            "hour": "*/1",
-            "minute": "*"
+            "trigger": "cron",
+            "trigger_params": {
+              "month": "*",
+              "day_of_week": "*",
+              "day": "*",
+              "hour": "*/1",
+              "minute": "*"}
         }
+
+* **Data Params for an Interval job**
+
+        {
+            "job_class_string": "simple_scheduler.jobs.clean_apns.CleanAPNsJob",
+            "name": "Clean APNs",
+            "pub_args": ["arg1": 1, "arg2": 2],
+            "trigger": "interval",
+            "trigger_params": {
+              "interval": 3600}
+        }
+
 
 Required fields: `job_class_string` and `name`
 
@@ -226,11 +305,9 @@ Required fields: `job_class_string` and `name`
             "job_class_string": "simple_scheduler.jobs.clean_apns.CleanAPNsJob",
             "name": "Clean APNs",
             "pub_args": ["arg1": 1, "arg2": 2],
-            "month": "*",
-            "day_of_week": "*",
-            "day": "*",
-            "hour": "*/1",
-            "minute": "*"
+            "trigger": "interval",
+            "trigger_params": {
+              "interval": 3600}
       },
       success : function(r) {
         console.log(r);
@@ -310,17 +387,31 @@ Required fields: `job_class_string` and `name`
 
    None
 
-* **Data Params**
+* **Data Params for a Cron job**
 
         {
             "job_class_string": "simple_scheduler.jobs.clean_apns.CleanAPNsJob",
             "name": "Clean APNs",
             "pub_args": ["arg1": 1, "arg2": 2],
-            "month": "*",
-            "day_of_week": "*",
-            "day": "*",
-            "hour": "*/1",
-            "minute": "*"
+            "trigger": "cron",
+            "trigger_params": {
+              "month": "*",
+              "day_of_week": "*",
+              "day": "*",
+              "hour": "*/1",
+              "minute": "*"}
+        }
+
+
+* **Data Params for an Interval job**
+
+        {
+            "job_class_string": "simple_scheduler.jobs.clean_apns.CleanAPNsJob",
+            "name": "Clean APNs",
+            "pub_args": ["arg1": 1, "arg2": 2],
+            "trigger": "interval",
+            "trigger_params": {
+              "interval": 3600}
         }
 
 * **Success Response:**
@@ -353,6 +444,14 @@ Required fields: `job_class_string` and `name`
       url: "/api/v1/jobs/d8f376e858a411e4b6ae22000ac58d05",
       dataType: "json",
       type : "PUT",
+      data: {
+        "job_class_string": "simple_scheduler.jobs.clean_apns.CleanAPNsJob",
+        "name": "Clean APNs",
+        "pub_args": ["arg1": 1, "arg2": 2],
+        "trigger": "interval",
+        "trigger_params": {
+          "interval": 3600}
+      },
       success : function(r) {
         console.log(r);
       }
@@ -505,12 +604,14 @@ Required fields: `job_class_string` and `name`
                 execution_id: "7252d7a6a80f11e58bcc02ba903740c3",
                 hostname: "",
                 job: {
-                    day: "*",
-                    day_of_week: "*",
-                    hour: "*",
                     job_id: "bb0dec52797f11e4a14122000a150f89",
-                    minute: "*/5",
-                    month: "*",
+                    trigger: "cron",
+                    trigger_params: {
+                      day: "*",
+                      day_of_week: "*",
+                      hour: "*",
+                      minute: "*/5",
+                      month: "*"},
                     name: "Poll sendgrid for bounces and spamreports",
                     pub_args: [],
                     job_class_string: "simple_scheduler.jobs.sample_job.ImportDataJob",
@@ -582,12 +683,14 @@ Required fields: `job_class_string` and `name`
             execution_id: "7252d7a6a80f11e58bcc02ba903740c3",
             hostname: "",
             job: {
-                day: "*",
-                day_of_week: "*",
-                hour: "*",
                 job_id: "bb0dec52797f11e4a14122000a150f89",
-                minute: "*/5",
-                month: "*",
+                trigger: "cron",
+                    trigger_params: {
+                      day: "*",
+                      day_of_week: "*",
+                      hour: "*",
+                      minute: "*/5",
+                      month: "*"},
                 name: "Poll sendgrid for bounces and spamreports",
                 pub_args: [],
                 job_class_string: "simple_scheduler.jobs.sample_job.ImportDataJob",

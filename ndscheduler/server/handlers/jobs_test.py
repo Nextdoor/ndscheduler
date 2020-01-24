@@ -34,7 +34,7 @@ class JobsTest(tornado.testing.AsyncHTTPTestCase):
         super(JobsTest, self).setUp(*args, **kwargs)
 
         self.server.start_scheduler()
-        self.JOBS_URL = '/api/v1/jobs'
+        self.JOBS_URL = '/api/v2/jobs'
         self.old_get_jobs_yield = jobs.Handler.get_jobs_yield
         self.old_get_job_yield = jobs.Handler.get_job_yield
         self.old_delete_job_yield = jobs.Handler.delete_job_yield

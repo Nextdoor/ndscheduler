@@ -121,8 +121,8 @@ class Handler(base.BaseHandler):
         """Returns a job or multiple jobs.
 
         Handles two endpoints:
-            GET /api/v1/jobs           (when job_id == None)
-            GET /api/v1/jobs/{job_id}  (when job_id != None)
+            GET /api/v2/jobs           (when job_id == None)
+            GET /api/v2/jobs/{job_id}  (when job_id != None)
 
         :param str job_id: String for job id.
         """
@@ -138,7 +138,7 @@ class Handler(base.BaseHandler):
         add_job() is a non-blocking operation, but audit log is a blocking operation.
 
         Handles an endpoint:
-            POST /api/v1/jobs
+            POST /api/v2/jobs
         """
         self._validate_post_data()
 
@@ -186,7 +186,7 @@ class Handler(base.BaseHandler):
         """Deletes a job.
 
         Handles an endpoint:
-            DELETE /api/v1/jobs/{job_id}
+            DELETE /api/v2/jobs/{job_id}
 
         :param str job_id: Job id
         """
@@ -313,7 +313,7 @@ class Handler(base.BaseHandler):
         """Modifies a job.
 
         Handles an endpoint:
-            PUT /api/v1/jobs/{job_id}
+            PUT /api/v2/jobs/{job_id}
 
         :param str job_id: Job id.
         """
@@ -332,7 +332,7 @@ class Handler(base.BaseHandler):
         pause_job() is a non-blocking operation, but audit log is a blocking operation.
 
         Handles an endpoint:
-            PATCH /api/v1/jobs/{job_id}
+            PATCH /api/v2/jobs/{job_id}
 
         :param str job_id: Job id.
         """
@@ -359,7 +359,7 @@ class Handler(base.BaseHandler):
         resume_job() is a non-blocking operation, but audit log is a blocking operation.
 
         Handles an endpoint:
-            OPTIONS /api/v1/jobs/{job_id}
+            OPTIONS /api/v2/jobs/{job_id}
 
         :param str job_id: Job id.
         """

@@ -90,14 +90,14 @@ class Handler(base.BaseHandler):
         """Returns a execution or multiple executions.
 
         Handles two endpoints:
-            GET /api/v1/executions                 (when execution_id == None)
+            GET /api/v2/executions                 (when execution_id == None)
                 It takes two query string parameters:
                 - time_range_end - unix epoch timestamp. Default: now
                 - time_range_start - unix epoch timestamp. Default: 10 minutes ago.
                 These two parameters limit the executions to return:
                 time_range_start <= execution.scheduled_time <= time_range_end
 
-            GET /api/v1/executions/{execution_id}  (when execution_id != None)
+            GET /api/v2/executions/{execution_id}  (when execution_id != None)
 
         :param str execution_id: Execution id.
         """
@@ -163,7 +163,7 @@ class Handler(base.BaseHandler):
         """Runs a job.
 
         Handles an endpoint:
-            POST /api/v1/executions
+            POST /api/v2/executions
 
         Args:
             job_id: String for job id.
@@ -175,6 +175,6 @@ class Handler(base.BaseHandler):
         """Stops a job execution.
 
         Handles an endpoint:
-            POST /api/v1/executions
+            POST /api/v2/executions
         """
         raise tornado.web.HTTPError(501, 'Not implemented yet.')

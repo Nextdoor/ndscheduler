@@ -26,7 +26,7 @@ class ExecutionsTest(tornado.testing.AsyncHTTPTestCase):
     def setUp(self, *args, **kwargs):
         super(ExecutionsTest, self).setUp(*args, **kwargs)
         self.server.start_scheduler()
-        self.EXECUTIONS_URL = '/api/v1/executions'
+        self.EXECUTIONS_URL = '/api/v2/executions'
         self.old_get_executions_yield = executions.Handler.get_executions_yield
         self.old_get_execution_yield = executions.Handler.get_execution_yield
         executions.Handler.get_executions_yield = mock_get_executions_yield

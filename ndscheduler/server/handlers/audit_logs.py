@@ -47,6 +47,6 @@ class Handler(base.BaseHandler):
     def get(self):
         """Returns audit logs.
 
-        Handles the endpoint GET /api/v1/logs.
+        Handles the endpoint GET /api/v2/logs.
         """
         self.get_logs_yield()

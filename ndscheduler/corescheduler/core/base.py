@@ -145,13 +145,13 @@ class BaseScheduler (apscheduler_tornado.TornadoScheduler):
         if 'interval' in trigger_params:
             trigger_params['seconds'] = int(trigger_params.pop('interval'))
 
-        job = self.add_job(func=self.run_job,
-                           trigger=trigger,
-                           args=arguments,
-                           kwargs=kwargs,
-                           name=name,
-                           id=job_id,
-                           **trigger_params)
+        self.add_job(func=self.run_job,
+                     trigger=trigger,
+                     args=arguments,
+                     kwargs=kwargs,
+                     name=name,
+                     id=job_id,
+                     **trigger_params)
         return job_id
 
     def modify_scheduler_job(self, job_id, **kwargs):

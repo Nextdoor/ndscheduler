@@ -85,6 +85,7 @@ setup(
         'future >= 0.15.2',
         'tornado < 6',
         'python-dateutil >= 2.2',
+        'requests >= 2.22.0'
     ],
     classifiers=classifiers,
     cmdclass={'clean': CleanHook},

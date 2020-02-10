@@ -265,7 +265,8 @@ class Handler(base.BaseHandler):
             old_job['job_class_string'],
             new_job['job_class_string']
             )
-        description += self._generate_description_for_item('Trigger',
+        description += self._generate_description_for_item(
+            'Trigger',
             self._generate_trigger_description(old_job['trigger'], old_job['trigger_params']),
             self._generate_trigger_description(new_job['trigger'], new_job['trigger_params'])
             )

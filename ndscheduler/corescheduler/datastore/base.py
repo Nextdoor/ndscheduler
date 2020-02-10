@@ -129,7 +129,6 @@ class DatastoreBase(sched_sqlalchemy.SQLAlchemyJobStore):
                 'task_name': utils.get_job_name(job),
                 'pub_args': utils.get_job_args(job)}
 
-
             if isinstance(job.trigger, apscheduler.triggers.cron.CronTrigger):
                 return_json["trigger"] = "cron"
                 return_json["trigger_params"] = utils.get_cron_strings(job)

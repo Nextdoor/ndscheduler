@@ -88,7 +88,8 @@ class SchedulerManager:
         :param str name: String for job name, e.g., Check Melissa job.
         :param str trigger: String for job trigger passed to the scheduler.
         :param pub_args: List for arguments passed to publish method of a task.
-        :param trigger_params: Dict of trigger parameters passed to the apscheduler during adding jobs.
+        :param trigger_params: Dict of trigger parameters passed to the apscheduler
+            during adding jobs.
         :param kwargs: Other keyword arguments passed to run_job function.
         :return: String of job id, e.g., 6bca19736d374ef2b3df23eb278b512e
         :rtype: str

@@ -115,9 +115,8 @@ class BaseScheduler (apscheduler_tornado.TornadoScheduler):
                                        description=job_class.get_failed_description(),
                                        result=job_class.get_failed_result())
 
-    
     def add_scheduler_job(self, job_class_string, name, trigger, pub_args=None,
-                            trigger_params=None, **kwargs):
+                          trigger_params=None, **kwargs):
         """Add a job. Job information will be persistent in postgres.
         This is a NON-BLOCKING operation, as internally, apscheduler calls wakeup()
         that is async.
@@ -165,7 +164,8 @@ class BaseScheduler (apscheduler_tornado.TornadoScheduler):
                 myscheduler.jobs.a_job.NiceJob
             - pub_args: List of arguments passed to the task.
             - trigger: String for job trigger passed to the scheduler.
-            - trigger_params: Dict of trigger parameters passed to the apscheduler during adding jobs.
+            - trigger_params: Dict of trigger parameters passed to the apscheduler during
+                adding jobs.
 
         """
 
@@ -194,12 +194,11 @@ class BaseScheduler (apscheduler_tornado.TornadoScheduler):
 
             job.reschedule(trigger=kwargs.pop('trigger'), **trigger_params)
 
-        else: # Remove if not all trigger parameters are available
+        else:  # Remove if not all trigger parameters are available
             if 'trigger' in kwargs:
                 kwargs.pop('trigger')
             if 'trigger_params' in kwargs:
                 kwargs.pop('trigger_params')
-
 
         # This is a NON-BLOCKING operation
         job.modify(**kwargs)

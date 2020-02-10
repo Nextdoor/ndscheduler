@@ -28,16 +28,17 @@ class SchedulerManagerTest(tornado.testing.AsyncTestCase):
         name = 'it is hello world'
         pub_args = ('1', '2', '3')
         trigger_params = dict(
-            month = '*/1',
-            day_of_week = 'sat',
-            day = '*/2',
-            hour = '*/3',
-            minute = '*/4'
+            month='*/1',
+            day_of_week='sat',
+            day='*/2',
+            hour='*/3',
+            minute='*/4'
             )
         trigger = 'cron'
 
         # non-blocking operation
-        job_id = self.scheduler.add_job(task_name, name, trigger, pub_args, trigger_params, languages='en-us')
+        job_id = self.scheduler.add_job(task_name, name, trigger, pub_args,
+                                        trigger_params, languages='en-us')
 
         self.assertTrue(len(job_id), 32)
 
@@ -72,11 +73,11 @@ class SchedulerManagerTest(tornado.testing.AsyncTestCase):
         name = 'it is hello world 2'
         pub_args = ('1', '2', '3')
         trigger_params = dict(
-            month = '*/1',
-            day_of_week = 'sat',
-            day = '*/2',
-            hour = '*/3',
-            minute = '*/4'
+            month='*/1',
+            day_of_week='sat',
+            day='*/2',
+            hour='*/3',
+            minute='*/4'
             )
         trigger = 'cron'
 
@@ -90,11 +91,12 @@ class SchedulerManagerTest(tornado.testing.AsyncTestCase):
         name = 'hello world 3'
         trigger = 'cron'
         trigger_params = dict(
-            month = '*/6'
+            month='*/6'
             )
 
         # non-blocking operation
-        self.scheduler.modify_job(job_id, name=name, job_class_string=job_class_string, trigger=trigger,
+        self.scheduler.modify_job(job_id, name=name, job_class_string=job_class_string,
+                                  trigger=trigger,
                                   pub_args=args, trigger_params=trigger_params)
 
         # blocking operation

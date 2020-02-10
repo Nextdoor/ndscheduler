@@ -222,7 +222,6 @@ class Handler(base.BaseHandler):
         :rtype: str
         """
 
-
         if trigger == 'cron':
             descr = "%s: minute=\"%s\" hour=\"%s\" day=\"%s\" month=\"%s\" " \
                     "day_of_week=\"%s\"" % (trigger, trigger_params['minute'],
@@ -250,7 +249,6 @@ class Handler(base.BaseHandler):
         else:
             return str(pub_args)
 
-
     def _generate_description_for_modify(self, old_job, new_job):
         """Generates description text after modifying a job.
 
@@ -262,13 +260,20 @@ class Handler(base.BaseHandler):
         """
 
         description = self._generate_description_for_item('Name', old_job['name'], new_job['name'])
-        description += self._generate_description_for_item('Job Class', old_job['job_class_string'], new_job['job_class_string'])
+        description += self._generate_description_for_item(
+            'Job Class',
+            old_job['job_class_string'],
+            new_job['job_class_string']
+            )
         description += self._generate_description_for_item('Trigger',
             self._generate_trigger_description(old_job['trigger'], old_job['trigger_params']),
-            self._generate_trigger_description(new_job['trigger'], new_job['trigger_params']))
-        description += self._generate_description_for_item('Arguments',
+            self._generate_trigger_description(new_job['trigger'], new_job['trigger_params'])
+            )
+        description += self._generate_description_for_item(
+            'Arguments',
             self._generate_pubargs_description(old_job['pub_args']),
-            self._generate_pubargs_description(new_job['pub_args']))
+            self._generate_pubargs_description(new_job['pub_args'])
+            )
 
         return description
 
@@ -387,12 +392,12 @@ class Handler(base.BaseHandler):
 
         :raises: HTTPError(400: Bad arguments).
         """
-        all_required_fields = ['name', 'job_class_string','trigger','trigger_params']
+        all_required_fields = ['name', 'job_class_string', 'trigger', 'trigger_params']
         for field in all_required_fields:
             if field not in self.json_args:
                 raise tornado.web.HTTPError(400, reason='Require this parameter: %s' % field)
 
-        #TODO better validating
+        # TODO better validating
         if self.json_args['trigger'] == 'cron':
             valid_cron_string = False
             at_least_one_required_fields = ['month', 'day', 'hour', 'minute', 'day_of_week']
@@ -402,9 +407,14 @@ class Handler(base.BaseHandler):
                     break
 
             if not valid_cron_string:
-                raise tornado.web.HTTPError(400, reason=('Require at least one of following parameters in "trigger_params":'
-                                                     ' %s' % str(at_least_one_required_fields)))
+                raise tornado.web.HTTPError(
+                    400, reason=('Require at least one of following parameters in "trigger_params":'
+                                 ' %s' % str(at_least_one_required_fields))
+                    )
 
         if self.json_args['trigger'] == 'interval':
             if 'interval' not in self.json_args['trigger_params']:
-                raise tornado.web.HTTPError(400, reason=('Require the parameter "interval" in "trigger_params".'))
+                raise tornado.web.HTTPError(
+                        400,
+                        reason=('Require the parameter "interval" in "trigger_params".')
+                        )

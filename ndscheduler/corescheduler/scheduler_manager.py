@@ -79,25 +79,23 @@ class SchedulerManager:
     #
     # Manage jobs
     #
-    def add_job(self, job_class_string, name, pub_args=None, month=None,
-                day_of_week=None, day=None, hour=None, minute=None, **kwargs):
+    def add_job(self, job_class_string, name, trigger, pub_args=None,
+                trigger_params=None, **kwargs):
         """Add a job. Job infomation will be persistent in the datastore.
         This is a NON-BLOCKING operation, as internally, apscheduler calls wakeup()
         that is async.
         :param str job_class_string: String for job class, e.g., myscheduler.jobs.a_job.NiceJob
         :param str name: String for job name, e.g., Check Melissa job.
+        :param str trigger: String for job trigger passed to the scheduler.
         :param pub_args: List for arguments passed to publish method of a task.
-        :param str month: String for month cron string, e.g., */10
-        :param str day_of_week: String for day of week cron string, e.g., 1-6
-        :param str day: String for day cron string, e.g., */1
-        :param str hour: String for hour cron string, e.g., */2
-        :param str minute: String for minute cron string, e.g., */3
+        :param trigger_params: Dict of trigger parameters passed to the apscheduler during adding jobs.
         :param kwargs: Other keyword arguments passed to run_job function.
         :return: String of job id, e.g., 6bca19736d374ef2b3df23eb278b512e
         :rtype: str
         """
-        return self.sched.add_scheduler_job(job_class_string, name, pub_args, month, day_of_week,
-                                            day, hour, minute, **kwargs)
+        return self.sched.add_scheduler_job(job_class_string, name,
+                                            trigger, pub_args, trigger_params,
+                                            **kwargs)
 
     def pause_job(self, job_id):
         """Pauses the schedule of a job.

@@ -190,3 +190,8 @@ body {
   padding-right: 10px !important;
   padding-left: 10px !important;
 }
+
+
+.modal-tab-content {
+  margin-bottom: 10px;
+}

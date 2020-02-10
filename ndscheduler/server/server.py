@@ -23,7 +23,7 @@ logger = logging.getLogger(__name__)
 
 class SchedulerServer:
 
-    VERSION = 'v1'
+    VERSION = 'v2'
 
     singleton = None
 

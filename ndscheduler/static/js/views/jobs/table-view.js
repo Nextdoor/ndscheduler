@@ -113,34 +113,34 @@ define(['utils',
 
       var data = [];
 
-      // Build up data to pass to data tables
-      _.each(jobs, function(job) {
-        var jobObj = job.toJSON();
-        data.push([
-          _.template(JobRowNameHtml)({
+// Build up data to pass to data tables
+				_.each(jobs, function(job) {
+					var jobObj = job.toJSON();
+
+          var jobRowNameArguments = {
             'job_name': _.escape(jobObj.name),
             'job_schedule': job.getScheduleString(),
             'next_run_at': job.getNextRunTimeHTMLString(),
             'job_id': jobObj.job_id,
             'job_class': _.escape(jobObj.job_class_string),
-            'job_month': _.escape(jobObj.month),
-            'job_day_of_week': _.escape(jobObj.day_of_week),
-            'job_day': _.escape(jobObj.day),
-            'job_hour': _.escape(jobObj.hour),
-            'job_minute': _.escape(jobObj.minute),
             'job_active': job.getActiveString(),
-            'job_pubargs': _.escape(job.getPubArgsString())
-          }),
-          job.getScheduleString(),
-          job.getNextRunTimeHTMLString(),
-          _.template(JobRowActionHtml)({
-            'job_name': _.escape(jobObj.name),
-            'job_id': jobObj.job_id,
-            'job_class': _.escape(jobObj.job_class_string),
-            'job_pubargs': _.escape(job.getPubArgsString())
-          })
-        ]);
-      });
+            'job_pubargs': _.escape(job.getPubArgsString()),
+            'job_trigger': _.escape(jobObj.trigger),
+            'job_trigger_params': _.escape(JSON.stringify(jobObj.trigger_params)),
+          }
+
+					data.push([
+							_.template(JobRowNameHtml)(jobRowNameArguments),
+							job.getScheduleString(),
+							job.getNextRunTimeHTMLString(),
+							_.template(JobRowActionHtml)({
+								'job_name': _.escape(jobObj.name),
+								'job_id': jobObj.job_id,
+								'job_class': _.escape(jobObj.job_class_string),
+								'job_pubargs': _.escape(job.getPubArgsString())
+							})
+						]);
+				});
 
       if (data.length) {
         this.table.fnClearTable();

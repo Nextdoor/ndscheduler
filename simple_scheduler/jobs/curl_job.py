@@ -24,8 +24,8 @@ class CurlJob(job.JobBase):
                                                   '(currently supported: GET/DELETE)'},
 
             ],
-            'example_arguments': ('["http://localhost:8888/api/v1/jobs", "GET"]'
-                                  '["http://localhost:8888/api/v1/jobs/ba12e", "DELETE"]')
+            'example_arguments': ('["http://localhost:8888/api/v2/jobs", "GET"]'
+                                  '["http://localhost:8888/api/v2/jobs/ba12e", "DELETE"]')
         }
 
     def run(self, url, request_type,  *args, **kwargs):
@@ -42,4 +42,4 @@ class CurlJob(job.JobBase):
 
 if __name__ == "__main__":
     job = CurlJob.create_test_instance()
-    job.run('http://localhost:888/api/v1/jobs')
+    job.run('http://localhost:888/api/v2/jobs')

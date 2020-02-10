@@ -48,7 +48,11 @@ define(['utils',
     initialize: function() {
 
       $('body').append(AddJobModalHtml);
+
+      $('#input-job-trigger').val("cron");
+
       this.bindAddJobConfirmClickEvent();
+      this.bindJobTriggerTabChangedEvent();
 
       var jobsMetaInfo = $.parseJSON($('#jobs-meta-info').html());
       var data = [];
@@ -70,6 +74,15 @@ define(['utils',
 
     },
 
+    bindJobTriggerTabChangedEvent: function() {
+      $('#input-trigger-tab a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+        //show selected tab / active
+        var trigger = $(e.target).attr('id');
+        $('#input-job-trigger').val(trigger);
+      });
+
+    },
+
     bindAddJobConfirmClickEvent: function() {
 
       $('#add-job-confirm-button').on('click', _.bind(function(e) {
@@ -77,12 +90,29 @@ define(['utils',
 
         var jobName = $('#input-job-name').val();
         var jobTask = $('#input-job-task-class').val();
-        var month = $('#input-job-month').val();
-        var dayOfWeek = $('#input-job-day-of-week').val();
-        var day = $('#input-job-day').val();
-        var hour = $('#input-job-hour').val();
-        var minute = $('#input-job-minute').val();
+        var trigger = $('#input-job-trigger').val().toLowerCase();
         var args = $('#input-job-task-args').val();
+
+
+        var trigger_params = {};
+
+        if(trigger.toLowerCase() == "cron"){
+          trigger_params.month = $('#input-job-month').val();
+          trigger_params.day_of_week = $('#input-job-day-of-week').val();
+          trigger_params.day = $('#input-job-day').val();
+          trigger_params.hour = $('#input-job-hour').val();
+          trigger_params.minute = $('#input-job-minute').val();
+        } else if(trigger.toLowerCase() == "interval"){
+          var seconds = parseInt($('#input-job-seconds').val());
+          var minutes = parseInt($('#input-job-minutes').val());
+          var hours = parseInt($('#input-job-hours').val());
+          var days = parseInt($('#input-job-days').val());
+
+          var interval_seconds = 86400 * days + 3600 * hours + 60 * minutes + seconds;
+
+          trigger_params.interval = interval_seconds;
+        }
+
 
         if (!$.trim(jobName)) {
           utils.alertError('Please fill in job name');
@@ -117,11 +147,8 @@ define(['utils',
           job_class_string: jobTask,
           name: jobName,
           pub_args: taskArgs,
-          month: month,
-          day_of_week: dayOfWeek,
-          day: day,
-          hour: hour,
-          minute: minute
+          trigger: trigger,
+          trigger_params: trigger_params
         });
 
         $('#add-job-modal').modal('hide');

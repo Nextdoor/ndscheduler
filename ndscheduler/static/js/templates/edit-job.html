@@ -46,24 +46,40 @@
                         <label for="" class="col-sm-2 control-label">
                             Scheduling
                         </label>
+
+                        <div class="hidden" id="edit-job-trigger"></div>
+
+                        <div class="col-sm-10 center">
+                            <!-- Nav tabs -->
+                            <ul class="nav nav-tabs modal-tab-content" id="edit-trigger-tab" role="tablist">
+                                <li role="presentation" class="active"><a id="cron" href="#edit-cron-sched" role="tab"
+                                        data-toggle="tab">Cron</a></li>
+                                <li role="presentation"><a id="interval" href="#edit-interval-sched" role="tab"
+                                        data-toggle="tab">Interval</a></li>
+                            </ul>
+
+                            <!-- Tab panes -->
+                            <div class="tab-content">
+                                <div role=" tabpanel" class="tab-pane active" id="edit-cron-sched">
+                                    <div class="form-group">
                         <div class="col-sm-2">
-                            <input type="text" class="form-control" id="edit-input-job-minute">
+                                            <input type="text" class="form-control" id="edit-job-minute" value="0">
                             <span class="help-block text-center">minute</span>
                         </div>
                         <div class="col-sm-2">
-                            <input type="text" class="form-control" id="edit-input-job-hour">
+                                            <input type="text" class="form-control" id="edit-job-hour" value="*">
                             <span class="help-block text-center">hour (UTC)</span>
                         </div>
                         <div class="col-sm-2">
-                            <input type="text" class="form-control" id="edit-input-job-day">
-                            <span class="help-block text-center">day</span>
+                                            <input type="text" class="form-control" id="edit-job-day" value="*">
+                                            <span class="help-block text-center">day of month</span>
                         </div>
                         <div class="col-sm-2">
-                            <input type="text" class="form-control" id="edit-input-job-month">
+                                            <input type="text" class="form-control" id="edit-job-month" value="*">
                             <span class="help-block text-center">month</span>
                         </div>
                         <div class="col-sm-2">
-                            <input type="text" class="form-control" id="edit-input-job-day-of-week">
+                                            <input type="text" class="form-control" id="edit-job-day-of-week" value="*">
                             <span class="help-block text-center">day of week</span>
                         </div>
                     </div>
@@ -74,6 +90,31 @@
                         For day of week, 0 is Monday, 6 is Sunday. Legal format: <strong>0-3</strong>,
                         <strong>mon,tue,wed,thu,fri,sat,sun</strong>
                     </div>
+                                </div>
+                                <div role="tabpanel" class="tab-pane" id="edit-interval-sched">
+                                    <div class="form-group">
+                                        <div class="col-sm-2">
+                                            <input type="text" class="form-control" id="edit-job-seconds" value="0">
+                                            <span class="help-block text-center">seconds</span>
+                                        </div>
+                                        <div class="col-sm-2">
+                                            <input type="text" class="form-control" id="edit-job-minutes" value="0">
+                                            <span class="help-block text-center">minutes</span>
+                                        </div>
+                                        <div class="col-sm-2">
+                                            <input type="text" class="form-control" id="edit-job-hours" value="0">
+                                            <span class="help-block text-center">hours</span>
+                                        </div>
+                                        <div class="col-sm-2">
+                                            <input type="text" class="form-control" id="edit-job-days" value="0">
+                                            <span class="help-block text-center">days</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                 </form>
             </div>
             <div class="modal-footer">

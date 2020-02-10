@@ -115,20 +115,17 @@ class BaseScheduler (apscheduler_tornado.TornadoScheduler):
                                        description=job_class.get_failed_description(),
                                        result=job_class.get_failed_result())
 
-    def add_scheduler_job(self, job_class_string, name, pub_args=None,
-                          month=None, day_of_week=None, day=None,
-                          hour=None, minute=None, **kwargs):
+    
+    def add_scheduler_job(self, job_class_string, name, trigger, pub_args=None,
+                            trigger_params=None, **kwargs):
         """Add a job. Job information will be persistent in postgres.
         This is a NON-BLOCKING operation, as internally, apscheduler calls wakeup()
         that is async.
         :param str job_class_string: String for job class, e.g., myscheduler.jobs.a_job.NiceJob
         :param str name: String for job name, e.g., Check Melissa job.
+        :param str trigger: String for job trigger passed to the scheduler.
         :param list pub_args: List for arguments passed to publish method of a task.
-        :param str month: String for month cron string, e.g., */10
-        :param str day_of_week: String for day of week cron string, e.g., 1-6
-        :param str day: String for day cron string, e.g., */1
-        :param str hour: String for hour cron string, e.g., */2
-        :param str minute: String for minute cron string, e.g., */3
+        :param trigger_params: Dict of trigger parameters passed to the apscheduler during adding jobs.
         :param dict kwargs: Other keyword arguments passed to run_job function.
         :return: String of job id, e.g., 6bca19736d374ef2b3df23eb278b512e
         :rtype: str
@@ -144,9 +141,17 @@ class BaseScheduler (apscheduler_tornado.TornadoScheduler):
                      datastore.db_config, datastore.table_names]
         arguments.extend(pub_args)
 
-        self.add_job(self.run_job,
-                     'cron', month=month, day=day, day_of_week=day_of_week, hour=hour,
-                     minute=minute, args=arguments, kwargs=kwargs, name=name, id=job_id)
+        # Rename interval to seconds for calling apscheduler's reschedule API
+        if 'interval' in trigger_params:
+            trigger_params['seconds'] = int(trigger_params.pop('interval'))
+
+        job = self.add_job(func=self.run_job,
+                           trigger=trigger,
+                           args=arguments,
+                           kwargs=kwargs,
+                           name=name,
+                           id=job_id,
+                           **trigger_params)
         return job_id
 
     def modify_scheduler_job(self, job_id, **kwargs):
@@ -159,11 +164,9 @@ class BaseScheduler (apscheduler_tornado.TornadoScheduler):
             - job_class_string: String for job class string, e.g.,
                 myscheduler.jobs.a_job.NiceJob
             - pub_args: List of arguments passed to the task.
-            - month: String for month cron string, e.g., */10
-            - day_of_week: String for day of week cron string, e.g., 1-6
-            - day: String for day cron string, e.g., */1
-            - hour: String for hour cron string, e.g., */2
-            - minute: String for minute cron string, e.g., */3
+            - trigger: String for job trigger passed to the scheduler.
+            - trigger_params: Dict of trigger parameters passed to the apscheduler during adding jobs.
+
         """
 
         # This is a BLOCKING operation
@@ -173,24 +176,30 @@ class BaseScheduler (apscheduler_tornado.TornadoScheduler):
         if 'job_class_string' in kwargs or 'pub_args' in kwargs:
             args = list(job.args)
             if 'job_class_string' in kwargs:
-                args[0] = kwargs['job_class_string']
+                args[0] = kwargs.pop('job_class_string')
                 # 'task_name' is not an argument for modify_job.
-                del kwargs['job_class_string']
             if 'pub_args' in kwargs:
-                args = args[:constants.JOB_ARGS] + kwargs['pub_args']
-                del kwargs['pub_args']
+                args = args[:constants.JOB_ARGS] + kwargs.pop('pub_args')
             kwargs['args'] = args
 
-        cron_keywords = ['month', 'day', 'hour', 'minute', 'day_of_week']
-        trigger_kwargs = {}
-        for cron_key in cron_keywords:
-            if cron_key in kwargs:
-                trigger_kwargs[cron_key] = kwargs[cron_key]
-                del kwargs[cron_key]
+        # Handle trigger rescheduling
+        # This is a NON-BLOCKING operation
+        if 'trigger' in kwargs and 'trigger_params' in kwargs:
+            # Handle trigger only if all parameter are available
+            trigger_params = kwargs.pop('trigger_params')
 
-        if trigger_kwargs:
-            # This is a NON-BLOCKING operation
-            job.reschedule(trigger='cron', **trigger_kwargs)
+            # Rename interval to seconds for calling apscheduler's reschedule API
+            if 'interval' in trigger_params:
+                trigger_params['seconds'] = int(trigger_params.pop('interval'))
+
+            job.reschedule(trigger=kwargs.pop('trigger'), **trigger_params)
+
+        else: # Remove if not all trigger parameters are available
+            if 'trigger' in kwargs:
+                kwargs.pop('trigger')
+            if 'trigger_params' in kwargs:
+                kwargs.pop('trigger_params')
+
 
         # This is a NON-BLOCKING operation
         job.modify(**kwargs)

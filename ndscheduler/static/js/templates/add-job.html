@@ -35,38 +35,80 @@
                             <span class="help-block text-center">Should be valid JSON string of an array (single quote is NOT allowed), e.g., [1, 2, "hello"]</span>
                         </div>
                     </div>
+
                     <div class="form-group">
                         <label for="" class="col-sm-2 control-label" required>
                             Scheduling
                         </label>
-                        <div class="col-sm-2">
-                            <input type="text" class="form-control" id="input-job-minute" value="0">
-                            <span class="help-block text-center">minute</span>
-                        </div>
-                        <div class="col-sm-2">
-                            <input type="text" class="form-control" id="input-job-hour" value="*">
-                            <span class="help-block text-center">hour (UTC)</span>
-                        </div>
-                        <div class="col-sm-2">
-                            <input type="text" class="form-control" id="input-job-day" value="*">
-                            <span class="help-block text-center">day of month</span>
-                        </div>
-                        <div class="col-sm-2">
-                            <input type="text" class="form-control" id="input-job-month" value="*">
-                            <span class="help-block text-center">month</span>
-                        </div>
-                        <div class="col-sm-2">
-                            <input type="text" class="form-control" id="input-job-day-of-week" value="*">
-                            <span class="help-block text-center">day of week</span>
-                        </div>
+
+                        <div class="hidden" id="input-job-trigger"></div>
+
+                        <div class="col-sm-10 center">
+                            <!-- Nav tabs -->
+                            <ul class="nav nav-tabs modal-tab-content" id="input-trigger-tab" role="tablist">
+                                <li role="presentation" class="active"><a id="cron" href="#input-cron-sched"  role="tab" data-toggle="tab">Cron</a></li>
+                                <li role="presentation"><a id="interval" href="#input-interval-sched" role="tab" data-toggle="tab">Interval</a></li>
+                            </ul>
+
+                            <!-- Tab panes -->
+                            <div class="tab-content">
+                                <div role="tabpanel" class="tab-pane active" id="input-cron-sched">
+                                    <div class="form-group">
+                                        <div class="col-sm-2">
+                                            <input type="text" class="form-control" id="input-job-minute" value="0">
+                                            <span class="help-block text-center">minute</span>
+                                        </div>
+                                        <div class="col-sm-2">
+                                            <input type="text" class="form-control" id="input-job-hour" value="*">
+                                            <span class="help-block text-center">hour (UTC)</span>
+                                        </div>
+                                        <div class="col-sm-2">
+                                            <input type="text" class="form-control" id="input-job-day" value="*">
+                                            <span class="help-block text-center">day of month</span>
+                                        </div>
+                                        <div class="col-sm-2">
+                                            <input type="text" class="form-control" id="input-job-month" value="*">
+                                            <span class="help-block text-center">month</span>
+                                        </div>
+                                        <div class="col-sm-2">
+                                            <input type="text" class="form-control" id="input-job-day-of-week" value="*">
+                                            <span class="help-block text-center">day of week</span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="" class="col-sm-2 control-label">
+                                            Note:
+                                        </label>
+                                        For day of week, 0 is Monday, 6 is Sunday. Legal format: <strong>0-3</strong>,
+                                        <strong>mon,tue,wed,thu,fri,sat,sun</strong>
+                                    </div>
+                                </div>
+                                <div role="tabpanel" class="tab-pane" id="input-interval-sched">
+                                    <div class="form-group">
+                                        <div class="col-sm-2">
+                                            <input type="text" class="form-control" id="input-job-seconds" value="0">
+                                            <span class="help-block text-center">seconds</span>
+                                        </div>
+                                        <div class="col-sm-2">
+                                            <input type="text" class="form-control" id="input-job-minutes" value="0">
+                                            <span class="help-block text-center">minutes</span>
+                                        </div>
+                                        <div class="col-sm-2">
+                                            <input type="text" class="form-control" id="input-job-hours" value="0">
+                                            <span class="help-block text-center">hours</span>
+                                        </div>
+                                        <div class="col-sm-2">
+                                            <input type="text" class="form-control" id="input-job-days" value="0">
+                                            <span class="help-block text-center">days</span>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+                            </div>
+                      </div>
                     </div>
-                    <div class="form-group">
-                        <label for="" class="col-sm-2 control-label">
-                            Note:
-                        </label>
-                        For day of week, 0 is Monday, 6 is Sunday. Legal format: <strong>0-3</strong>,
-                        <strong>mon,tue,wed,thu,fri,sat,sun</strong>
-                    </div>
+
                 </form>
             </div>
             <div class="modal-footer">

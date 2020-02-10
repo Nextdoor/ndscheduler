@@ -34,7 +34,7 @@ class JobsTest(tornado.testing.AsyncHTTPTestCase):
         super(JobsTest, self).setUp(*args, **kwargs)
 
         self.server.start_scheduler()
-        self.JOBS_URL = '/api/v1/jobs'
+        self.JOBS_URL = '/api/v2/jobs'
         self.old_get_jobs_yield = jobs.Handler.get_jobs_yield
         self.old_get_job_yield = jobs.Handler.get_job_yield
         self.old_delete_job_yield = jobs.Handler.delete_job_yield
@@ -72,7 +72,10 @@ class JobsTest(tornado.testing.AsyncHTTPTestCase):
         data = {
             'job_class_string': 'hello.world',
             'name': 'hello world job',
-            'minute': '*/5'}
+            'trigger': 'cron',
+            'trigger_params': {
+                'minute': '*/5'}
+            }
         response = self.fetch(self.JOBS_URL, method='POST', headers=headers,
                               body=json.dumps(data))
         return_info = json.loads(response.body.decode())
@@ -92,7 +95,10 @@ class JobsTest(tornado.testing.AsyncHTTPTestCase):
 
         data = {
             'job_class_string': 'hello.world',
-            'minute': '*/5'}
+            'trigger': 'cron',
+            'trigger_params': {
+                'minute': '*/5'}
+            }
         response = self.fetch(self.JOBS_URL, method='POST', headers=headers,
                               body=json.dumps(data))
         self.assertEqual(response.code, 400)
@@ -102,7 +108,10 @@ class JobsTest(tornado.testing.AsyncHTTPTestCase):
         data = {
             'job_class_string': 'hello.world',
             'name': 'hello world job',
-            'minute': '*/5'}
+            'trigger': 'cron',
+            'trigger_params': {
+                'minute': '*/5'}
+            }
         response = self.fetch(self.JOBS_URL, method='POST', headers=headers,
                               body=json.dumps(data))
         return_info = json.loads(response.body.decode())
@@ -121,7 +130,10 @@ class JobsTest(tornado.testing.AsyncHTTPTestCase):
         data = {
             'job_class_string': 'hello.world',
             'name': 'hello world job',
-            'minute': '*/5'}
+            'trigger': 'cron',
+            'trigger_params': {
+                'minute': '*/5'}
+            }
         response = self.fetch(self.JOBS_URL, method='POST', headers=headers,
                               body=json.dumps(data))
         return_info = json.loads(response.body.decode())
@@ -134,14 +146,17 @@ class JobsTest(tornado.testing.AsyncHTTPTestCase):
         job = return_info['jobs'][0]
         self.assertEqual(job['job_class_string'], data['job_class_string'])
         self.assertEqual(job['name'], data['name'])
-        self.assertEqual(job['minute'], data['minute'])
+        self.assertEqual(job['trigger_params']['minute'], data['trigger_params']['minute'])
 
     def test_delete_job(self):
         headers = {'Content-Type': 'application/json; charset=UTF-8'}
         data = {
             'job_class_string': 'hello.world',
             'name': 'hello world job',
-            'minute': '*/5'}
+            'trigger': 'cron',
+            'trigger_params': {
+                'minute': '*/5'}
+            }
         response = self.fetch(self.JOBS_URL, method='POST', headers=headers,
                               body=json.dumps(data))
         return_info = json.loads(response.body.decode())
@@ -161,7 +176,10 @@ class JobsTest(tornado.testing.AsyncHTTPTestCase):
         data = {
             'job_class_string': 'hello.world',
             'name': 'hello world job',
-            'minute': '*/5'}
+            'trigger': 'cron',
+            'trigger_params': {
+                'minute': '*/5'}
+            }
         response = self.fetch(self.JOBS_URL, method='POST', headers=headers,
                               body=json.dumps(data))
         return_info = json.loads(response.body.decode())
@@ -175,7 +193,10 @@ class JobsTest(tornado.testing.AsyncHTTPTestCase):
         data = {
             'job_class_string': 'hello.world!!!!',
             'name': 'hello world job~~~~',
-            'minute': '*/20'}
+            'trigger': 'cron',
+            'trigger_params': {
+                'minute': '*/20'}
+            }
         response = self.fetch(self.JOBS_URL + '/' + return_info['job_id'] + '?sync=true',
                               method='PUT', headers=headers, body=json.dumps(data))
         self.assertEqual(response.code, 200)

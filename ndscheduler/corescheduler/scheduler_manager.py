@@ -164,5 +164,8 @@ class SchedulerManager:
             - day: String for day cron string, e.g., */1
             - hour: String for hour cron string, e.g., */2
             - minute: String for minute cron string, e.g., */3
+            - trigger: String for job trigger passed to the scheduler.
+            - trigger_params: Dict of trigger parameters passed to the apscheduler
+            during adding jobs.
         """
         self.sched.modify_scheduler_job(job_id, **kwargs)

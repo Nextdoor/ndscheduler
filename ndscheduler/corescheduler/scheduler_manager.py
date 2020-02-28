@@ -158,10 +158,7 @@ class SchedulerManager:
             - job_class_string: String for job class string, e.g.,
                 myscheduler.jobs.a_job.NiceJob
             - pub_args: List of arguments passed to the task.
-            - month: String for month cron string, e.g., */10
-            - day_of_week: String for day of week cron string, e.g., 1-6
-            - day: String for day cron string, e.g., */1
-            - hour: String for hour cron string, e.g., */2
-            - minute: String for minute cron string, e.g., */3
+            - trigger: String for job trigger passed to the scheduler.
+            - trigger_params: Dict of trigger parameters passed to the apscheduler during adding jobs.
         """
         self.sched.modify_scheduler_job(job_id, **kwargs)

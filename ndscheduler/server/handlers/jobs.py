@@ -41,10 +41,6 @@ class Handler(base.BaseHandler):
             "job_class_string": utils.get_job_name(job),
             "pub_args": utils.get_job_args(job),
         }
-        # optional_args = utils.get_job_kwargs(job)
-        # if optional_args:
-        #     for key, value in optional_args.items():
-        #         return_dict[str(key)] = value
 
         return_dict.update(utils.get_job_kwargs(job))
         return_dict.update(utils.get_cron_strings(job))

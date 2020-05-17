@@ -41,6 +41,7 @@ class Handler(base.BaseHandler):
         return_json = yield self.get_logs()
         self.finish(return_json)
 
+    @tornado.web.authenticated
     @tornado.web.removeslash
     @tornado.web.asynchronous
     @tornado.gen.engine

@@ -24,6 +24,40 @@
     </script>
 </head>
 <body>
+    <!--- Login Modal -->
+    {% if current_user is None %}
+    <div class="modal-backdrop in"></div>
+    <div class="modal fade in" id="modalLoginForm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display:block">
+    {% else %}
+    <div class="modal fade in" id="modalLoginForm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    {%end %}
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <form role="form" method="POST" action="/login">
+                <div class="modal-header text-center">
+                    <h4 class="modal-title">Sign in</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body mx-3">
+                    <div class="md-form mb-5">
+                        <i class="fa fa-user"></i>
+                        <label data-error="wrong" data-success="right" for="defaultForm-name">User name</label>
+                        <input type="text" name="username" id="defaultForm-name" class="form-control validate">
+                    </div>
+                    <div class="md-form mb-4">
+                        <i class="fa fa-lock"></i>
+                        <label data-error="wrong" data-success="right" for="defaultForm-pass">User password</label>
+                        <input type="password" name="password" id="defaultForm-pass" class="form-control validate">
+                    </div>
+                </div>
+                <div class="modal-footer d-flex justify-content-center">
+                    <button class="btn btn-primary">Login</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
       <div class="container-fluid">
         <div class="navbar-header">
@@ -35,6 +69,7 @@
           </button>
           <span class="navbar-brand">Nextdoor Scheduler</span>
         </div>
+        {% if current_user %}
         <div class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
             <li id="jobs-tab"><a href="#jobs">Jobs</a></li>
@@ -44,13 +79,17 @@
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Docs <i class="caret"></i></a>
                 <ul class="dropdown-menu">
                     <li><a href="https://github.com/Nextdoor/ndscheduler" target="_blank">ndscheduler GitHub page</a></li>
+                    <li class="divider"></li>
+                    <li><a href="/logout">Logout '{{ escape(current_user) }}'</a></li>
                 </ul>
             </li>
           </ul>
         </div>
+        {% end %}
       </div>
     </div> <!-- End of navbar -->
 
+    {% if current_user is not None %}
     <div class="container-fluid">
         <div class="row">
             <div class="col-sm-3 col-md-2 sidebar">
@@ -186,6 +225,7 @@
             </div>
         </div>
     </div>
+    {% end %}
     <script data-main="/static/js/app" src="/static/js/vendor/require.js"></script>
 </body>
 

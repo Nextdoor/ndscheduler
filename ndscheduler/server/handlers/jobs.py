@@ -99,6 +99,7 @@ class Handler(base.BaseHandler):
         return_json = yield self.get_job(job_id)
         self.finish(return_json)
 
+    @tornado.web.authenticated
     @tornado.web.removeslash
     @tornado.web.asynchronous
     @tornado.gen.engine
@@ -116,6 +117,7 @@ class Handler(base.BaseHandler):
         else:
             self.get_job_yield(job_id)
 
+    @tornado.web.authenticated
     @tornado.web.removeslash
     def post(self):
         """Adds a job.
@@ -164,6 +166,7 @@ class Handler(base.BaseHandler):
     def delete_job_yield(self, job_id):
         yield self.delete_job(job_id)
 
+    @tornado.web.authenticated
     @tornado.web.removeslash
     @tornado.web.asynchronous
     @tornado.gen.engine
@@ -255,6 +258,7 @@ class Handler(base.BaseHandler):
         """
         yield self.modify_job(job_id)
 
+    @tornado.web.authenticated
     @tornado.web.removeslash
     @tornado.web.asynchronous
     @tornado.gen.engine
@@ -274,6 +278,7 @@ class Handler(base.BaseHandler):
         self.set_status(200)
         self.finish(response)
 
+    @tornado.web.authenticated
     @tornado.web.removeslash
     def patch(self, job_id):
         """Pauses a job.
@@ -301,6 +306,7 @@ class Handler(base.BaseHandler):
         self.set_status(200)
         self.write(response)
 
+    @tornado.web.authenticated
     @tornado.web.removeslash
     def options(self, job_id):
         """Resumes a job.

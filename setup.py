@@ -85,6 +85,7 @@ setup(
         'future >= 0.15.2',
         'tornado < 6',
         'python-dateutil >= 2.2',
+        'bcrypt  >= 3.1',
     ],
     classifiers=classifiers,
     cmdclass={'clean': CleanHook},

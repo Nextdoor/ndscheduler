@@ -17,6 +17,7 @@ from ndscheduler.server.handlers import audit_logs
 from ndscheduler.server.handlers import executions
 from ndscheduler.server.handlers import index
 from ndscheduler.server.handlers import jobs
+from ndscheduler.server.handlers import base
 
 logger = logging.getLogger(__name__)
 
@@ -35,13 +36,18 @@ class SchedulerServer:
             debug=settings.DEBUG,
             static_path=settings.STATIC_DIR_PATH,
             template_path=settings.TEMPLATE_DIR_PATH,
-            scheduler_manager=self.scheduler_manager
+            scheduler_manager=self.scheduler_manager,
+            cookie_secret=settings.SECURE_COOKIE,
+            login_url="/login",
+            default_handler_class=index.Handler,
         )
 
         # Setup server
         URLS = [
             # Index page
             (r'/', index.Handler),
+            (r"/login", base.LoginHandler),
+            (r"/logout", base.LogoutHandler),
 
             # APIs
             (r'/api/%s/jobs' % self.VERSION, jobs.Handler),

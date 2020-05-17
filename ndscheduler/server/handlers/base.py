@@ -5,9 +5,7 @@ subclassed in the rest of the app for different URLs.
 """
 
 import json
-import base64
 import bcrypt
-from time import sleep
 
 from concurrent import futures
 
@@ -58,7 +56,7 @@ class LoginHandler(BaseHandler):
     max_age = settings.COOKIE_MAX_AGE
 
     def get(self):
-        self.write(f"Login required!")
+        self.write("Login required!")
 
     def post(self):
         username = self.get_argument("username")

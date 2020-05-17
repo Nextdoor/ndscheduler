@@ -28,5 +28,5 @@ JOB_CLASS_PACKAGES = ['simple_scheduler.jobs']
 # e.g. AUTH_CREDENTIALS = {'username': 'password'}
 # The pasword must be hashed using bcrypt (e.g. htpasswd -nbB userName userPassword)
 AUTH_CREDENTIALS = {
-#    "user": "$2y$11$MCw3cm9Tp.8zF/hmPILW3.1hGMtP0UV8kUevfaxrzM7JzXdoyFi6.",  # Very$ecret
+    # "user": "$2y$11$MCw3cm9Tp.8zF/hmPILW3.1hGMtP0UV8kUevfaxrzM7JzXdoyFi6.",  # Very$ecret
 }

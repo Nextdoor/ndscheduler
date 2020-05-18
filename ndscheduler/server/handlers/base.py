@@ -35,7 +35,7 @@ class BaseHandler(tornado.web.RequestHandler):
 
     def get_current_user(self):
         if len(self.auth_credentials) > 0:
-            return self.get_secure_cookie("user")
+            return self.get_secure_cookie("user", max_age_days=settings.COOKIE_MAX_AGE)
         else:
             return "anonymous"
 
@@ -47,7 +47,7 @@ class BaseHandler(tornado.web.RequestHandler):
         :return: username
         :rtype: str
         """
-        username = self.get_secure_cookie("user")
+        username = self.get_secure_cookie("user", max_age_days=settings.COOKIE_MAX_AGE)
         return "anonymous" if username is None else username.decode()
 
 

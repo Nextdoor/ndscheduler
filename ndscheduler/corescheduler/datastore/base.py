@@ -180,7 +180,7 @@ class DatastoreBase(sched_sqlalchemy.SQLAlchemyJobStore):
         )
         result = self.engine.execute(sql_command)
         if result.rowcount > 0:
-            logger.warning(f"Cleaned Executions: {result.rowcount}")
+            logger.warning("Cleaned Executions: %s", result.rowcount)
         return
 
     def add_audit_log(self, job_id, job_name, event, **kwargs):

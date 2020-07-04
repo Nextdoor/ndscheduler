@@ -4,10 +4,13 @@ import dateutil.tz
 import dateutil.parser
 from apscheduler.jobstores import sqlalchemy as sched_sqlalchemy
 from sqlalchemy import desc, select, MetaData
+import logging
 
 from ndscheduler.corescheduler import constants
 from ndscheduler.corescheduler import utils
 from ndscheduler.corescheduler.datastore import tables
+
+logger = logging.getLogger(__name__)
 
 
 class DatastoreBase(sched_sqlalchemy.SQLAlchemyJobStore):
@@ -58,6 +61,9 @@ class DatastoreBase(sched_sqlalchemy.SQLAlchemyJobStore):
         super(DatastoreBase, self).__init__(url=self.get_db_url(), tablename=jobs_tablename)
 
         self.metadata.create_all(self.engine)
+
+        # clean-up interrupted executions
+        self._clean_executions()
 
     def get_db_url(self):
         """We can use the dict passed from db_config_dict to construct a db url.
@@ -161,6 +167,21 @@ class DatastoreBase(sched_sqlalchemy.SQLAlchemyJobStore):
             'executions': [self._build_execution(row) for row in rows]}
 
         return return_json
+
+    def _clean_executions(self):
+        # set all executions in state "scheduled", "running", or "stopping" to "failed"
+        sql_command = (
+            self.executions_table.update()
+            .where(self.executions_table.c.state < constants.EXECUTION_STATUS_STOPPED)
+            .values(
+                    state=constants.EXECUTION_STATUS_FAILED,
+                    result='{"error": "interrupted"}'
+            )
+        )
+        result = self.engine.execute(sql_command)
+        if result.rowcount > 0:
+            logger.warning(f"Cleaned Executions: {result.rowcount}")
+        return
 
     def add_audit_log(self, job_id, job_name, event, **kwargs):
         """Insert an audit log.

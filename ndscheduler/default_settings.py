@@ -19,6 +19,7 @@ DEBUG = True
 STATIC_DIR_PATH = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'static')
 TEMPLATE_DIR_PATH = STATIC_DIR_PATH
 APP_INDEX_PAGE = 'index.html'
+WEBSITE_TITLE = 'Scheduler'
 
 #
 # Server setup
@@ -100,3 +101,10 @@ logging.getLogger().setLevel(logging.INFO)
 
 # Packages that contains job classes, e.g., simple_scheduler.jobs
 JOB_CLASS_PACKAGES = []
+
+# Basic Auth
+#
+# If needs basic auth, modify the dict below
+# e.g. BASIC_AUTH_CREDENTIALS = {'username': 'password'}
+#
+BASIC_AUTH_CREDENTIALS = {}

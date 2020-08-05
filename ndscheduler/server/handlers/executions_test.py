@@ -5,8 +5,8 @@ import json
 
 import tornado.testing
 
-from ndscheduler import constants
-from ndscheduler.core import scheduler_manager
+from ndscheduler.corescheduler import constants
+from ndscheduler.corescheduler import scheduler_manager
 from ndscheduler.server import server
 from ndscheduler.server.handlers import executions
 
@@ -41,7 +41,12 @@ class ExecutionsTest(tornado.testing.AsyncHTTPTestCase):
     def get_app(self):
         # Shouldn't use singleton here. Or the test will reuse IOLoop and cause
         #   RuntimeError: IOLoop is closing
-        self.scheduler = scheduler_manager.SchedulerManager()
+        scp = 'ndscheduler.corescheduler.core.base.BaseScheduler'
+        dcp = 'ndscheduler.corescheduler.datastore.providers.sqlite.DatastoreSqlite'
+        self.scheduler = scheduler_manager.SchedulerManager(
+            scheduler_class_path=scp,
+            datastore_class_path=dcp
+        )
         self.server = server.SchedulerServer(self.scheduler)
         return self.server.application
 
@@ -55,9 +60,9 @@ class ExecutionsTest(tornado.testing.AsyncHTTPTestCase):
         datastore.add_execution(execution1['eid'], execution1['job_id'], execution1['state'])
         response = self.fetch(self.EXECUTIONS_URL + '/%s?sync=true' % execution1['eid'])
         return_info = json.loads(response.body.decode())
-        self.assertEquals(return_info['execution_id'], execution1['eid'])
-        self.assertEquals(return_info['state'],
-                          constants.EXECUTION_STATUS_DICT[execution1['state']])
+        self.assertEqual(return_info['execution_id'], execution1['eid'])
+        self.assertEqual(return_info['state'],
+                         constants.EXECUTION_STATUS_DICT[execution1['state']])
 
     def test_get_execution1(self):
         datastore = self.scheduler.get_datastore()
@@ -73,4 +78,4 @@ class ExecutionsTest(tornado.testing.AsyncHTTPTestCase):
         response = self.fetch(self.EXECUTIONS_URL + '?time_range_end=%s' % (
             two_minutes_later.isoformat()))
         return_info = json.loads(response.body.decode())
-        self.assertEquals(return_info['executions'][0]['execution_id'], execution1['eid'])
+        self.assertEqual(return_info['executions'][0]['execution_id'], execution1['eid'])

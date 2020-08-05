@@ -1,4 +1,29 @@
-"""Constants used in ndscheduler library."""
+"""Constants used in corescheduler library."""
+
+#
+# Database settings
+#
+DEFAULT_JOBS_TABLENAME = 'scheduler_jobs'
+DEFAULT_EXECUTIONS_TABLENAME = 'scheduler_execution'
+DEFAULT_AUDIT_LOGS_TABLENAME = 'scheduler_jobauditlog'
+
+#
+# APScheduler Settings
+#
+DEFAULT_THREAD_POOL_SIZE = 4
+DEFAULT_JOB_MAX_INSTANCES = 3
+DEFAULT_JOB_COALESCE = True
+DEFAULT_TIMEZONE = 'UTC'
+
+# When a job is misfired -- A job were to run at a specific time, but due to some
+# reason (e.g., scheduler restart), we miss that run.
+#
+# By default, if a job is misfired within 1 hour, the scheduler will rerun it.
+# Otherwise, if it's misfired over 1 hour, the scheduler will not rerun it.
+DEFAULT_JOB_MISFIRE_GRACE_SEC = 3600
+
+# Number of args passed to jobs
+JOB_ARGS = 5
 
 #
 # Execution status

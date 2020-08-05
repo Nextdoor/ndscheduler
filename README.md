@@ -23,14 +23,16 @@ Check out our blog post - [We Don't Run Cron Jobs at Nextdoor](https://engblog.n
 
 ## Key Abstractions
 
-* [Core](https://github.com/Nextdoor/ndscheduler/tree/master/ndscheduler/core): a bunch of resuable components
-  * [Datastore](https://github.com/Nextdoor/ndscheduler/tree/master/ndscheduler/core/datastore): manages database connections and makes queries; could support Postgres, MySQL, and sqlite.
+* [CoreScheduler](https://github.com/Nextdoor/ndscheduler/tree/master/ndscheduler/corescheduler): encapsulates all core scheduling functionality, and consists of:
+  * [Datastore](https://github.com/Nextdoor/ndscheduler/tree/master/ndscheduler/corescheduler/datastore): manages database connections and makes queries; could support Postgres, MySQL, and sqlite.
     * Job: represents a schedule job and decides how to run a paricular job.
     * Execution: represents an instance of job execution.
     * AuditLog: logs when and who runs what job.
-  * [ScheduleManager](https://github.com/Nextdoor/ndscheduler/blob/master/ndscheduler/core/scheduler_manager.py): access Datastore to manage jobs, i.e., schedule/modify/delete/pause/resume a job.
+  * [ScheduleManager](https://github.com/Nextdoor/ndscheduler/blob/master/ndscheduler/corescheduler/scheduler_manager.py): access Datastore to manage jobs, i.e., schedule/modify/delete/pause/resume a job.
 * [Server](https://github.com/Nextdoor/ndscheduler/tree/master/ndscheduler/server): a tornado server that runs ScheduleManager and provides REST APIs and serves UI.
 * [Web UI](https://github.com/Nextdoor/ndscheduler/tree/master/ndscheduler/static): a single page HTML app; this is a default implementation.
+
+Note: ``corescheduler`` can also be used independently within your own service if you use a different Tornado server / Web UI.
 
 ## Try it NOW
 
@@ -100,6 +102,10 @@ After you set up ``Settings``, ``Server`` and ``Jobs``, you can run the whole th
     NDSCHEDULER_SETTINGS_MODULE=simple_scheduler.settings \
     PYTHONPATH=.:$(PYTHONPATH) \
 		    python simple_scheduler/scheduler.py
+		  
+### Upgrading
+
+It is best practice to backup your database before doing any upgrade. ndscheduler relies on [apscheduler](https://apscheduler.readthedocs.io/en/latest/) to serialize jobs to the database, and while it is usually backwards-compatible (i.e. jobs created with an older version of apscheduler will continue to work after upgrading apscheduler) this is not guaranteed, and it is known that downgrading apscheduler can cause issues. See [this PR comment](https://github.com/Nextdoor/ndscheduler/pull/54#issue-262152050) for more details.
 
 ### Reference Implementation
 

@@ -3,24 +3,18 @@
 import datetime
 import unittest
 
-from ndscheduler import constants
-from ndscheduler.core.datastore.providers import base
+from apscheduler.schedulers.blocking import BlockingScheduler
 
-
-class SimpleDatastore(base.DatastoreBase):
-
-    @classmethod
-    def get_db_url(cls):
-        return 'sqlite:///'
-
-    def get_time_isoformat_from_db(self, time_object):
-        return time_object
+from ndscheduler.corescheduler import constants
+from ndscheduler.corescheduler.datastore.providers.sqlite import DatastoreSqlite
 
 
 class DatastoreBaseTest(unittest.TestCase):
 
     def setUp(self):
-        self.store = SimpleDatastore.get_instance()
+        fake_scheduler = BlockingScheduler()
+        self.store = DatastoreSqlite.get_instance()
+        self.store.start(fake_scheduler, None)
 
     def test_add_execution_get_execution(self):
         eid = '12345'
@@ -54,14 +48,14 @@ class DatastoreBaseTest(unittest.TestCase):
         executions = self.store.get_executions(start_time, end_time)
         self.assertEqual(len(executions['executions']), 2)
 
-    def test_add_aduit_log_get_audit_logs(self):
+    def test_add_audit_log_get_audit_logs(self):
         job_id = '234'
         job_name = 'asdfs'
         event = constants.AUDIT_LOG_ADDED
         user = 'aa'
         description = 'hihi'
 
-        self.store.add_audit_log(job_id, job_name, event, user, description)
+        self.store.add_audit_log(job_id, job_name, event, user=user, description=description)
 
         now = datetime.datetime.utcnow()
         five_min_ago = now - datetime.timedelta(minutes=5)

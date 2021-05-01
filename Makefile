@@ -2,7 +2,7 @@ SHELL:=/bin/bash
 PYTHON=.venv/bin/python
 PIP=.venv/bin/pip
 SOURCE_VENV=. .venv/bin/activate
-FLAKE8_CHECKING=$(SOURCE_VENV) && flake8 ndscheduler simple_scheduler --max-line-length 100
+FLAKE8_CHECKING=$(SOURCE_VENV) && flake8 ndscheduler simple_scheduler --max-line-length 120
 
 all: test
 

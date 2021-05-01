@@ -13,13 +13,9 @@ class SchedulerManagerTest(tornado.testing.AsyncTestCase):
         super(SchedulerManagerTest, self).setUp(*args, **kwargs)
 
         scheduler_class = "ndscheduler.corescheduler.core.base.BaseScheduler"
-        datastore_class = (
-            "ndscheduler.corescheduler.datastore.providers.sqlite.DatastoreSqlite"
-        )
+        datastore_class = "ndscheduler.corescheduler.datastore.providers.sqlite.DatastoreSqlite"
 
-        self.scheduler = scheduler_manager.SchedulerManager(
-            scheduler_class, datastore_class
-        )
+        self.scheduler = scheduler_manager.SchedulerManager(scheduler_class, datastore_class)
         self.scheduler.start()
 
     def tearDown(self, *args, **kwargs):
@@ -39,15 +35,7 @@ class SchedulerManagerTest(tornado.testing.AsyncTestCase):
 
         # non-blocking operation
         job_id = self.scheduler.add_job(
-            task_name,
-            name,
-            pub_args,
-            month,
-            day_of_week,
-            day,
-            hour,
-            minute,
-            languages="en-us",
+            task_name, name, pub_args, month, day_of_week, day, hour, minute, languages="en-us",
         )
 
         self.assertTrue(len(job_id), 32)
@@ -89,9 +77,7 @@ class SchedulerManagerTest(tornado.testing.AsyncTestCase):
         minute = "*/4"
 
         # non-blocking operation
-        job_id = self.scheduler.add_job(
-            job_class_string, name, pub_args, month, day_of_week, day, hour, minute
-        )
+        job_id = self.scheduler.add_job(job_class_string, name, pub_args, month, day_of_week, day, hour, minute)
 
         self.assertTrue(len(job_id), 32)
 
@@ -102,11 +88,7 @@ class SchedulerManagerTest(tornado.testing.AsyncTestCase):
 
         # non-blocking operation
         self.scheduler.modify_job(
-            job_id,
-            name=name,
-            job_class_string=job_class_string,
-            pub_args=args,
-            month=month,
+            job_id, name=name, job_class_string=job_class_string, pub_args=args, month=month,
         )
 
         # blocking operation

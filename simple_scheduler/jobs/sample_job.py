@@ -4,24 +4,22 @@ from ndscheduler.corescheduler import job
 
 
 class AwesomeJob(job.JobBase):
-
     @classmethod
     def meta_info(cls):
         return {
-            'job_class_string': '%s.%s' % (cls.__module__, cls.__name__),
-            'notes': 'This will print a string in your shell. Check it out!',
-            'arguments': [
+            "job_class_string": "%s.%s" % (cls.__module__, cls.__name__),
+            "notes": "This will print a string in your shell. Check it out!",
+            "arguments": [
                 # argument1
-                {'type': 'string', 'description': 'First argument'},
-
+                {"type": "string", "description": "First argument"},
                 # argument2
-                {'type': 'string', 'description': 'Second argument'}
+                {"type": "string", "description": "Second argument"},
             ],
-            'example_arguments': '["first argument AAA", "second argument BBB"]'
+            "example_arguments": '["first argument AAA", "second argument BBB"]',
         }
 
     def run(self, argument1, argument2, *args, **kwargs):
-        print('Hello from AwesomeJob! Argument1: %s, Argument2: %s' % (argument1, argument2))
+        print("Hello from AwesomeJob! Argument1: %s, Argument2: %s" % (argument1, argument2))
         return [argument1, argument2]
 
 

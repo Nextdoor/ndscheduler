@@ -11,9 +11,7 @@ from email.utils import COMMASPACE, formatdate
 from os.path import basename
 
 
-def send(
-    mail_from: str, mail_to: list, subject: str, text: str, priority=3, attachments=[],
-) -> dict:
+def send(mail_from: str, mail_to: list, subject: str, text: str, priority=3, attachments=[],) -> dict:
     """Send email
 
     Parameters
@@ -59,19 +57,13 @@ def send(
                 with open(file, "rb") as f:
                     part = MIMEApplication(f.read(), Name=basename(file))
                 # After the file is closed
-                part["Content-Disposition"] = 'attachment; filename="%s"' % basename(
-                    file
-                )
+                part["Content-Disposition"] = 'attachment; filename="%s"' % basename(file)
                 msg.attach(part)
             except FileNotFoundError:
-                logger.debug(
-                    f"Failed to send mail from {mail_from} to {recipients}, file '{file}' doesn't exist"
-                )
+                logger.debug(f"Failed to send mail from {mail_from} to {recipients}, file '{file}' doesn't exist")
                 return {"returncode": 10, "error": f"File '{file}' doesn't exist"}
             except PermissionError:
-                logger.debug(
-                    f"Failed to send mail from {mail_from} to {recipients}, file '{file}' access denied"
-                )
+                logger.debug(f"Failed to send mail from {mail_from} to {recipients}, file '{file}' access denied")
                 return {"returncode": 11, "error": f"Access denied for file '{file}'"}
 
     result = 0
@@ -95,7 +87,5 @@ def send(
             error_msg = f"Server {smtp_server}: {e}"
             result = 4
 
-    logger.debug(
-        f"Mail sent from {mail_from} to {recipients}, result={result}, error='{error_msg}'"
-    )
+    logger.debug(f"Mail sent from {mail_from} to {recipients}, result={result}, error='{error_msg}'")
     return {"returncode": result, "error": error_msg}

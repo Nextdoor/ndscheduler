@@ -18,24 +18,19 @@ class DatastoreBaseTest(unittest.TestCase):
     def test_add_execution_get_execution(self):
         eid = "12345"
         job_id = "321"
-        self.store.add_execution(
-            eid, job_id, state=constants.EXECUTION_STATUS_SCHEDULED
-        )
+        self.store.add_execution(eid, job_id, state=constants.EXECUTION_STATUS_SCHEDULED)
         execution = self.store.get_execution(eid)
         self.assertEqual(execution["execution_id"], eid)
 
     def test_update_execution_get_execution(self):
         eid = "12346"
         job_id = "321"
-        self.store.add_execution(
-            eid, job_id, state=constants.EXECUTION_STATUS_SCHEDULED
-        )
+        self.store.add_execution(eid, job_id, state=constants.EXECUTION_STATUS_SCHEDULED)
         self.store.update_execution(eid, state=constants.EXECUTION_STATUS_RUNNING)
         execution = self.store.get_execution(eid)
         self.assertEqual(execution["execution_id"], eid)
         self.assertEqual(
-            execution["state"],
-            constants.EXECUTION_STATUS_DICT[constants.EXECUTION_STATUS_RUNNING],
+            execution["state"], constants.EXECUTION_STATUS_DICT[constants.EXECUTION_STATUS_RUNNING],
         )
 
     def test_get_executions_by_time_interval(self):
@@ -43,10 +38,7 @@ class DatastoreBaseTest(unittest.TestCase):
         start_time = (now + datetime.timedelta(minutes=20)).isoformat()
         end_time = (now + datetime.timedelta(minutes=100)).isoformat()
         self.store.add_execution(
-            "12",
-            "34",
-            state=constants.EXECUTION_STATUS_SCHEDULED,
-            scheduled_time=now + datetime.timedelta(minutes=5),
+            "12", "34", state=constants.EXECUTION_STATUS_SCHEDULED, scheduled_time=now + datetime.timedelta(minutes=5),
         )
         self.store.add_execution(
             "13",
@@ -76,9 +68,7 @@ class DatastoreBaseTest(unittest.TestCase):
         user = "aa"
         description = "hihi"
 
-        self.store.add_audit_log(
-            job_id, job_name, event, user=user, description=description
-        )
+        self.store.add_audit_log(job_id, job_name, event, user=user, description=description)
 
         now = datetime.datetime.utcnow()
         five_min_ago = now - datetime.timedelta(minutes=5)

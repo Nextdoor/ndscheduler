@@ -120,10 +120,7 @@ class Handler(base.BaseHandler):
 
         # Blocking operation.
         self.datastore.add_audit_log(
-            job_id,
-            self.json_args["name"],
-            constants.AUDIT_LOG_ADDED,
-            user=self.username,
+            job_id, self.json_args["name"], constants.AUDIT_LOG_ADDED, user=self.username,
         )
 
         response = {"job_id": job_id}
@@ -143,11 +140,7 @@ class Handler(base.BaseHandler):
         self.scheduler_manager.remove_job(job_id)
 
         self.datastore.add_audit_log(
-            job_id,
-            job["name"],
-            constants.AUDIT_LOG_DELETED,
-            user=self.username,
-            description=json.dumps(job),
+            job_id, job["name"], constants.AUDIT_LOG_DELETED, user=self.username, description=json.dumps(job),
         )
 
     @tornado.concurrent.run_on_executor
@@ -183,10 +176,11 @@ class Handler(base.BaseHandler):
         :rtype: str
         """
         if old_job[item] != new_job[item]:
-            return (
-                '<b>%s</b>: <font color="red">%s</font> =>'
-                ' <font color="green">%s</font><br>'
-            ) % (item, old_job[item], new_job[item])
+            return ('<b>%s</b>: <font color="red">%s</font> =>' ' <font color="green">%s</font><br>') % (
+                item,
+                old_job[item],
+                new_job[item],
+            )
         return ""
 
     def _generate_description_for_modify(self, old_job, new_job):
@@ -281,9 +275,7 @@ class Handler(base.BaseHandler):
         # Blocking operation.
         job = self._get_job(job_id)
 
-        self.datastore.add_audit_log(
-            job_id, job["name"], constants.AUDIT_LOG_PAUSED, user=self.username
-        )
+        self.datastore.add_audit_log(job_id, job["name"], constants.AUDIT_LOG_PAUSED, user=self.username)
 
         response = {"job_id": job_id}
         self.set_status(200)
@@ -308,9 +300,7 @@ class Handler(base.BaseHandler):
 
         # Blocking operation.
         job = self._get_job(job_id)
-        self.datastore.add_audit_log(
-            job_id, job["name"], constants.AUDIT_LOG_RESUMED, user=self.username
-        )
+        self.datastore.add_audit_log(job_id, job["name"], constants.AUDIT_LOG_RESUMED, user=self.username)
 
         response = {"job_id": job_id}
         self.set_status(200)
@@ -328,9 +318,7 @@ class Handler(base.BaseHandler):
         all_required_fields = ["name", "job_class_string"]
         for field in all_required_fields:
             if field not in self.json_args:
-                raise tornado.web.HTTPError(
-                    400, reason="Require this parameter: %s" % field
-                )
+                raise tornado.web.HTTPError(400, reason="Require this parameter: %s" % field)
 
         at_least_one_required_fields = ["month", "day", "hour", "minute", "day_of_week"]
         valid_cron_string = False
@@ -342,8 +330,5 @@ class Handler(base.BaseHandler):
         if not valid_cron_string:
             raise tornado.web.HTTPError(
                 400,
-                reason=(
-                    "Require at least one of following parameters:"
-                    " %s" % str(at_least_one_required_fields)
-                ),
+                reason=("Require at least one of following parameters:" " %s" % str(at_least_one_required_fields)),
             )

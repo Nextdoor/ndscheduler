@@ -2,7 +2,6 @@
 
 import json
 import logging
-import sys
 from getpass import getuser
 
 from apscheduler.schedulers import tornado as apscheduler_tornado
@@ -37,14 +36,7 @@ class BaseScheduler(apscheduler_tornado.TornadoScheduler):
 
     @classmethod
     def run_job(
-        cls,
-        job_class_path,
-        job_id,
-        db_class_path,
-        db_config,
-        db_tablenames,
-        *args,
-        **kwargs,
+        cls, job_class_path, job_id, db_class_path, db_config, db_tablenames, *args, **kwargs,
     ):
         """
         :param str job_class_path: String for job class, e.g., 'myscheduler.jobs.a_job.NiceJob'
@@ -58,9 +50,7 @@ class BaseScheduler(apscheduler_tornado.TornadoScheduler):
         :return: string execution id
         """
         execution_id = utils.generate_uuid()
-        datastore = utils.get_datastore_instance(
-            db_class_path, db_config, db_tablenames
-        )
+        datastore = utils.get_datastore_instance(db_class_path, db_config, db_tablenames)
         datastore.add_execution(
             execution_id,
             job_id,
@@ -74,9 +64,7 @@ class BaseScheduler(apscheduler_tornado.TornadoScheduler):
                 state=constants.EXECUTION_STATUS_SCHEDULED,
                 description=job_class.get_scheduled_description(),
             )
-            cls.run_scheduler_job(
-                job_class, job_id, execution_id, datastore, *args, **kwargs
-            )
+            cls.run_scheduler_job(job_class, job_id, execution_id, datastore, *args, **kwargs)
         except Exception:
             datastore.update_execution(
                 execution_id,
@@ -113,9 +101,7 @@ class BaseScheduler(apscheduler_tornado.TornadoScheduler):
         pass
 
     @classmethod
-    def run_scheduler_job(
-        cls, job_class, job_id, execution_id, datastore, *args, **kwargs
-    ):
+    def run_scheduler_job(cls, job_class, job_id, execution_id, datastore, *args, **kwargs):
         """Run a job.
         :param JobBase job_class: An instance of the job to run, e.g. myscheduler.jobs.a_job.NiceJob
         :param str job_id: Job id
@@ -140,11 +126,7 @@ class BaseScheduler(apscheduler_tornado.TornadoScheduler):
             result_json = json.dumps(result, indent=4, sort_keys=True)
             if type(result) is dict and (
                 ("error" in result and result["error"])
-                or (
-                    "returncode" in result
-                    and type(result["returncode"]) is int
-                    and result["returncode"] > 0
-                )
+                or ("returncode" in result and type(result["returncode"]) is int and result["returncode"] > 0)
             ):
                 state = constants.EXECUTION_STATUS_FAILED
             else:
@@ -162,25 +144,17 @@ class BaseScheduler(apscheduler_tornado.TornadoScheduler):
                 execution_id, state=state, description=description, result=result_json,
             )
         # If job wasn't completed successfully, then send an email to the ADMIN (if defined)
-        logger.debug(
-            f"Completed job {job_id}, status={constants.EXECUTION_STATUS_FAILED}"
-        )
-        if (
-            settings.ADMIN_MAIL
-            and settings.SERVER_MAIL
-            and state == constants.EXECUTION_STATUS_FAILED
-        ):
-            hostname = utils.get_hostname()
+        logger.debug(f"Completed job {job_id}, status={constants.EXECUTION_STATUS_FAILED}")
+        if settings.ADMIN_MAIL and settings.SERVER_MAIL and state == constants.EXECUTION_STATUS_FAILED:
+            # hostname = utils.get_hostname()
             job = datastore.lookup_job(job_id)
-            logger.debug(
-                f"Send failure notification to {settings.ADMIN_MAIL}: job '{job.name}'"
-            )
+            logger.debug(f"Send failure notification to {settings.ADMIN_MAIL}: job '{job.name}'")
             sender = (
                 settings.SERVER_MAIL
                 if "<" in settings.SERVER_MAIL
                 else f"{getuser()}.{utils.get_hostname()} <{settings.SERVER_MAIL}>"
             )
-            mail_result = mail.send(
+            _ = mail.send(
                 mail_from=sender,  # settings.SERVER_MAIL,
                 mail_to=settings.ADMIN_MAIL,
                 subject=f"ERROR: Job '{job.name}' did not succeed on {settings.WEBSITE_TITLE}.",

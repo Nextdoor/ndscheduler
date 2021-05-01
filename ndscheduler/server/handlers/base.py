@@ -6,7 +6,6 @@ subclassed in the rest of the app for different URLs.
 
 import logging
 import json
-import base64
 import bcrypt
 
 from concurrent import futures
@@ -15,8 +14,6 @@ import tornado.web
 import tornado.gen
 
 from ndscheduler import settings
-
-from time import sleep
 
 
 class BaseHandler(tornado.web.RequestHandler):
@@ -34,9 +31,7 @@ class BaseHandler(tornado.web.RequestHandler):
             self.json_args = None
 
         # clear expired cookies
-        if not self.get_secure_cookie(
-            settings.COOKIE_NAME, max_age_days=settings.COOKIE_MAX_AGE
-        ):
+        if not self.get_secure_cookie(settings.COOKIE_NAME, max_age_days=settings.COOKIE_MAX_AGE):
             self.clear_cookie(settings.COOKIE_NAME)
         # For audit log
         self.username = self.get_username()
@@ -45,9 +40,7 @@ class BaseHandler(tornado.web.RequestHandler):
 
     def get_current_user(self):
         if len(self.auth_credentials) > 0:
-            return self.get_secure_cookie(
-                settings.COOKIE_NAME, max_age_days=settings.COOKIE_MAX_AGE
-            )
+            return self.get_secure_cookie(settings.COOKIE_NAME, max_age_days=settings.COOKIE_MAX_AGE)
         else:
             return "anonymous"
 
@@ -60,34 +53,24 @@ class BaseHandler(tornado.web.RequestHandler):
         :rtype: str
         """
 
-        username = self.get_secure_cookie(
-            settings.COOKIE_NAME, max_age_days=settings.COOKIE_MAX_AGE
-        )
+        username = self.get_secure_cookie(settings.COOKIE_NAME, max_age_days=settings.COOKIE_MAX_AGE)
         return "anonymous" if username is None else username.decode()
 
 
 class LoginHandler(BaseHandler):
     def get(self):
-        self.write(f"Login required!")
-        self.write(
-            "<script>$('#modalLoginForm').modal({backdrop: 'static', keyboard: false});</script>"
-        )
+        self.write("Login required!")
+        self.write("<script>$('#modalLoginForm').modal({backdrop: 'static', keyboard: false});</script>")
 
     def post(self):
         username = self.get_argument("username")
         hashed = self.auth_credentials.get(username)
-        if hashed is not None and bcrypt.checkpw(
-            self.get_argument("password").encode(), hashed.encode()
-        ):
+        if hashed is not None and bcrypt.checkpw(self.get_argument("password").encode(), hashed.encode()):
             # 6h = 0.25 days
             # 1h = 0.041666667 days
             # 1min = 0.000694444 days
-            self.set_secure_cookie(
-                settings.COOKIE_NAME, username, expires_days=settings.COOKIE_MAX_AGE
-            )
-            logging.debug(
-                f"Set cookie for user {username}, expires: {settings.COOKIE_MAX_AGE * 1440} minutes"
-            )
+            self.set_secure_cookie(settings.COOKIE_NAME, username, expires_days=settings.COOKIE_MAX_AGE)
+            logging.debug(f"Set cookie for user {username}, expires: {settings.COOKIE_MAX_AGE * 1440} minutes")
             self.redirect("/")
         else:
             self.redirect("/")

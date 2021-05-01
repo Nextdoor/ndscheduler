@@ -1,15 +1,9 @@
-import tornado.concurrent
-import tornado.gen
-import tornado.web
-import confuse
-
 from ndscheduler import settings
 from ndscheduler.server.handlers import base
 from ndscheduler.version import __version__
 from getpass import getuser
 from os import uname
 import bcrypt
-from time import sleep
 from datetime import datetime as dt
 
 
@@ -36,10 +30,8 @@ class Handler(base.BaseHandler):
         username = self.get_argument("username")
         new_pwd = self.get_argument("new_pwd")
         hashed = self.auth_credentials.get(username)
-        if hashed is not None and bcrypt.checkpw(
-            self.get_argument("password").encode(), hashed.encode()
-        ):
-            self.website_info["message"] = f"Changed Password!"
+        if hashed is not None and bcrypt.checkpw(self.get_argument("password").encode(), hashed.encode()):
+            self.website_info["message"] = "Changed Password!"
             self.website_info["changed"] = True
             self.render(
                 "passwd.html", website_info=self.website_info,
@@ -49,7 +41,8 @@ class Handler(base.BaseHandler):
             settings.AUTH_CREDENTIALS[username] = new_pwd
             with open(settings.YAML_CONFIG_FILE, "w") as f:
                 f.write(
-                    f"# Password changed by user '{self.current_user.decode()}' on {dt.now().strftime('%d.%m.%Y at %H:%M:%S')}\n\n"
+                    f"# Password changed by user '{self.current_user.decode()}' on "
+                    f"{dt.now().strftime('%d.%m.%Y at %H:%M:%S')}\n\n"
                 )
                 f.write(settings.YAML_CONFIG.dump(full=False))
         else:

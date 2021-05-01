@@ -48,9 +48,7 @@ def get_all_available_jobs():
                 if filename == "__init__.py":
                     continue
                 module_name = filename[:-3]
-                job_module = importlib.import_module(
-                    "%s.%s" % (job_class_package, module_name)
-                )
+                job_module = importlib.import_module("%s.%s" % (job_class_package, module_name))
                 for property in dir(job_module):
                     module_property = getattr(job_module, property)
                     try:

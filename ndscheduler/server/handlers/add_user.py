@@ -1,7 +1,6 @@
 import tornado.concurrent
 import tornado.gen
 import tornado.web
-import confuse
 
 from ndscheduler import settings
 from ndscheduler.server.handlers import base
@@ -9,7 +8,6 @@ from ndscheduler.version import __version__
 from getpass import getuser
 from os import uname
 import bcrypt
-from time import sleep
 from datetime import datetime as dt
 
 
@@ -49,7 +47,8 @@ class Handler(base.BaseHandler):
             settings.AUTH_CREDENTIALS[username] = new_pwd
             with open(settings.YAML_CONFIG_FILE, "w") as f:
                 f.write(
-                    f"# Configuration updated by user '{self.current_user.decode()}' on {dt.now().strftime('%d.%m.%Y at %H:%M:%S')}\n\n"
+                    f"# Configuration updated by user '{self.current_user.decode()}' on "
+                    f"{dt.now().strftime('%d.%m.%Y at %H:%M:%S')}\n\n"
                 )
                 f.write(settings.YAML_CONFIG.dump(full=False))
         else:

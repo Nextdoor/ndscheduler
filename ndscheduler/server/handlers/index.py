@@ -27,9 +27,7 @@ class Handler(base.BaseHandler):
         # Get job pack versions
         job_versions = []
         for job in settings.JOB_CLASS_PACKAGES:
-            job_versions.append(
-                f"{job} v{pkg_resources.require(job.split('.')[0])[0].version}"
-            )
+            job_versions.append(f"{job} v{pkg_resources.require(job.split('.')[0])[0].version}")
 
         website_info = {
             "title": settings.WEBSITE_TITLE,
@@ -37,8 +35,7 @@ class Handler(base.BaseHandler):
             "job_versions": ", ".join(job_versions),
             "user": getuser(),
             "host": uname()[1],
-            "admin_user": self.current_user
-            and self.current_user.decode() in settings.ADMIN_USER,
+            "admin_user": self.current_user and self.current_user.decode() in settings.ADMIN_USER,
             "help_url": settings.HELP_URL,
         }
 

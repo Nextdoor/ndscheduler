@@ -37,9 +37,7 @@ class SchedulerManager:
         :param int thread_pool_size: Int thread pool size
         :param str timezone: str timezone to schedule jobs in, e.g. 'UTC'
         """
-        datastore = utils.get_datastore_instance(
-            datastore_class_path, db_config, db_tablenames
-        )
+        datastore = utils.get_datastore_instance(datastore_class_path, db_config, db_tablenames)
         job_stores = {"default": datastore}
 
         job_default = {
@@ -111,15 +109,7 @@ class SchedulerManager:
         :rtype: str
         """
         return self.sched.add_scheduler_job(
-            job_class_string,
-            name,
-            pub_args,
-            month,
-            day_of_week,
-            day,
-            hour,
-            minute,
-            **kwargs
+            job_class_string, name, pub_args, month, day_of_week, day, hour, minute, **kwargs
         )
 
     def pause_job(self, job_id):

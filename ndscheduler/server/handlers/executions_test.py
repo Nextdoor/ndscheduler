@@ -42,9 +42,7 @@ class ExecutionsTest(tornado.testing.AsyncHTTPTestCase):
         #   RuntimeError: IOLoop is closing
         scp = "ndscheduler.corescheduler.core.base.BaseScheduler"
         dcp = "ndscheduler.corescheduler.datastore.providers.sqlite.DatastoreSqlite"
-        self.scheduler = scheduler_manager.SchedulerManager(
-            scheduler_class_path=scp, datastore_class_path=dcp
-        )
+        self.scheduler = scheduler_manager.SchedulerManager(scheduler_class_path=scp, datastore_class_path=dcp)
         self.server = server.SchedulerServer(self.scheduler)
         return self.server.application
 
@@ -55,15 +53,11 @@ class ExecutionsTest(tornado.testing.AsyncHTTPTestCase):
             "job_id": "5678",
             "state": constants.EXECUTION_STATUS_SCHEDULED,
         }
-        datastore.add_execution(
-            execution1["eid"], execution1["job_id"], execution1["state"]
-        )
+        datastore.add_execution(execution1["eid"], execution1["job_id"], execution1["state"])
         response = self.fetch(self.EXECUTIONS_URL + "/%s?sync=true" % execution1["eid"])
         return_info = json.loads(response.body.decode())
         self.assertEqual(return_info["execution_id"], execution1["eid"])
-        self.assertEqual(
-            return_info["state"], constants.EXECUTION_STATUS_DICT[execution1["state"]]
-        )
+        self.assertEqual(return_info["state"], constants.EXECUTION_STATUS_DICT[execution1["state"]])
 
     def test_get_execution1(self):
         datastore = self.scheduler.get_datastore()
@@ -74,16 +68,9 @@ class ExecutionsTest(tornado.testing.AsyncHTTPTestCase):
             "scheduled_time": datetime.datetime.utcnow(),
         }
         datastore.add_execution(
-            execution1["eid"],
-            execution1["job_id"],
-            execution1["state"],
-            scheduled_time=execution1["scheduled_time"],
+            execution1["eid"], execution1["job_id"], execution1["state"], scheduled_time=execution1["scheduled_time"],
         )
         two_minutes_later = execution1["scheduled_time"] + datetime.timedelta(minutes=2)
-        response = self.fetch(
-            self.EXECUTIONS_URL + "?time_range_end=%s" % (two_minutes_later.isoformat())
-        )
+        response = self.fetch(self.EXECUTIONS_URL + "?time_range_end=%s" % (two_minutes_later.isoformat()))
         return_info = json.loads(response.body.decode())
-        self.assertEqual(
-            return_info["executions"][0]["execution_id"], execution1["eid"]
-        )
+        self.assertEqual(return_info["executions"][0]["execution_id"], execution1["eid"])

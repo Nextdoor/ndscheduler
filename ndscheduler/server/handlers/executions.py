@@ -62,9 +62,7 @@ class Handler(base.BaseHandler):
         now = datetime.utcnow()
         time_range_end = self.get_argument("time_range_end", now.isoformat())
         ten_minutes_ago = now - timedelta(minutes=10)
-        time_range_start = self.get_argument(
-            "time_range_start", ten_minutes_ago.isoformat()
-        )
+        time_range_start = self.get_argument("time_range_start", ten_minutes_ago.isoformat())
 
         executions = self.datastore.get_executions(time_range_start, time_range_end)
         return executions
@@ -133,11 +131,7 @@ class Handler(base.BaseHandler):
 
         # Audit log
         self.datastore.add_audit_log(
-            job_id,
-            job.name,
-            constants.AUDIT_LOG_CUSTOM_RUN,
-            user=self.username,
-            description=execution_id,
+            job_id, job.name, constants.AUDIT_LOG_CUSTOM_RUN, user=self.username, description=execution_id,
         )
 
         response = {"execution_id": execution_id}

@@ -115,26 +115,18 @@ class SchedulerServer:
             cls.singleton.start_scheduler()
 
             if settings.SSL_CERT and settings.SSL_KEY:
-                logging.debug(
-                    f"SSL_CERT: {settings.SSL_CERT}, SSL_KEY: {settings.SSL_KEY}"
-                )
+                logging.debug(f"SSL_CERT: {settings.SSL_CERT}, SSL_KEY: {settings.SSL_KEY}")
                 # HTTPS server
                 prefix = "https"
                 ssl_ctx = ssl.create_default_context(ssl.Purpose.CLIENT_AUTH)
                 ssl_ctx.load_cert_chain(settings.SSL_CERT, settings.SSL_KEY)
-                http_server = tornado.httpserver.HTTPServer(
-                    cls.singleton.application, ssl_options=ssl_ctx
-                )
+                http_server = tornado.httpserver.HTTPServer(cls.singleton.application, ssl_options=ssl_ctx)
                 http_server.listen(settings.HTTP_PORT, settings.HTTP_ADDRESS)
             else:
                 prefix = "http"
-                cls.singleton.application.listen(
-                    settings.HTTP_PORT, settings.HTTP_ADDRESS
-                )
+                cls.singleton.application.listen(settings.HTTP_PORT, settings.HTTP_ADDRESS)
 
-            logger.info(
-                f"Running server at {prefix}://{settings.HTTP_ADDRESS}:{settings.HTTP_PORT} ..."
-            )
+            logger.info(f"Running server at {prefix}://{settings.HTTP_ADDRESS}:{settings.HTTP_PORT} ...")
 
             if settings.HTTP_ADDRESS == "":
                 addr = "<this_host>"

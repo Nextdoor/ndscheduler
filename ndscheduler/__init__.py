@@ -56,9 +56,7 @@ def teardown_package():
 
 
 def get_cli_args():
-    parser = argparse.ArgumentParser(
-        description="NDscheduler - web based cron replacement", add_help=False,
-    )
+    parser = argparse.ArgumentParser(description="NDscheduler - web based cron replacement", add_help=False,)
     parser.add_argument(
         "--http-port",
         "-p",
@@ -69,11 +67,7 @@ def get_cli_args():
         choices=range(80, 65535),
     )
     parser.add_argument(
-        "--http-address",
-        "-a",
-        dest="HTTP_ADDRESS",
-        help="web server IP address",
-        type=str,
+        "--http-address", "-a", dest="HTTP_ADDRESS", help="web server IP address", type=str,
     )
     parser.add_argument(
         "--nd-settings",
@@ -89,10 +83,7 @@ def get_cli_args():
         "--logging-level", "-l", dest="LOGGING_LEVEL", help="logging level", type=str,
     )
     parser.add_argument(
-        "--encrypt",
-        "-e",
-        help="Create hash value from password for use in AUTH_CREDENTIALS.",
-        action="store_true",
+        "--encrypt", "-e", help="Create hash value from password for use in AUTH_CREDENTIALS.", action="store_true",
     )
 
     args, _ = parser.parse_known_args()
@@ -103,9 +94,7 @@ def get_cli_args():
     if args.encrypt:
         if args.DEBUG:
             print()
-            print(
-                "WARNING: running in debug mode, password will be shown in clear text!"
-            )
+            print("WARNING: running in debug mode, password will be shown in clear text!")
             sleep(1)
         password = getpass(prompt="Enter password which should be hashed: ")
         sleep(0.2)
@@ -135,11 +124,7 @@ def get_cli_args():
 
 
 def load_yaml_config(
-    config_file=None,
-    args=None,
-    yaml_extras={},
-    app_name="ndscheduler",
-    default_config=__name__,
+    config_file=None, args=None, yaml_extras={}, app_name="ndscheduler", default_config=__name__,
 ):
     # Load config values from YAML file
 
@@ -168,9 +153,7 @@ def load_yaml_config(
             "auditlogs_tablename": confuse.String(default="scheduler_jobauditlog"),
         },
         # SQLite
-        "DATABASE_CLASS": confuse.Choice(
-            ["sqlite", "postgres", "mysql",], default="sqlite",
-        ),
+        "DATABASE_CLASS": confuse.Choice(["sqlite", "postgres", "mysql",], default="sqlite",),
         "DATABASE_CONFIG_DICT": {
             "file_path": confuse.String(default="datastore.db"),  # SQLite
             # additional attributes for MySQL and Postgres
@@ -183,16 +166,12 @@ def load_yaml_config(
         },  # Postgres
         # ndscheduler is based on apscheduler. Here we can customize the apscheduler's main scheduler class
         # Please see ndscheduler/core/scheduler/base.py
-        "SCHEDULER_CLASS": confuse.String(
-            default="ndscheduler.corescheduler.core.base.BaseScheduler"
-        ),
+        "SCHEDULER_CLASS": confuse.String(default="ndscheduler.corescheduler.core.base.BaseScheduler"),
         "LOGGING_LEVEL": confuse.String(default="INFO"),
         # Packages that contains job classes, e.g., simple_scheduler.jobs
         "JOB_CLASS_PACKAGES": confuse.StrSeq(default=""),
         # Secure Cookie Hash
-        "SECURE_COOKIE": confuse.String(
-            default="__TODO:_GENERATE_YOUR_OWN_RANDOM_VALUE_HERE__"
-        ),
+        "SECURE_COOKIE": confuse.String(default="__TODO:_GENERATE_YOUR_OWN_RANDOM_VALUE_HERE__"),
         # Name of the secure cookie
         "COOKIE_NAME": confuse.String(default="user"),
         # Secure cookie age in days (decimals are supported)
@@ -217,9 +196,7 @@ def load_yaml_config(
     }
 
     yaml_config = confuse.LazyConfig(app_name, default_config)
-    logger.debug(
-        f"Loading configuration from YAML config file, dir:{yaml_config.config_dir()}, file:{config_file}, "
-    )
+    logger.debug(f"Loading configuration from YAML config file, dir:{yaml_config.config_dir()}, file:{config_file}, ")
     if config_file:
         if Path(config_file).is_file():
             yaml_config.set_file(config_file)
@@ -238,16 +215,13 @@ def load_yaml_config(
     logger.info(f"Loaded YAML configuration: {config_file}")
 
     # Authentication is optional
-    if not "AUTH_CREDENTIALS" in yaml_config:
+    if "AUTH_CREDENTIALS" not in yaml_config:
         yaml_config["AUTH_CREDENTIALS"] = {}
 
     try:
         valid = yaml_config.get(yaml_template)
     except (confuse.NotFoundError, confuse.ConfigValueError) as e:
-        logger.error(
-            f"Value {e} in config file: {yaml_config.config_dir()}/"
-            f"{confuse.CONFIG_FILENAME}"
-        )
+        logger.error(f"Value {e} in config file: {yaml_config.config_dir()}/" f"{confuse.CONFIG_FILENAME}")
         exit(1)
 
     try:
@@ -307,19 +281,14 @@ class Settings(object):
                             setattr(self, setting, setting_value)
                 except ImportError as e:
                     error = ImportError(
-                        'Could not import settings "%s" (Is it on sys.path?): %s'
-                        % (settings_module_path, e)
+                        'Could not import settings "%s" (Is it on sys.path?): %s' % (settings_module_path, e)
                     )
                     logger.warning(error)
             except KeyError:
                 # NOTE: This is arguably an EnvironmentError, but that causes
                 # problems with Python's interactive help.
                 logger.warning(
-                    (
-                        "Environment variable %s is undefined. "
-                        "Use default settings for now."
-                    )
-                    % ENVIRONMENT_VARIABLE
+                    ("Environment variable %s is undefined. " "Use default settings for now.") % ENVIRONMENT_VARIABLE
                 )
             if hasattr(settings_module, "extra_parser"):
                 parents = [parser, getattr(settings_module, "extra_parser")]
@@ -343,11 +312,7 @@ class Settings(object):
                 parents=[parser],
             )
             extra_parser.add_argument(
-                "--yaml-config",
-                "-y",
-                dest="yaml_config",
-                help="Path to yaml config file",
-                type=str,
+                "--yaml-config", "-y", dest="yaml_config", help="Path to yaml config file", type=str,
             )
             extra_args, _ = extra_parser.parse_known_args()
             valid = load_yaml_config(config_file=extra_args.yaml_config, args=args,)

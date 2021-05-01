@@ -8,14 +8,14 @@ import logging
 DEBUG = True
 
 HTTP_PORT = 8888
-HTTP_ADDRESS = '0.0.0.0'
+HTTP_ADDRESS = "0.0.0.0"
 
 #
 # Set logging level
 #
 logging.getLogger().setLevel(logging.DEBUG)
 
-JOB_CLASS_PACKAGES = ['simple_scheduler.jobs']
+JOB_CLASS_PACKAGES = ["simple_scheduler.jobs"]
 
 # Secure Cookie Hash
 # SECURE_COOKIE = "__TODO:_GENERATE_YOUR_OWN_RANDOM_VALUE_HERE__"

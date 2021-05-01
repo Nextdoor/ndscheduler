@@ -21,9 +21,7 @@ class Handler(base.BaseHandler):
         now = datetime.utcnow()
         time_range_end = self.get_argument("time_range_end", now.isoformat())
         ten_minutes_ago = now - timedelta(minutes=10)
-        time_range_start = self.get_argument(
-            "time_range_start", ten_minutes_ago.isoformat()
-        )
+        time_range_start = self.get_argument("time_range_start", ten_minutes_ago.isoformat())
 
         logs = self.datastore.get_audit_logs(time_range_start, time_range_end)
         return logs
@@ -59,7 +57,8 @@ class Handler(base.BaseHandler):
                             "event": "modified",
                             "user": "",
                             "created_time": "",
-                            "description": "<script>$('#modalLoginForm').modal({backdrop: 'static', keyboard: false});</script>",
+                            "description": ("<script>$('#modalLoginForm').modal"
+                                "({backdrop: 'static', keyboard: false});</script>"),
                         }
                     ]
                 }

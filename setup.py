@@ -36,7 +36,7 @@ class CleanHook(clean):
         maybe_rm(".eggs")
         subprocess.call("rm -rf *.egg", shell=True)
         subprocess.call("rm -f datastore.db", shell=True)
-        subprocess.call('find . -name "*.pyc" -exec rm -rf {} \;', shell=True)
+        subprocess.call('find . -name "*.pyc" -exec rm -rf {} \\;', shell=True)
 
 
 # -*- Classifiers -*-
@@ -68,7 +68,7 @@ setup(
     keywords="scheduler nextdoor cron python",
     packages=find_packages(),
     include_package_data=True,
-    tests_require=["funcsigs", "mock >= 1.1.2", "nose", ],
+    tests_require=["funcsigs", "mock >= 1.1.2", "nose",],
     test_suite="nose.collector",
     python_requires=">=3.6.4",
     install_requires=[

@@ -57,16 +57,10 @@ class DatastoreBase(sched_sqlalchemy.SQLAlchemyJobStore):
             if "auditlogs_tablename" in table_names:
                 auditlogs_tablename = table_names["auditlogs_tablename"]
 
-        self.executions_table = tables.get_execution_table(
-            self.metadata, executions_tablename
-        )
-        self.auditlogs_table = tables.get_auditlogs_table(
-            self.metadata, auditlogs_tablename
-        )
+        self.executions_table = tables.get_execution_table(self.metadata, executions_tablename)
+        self.auditlogs_table = tables.get_auditlogs_table(self.metadata, auditlogs_tablename)
 
-        super(DatastoreBase, self).__init__(
-            url=self.get_db_url(), tablename=jobs_tablename
-        )
+        super(DatastoreBase, self).__init__(url=self.get_db_url(), tablename=jobs_tablename)
 
         self.metadata.create_all(self.engine)
 
@@ -109,9 +103,7 @@ class DatastoreBase(sched_sqlalchemy.SQLAlchemyJobStore):
         :param kwargs: Keyword arguments.
         """
         execution_update = (
-            self.executions_table.update()
-            .where(self.executions_table.c.eid == execution_id)
-            .values(**kwargs)
+            self.executions_table.update().where(self.executions_table.c.eid == execution_id).values(**kwargs)
         )
         self.engine.execute(execution_update)
 

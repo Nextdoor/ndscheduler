@@ -207,7 +207,11 @@ def load_yaml_config(
             logging.error(f"Config file '{config_file}' doesn't exist.")
             exit(1)
     else:
+        # default config file location
         config_file = f"{yaml_config.config_dir()}/{confuse.CONFIG_FILENAME}"
+        # if not Path(config_file).is_file():  # fall-back to defaults
+        #     config_file = os.path.dirname(__file__) + "/config_default.yaml"
+        #     yaml_config.set_file(config_file)
 
     if args:
         yaml_config.set_args(args, dots=True)

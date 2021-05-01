@@ -18,7 +18,7 @@ class CurlJob(job.JobBase):
             "notes": "This sends a HTTP request to a particular URL",
             "arguments": [
                 # url
-                {"type": "string", "description": "What URL you want to make a GET call?",},
+                {"type": "string", "description": "What URL you want to make a GET call?", },
                 # Request Type
                 {
                     "type": "string",

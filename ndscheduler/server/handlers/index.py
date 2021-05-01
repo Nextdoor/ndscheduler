@@ -10,8 +10,6 @@ from getpass import getuser
 from os import uname
 import pkg_resources
 
-import tornado.web
-
 
 class Handler(base.BaseHandler):
     """Index page request handler."""

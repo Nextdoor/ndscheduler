@@ -153,7 +153,7 @@ def load_yaml_config(
             "auditlogs_tablename": confuse.String(default="scheduler_jobauditlog"),
         },
         # SQLite
-        "DATABASE_CLASS": confuse.Choice(["sqlite", "postgres", "mysql",], default="sqlite",),
+        "DATABASE_CLASS": confuse.Choice(["sqlite", "postgres", "mysql", ], default="sqlite",),
         "DATABASE_CONFIG_DICT": {
             "file_path": confuse.String(default="datastore.db"),  # SQLite
             # additional attributes for MySQL and Postgres

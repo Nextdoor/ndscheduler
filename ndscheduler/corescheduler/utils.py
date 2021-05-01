@@ -49,7 +49,7 @@ def get_job_args(job):
     :return: task arguments
     :rtype: list of str
     """
-    return job.args[constants.JOB_ARGS :]
+    return job.args[constants.JOB_ARGS:]
 
 
 def get_job_kwargs(job):

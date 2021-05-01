@@ -58,7 +58,7 @@ class Handler(base.BaseHandler):
                             "user": "",
                             "created_time": "",
                             "description": ("<script>$('#modalLoginForm').modal"
-                                "({backdrop: 'static', keyboard: false});</script>"),
+                                            "({backdrop: 'static', keyboard: false});</script>"),
                         }
                     ]
                 }

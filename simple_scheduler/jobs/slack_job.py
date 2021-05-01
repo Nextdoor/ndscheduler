@@ -27,13 +27,13 @@ class SlackJob(job.JobBase):
             ),
             "arguments": [
                 # channel
-                {"type": "string", "description": "What channel you want to send the message to",},
+                {"type": "string", "description": "What channel you want to send the message to", },
                 # name
                 {"type": "string", "description": "This bot's name"},
                 # icon_emoji
                 {"type": "string", "description": "An emoji for this bot's avatar"},
                 # message
-                {"type": "string", "description": "The actual message you want to send.",},
+                {"type": "string", "description": "The actual message you want to send.", },
             ],
             "example_arguments": (
                 '["#slack-bot-test", "ndscheduler chat bot", ":satisfied:",' ' "Standup, team! @channel"]'

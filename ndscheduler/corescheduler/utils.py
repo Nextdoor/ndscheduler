@@ -19,8 +19,8 @@ def import_from_path(path):
     :rtype: class
     """
 
-    components = path.split('.')
-    module = __import__('.'.join(components[:-1]))
+    components = path.split(".")
+    module = __import__(".".join(components[:-1]))
     for comp in components[1:-1]:
         module = getattr(module, comp)
     return getattr(module, components[-1])
@@ -49,7 +49,7 @@ def get_job_args(job):
     :return: task arguments
     :rtype: list of str
     """
-    return job.args[constants.JOB_ARGS:]
+    return job.args[constants.JOB_ARGS :]
 
 
 def get_job_kwargs(job):
@@ -68,12 +68,13 @@ def get_cron_strings(job):
     :rtype: dict
     """
     return {
-        'month': str(job.trigger.fields[1]),
-        'day': str(job.trigger.fields[2]),
-        'week': str(job.trigger.fields[3]),
-        'day_of_week': str(job.trigger.fields[4]),
-        'hour': str(job.trigger.fields[5]),
-        'minute': str(job.trigger.fields[6])}
+        "month": str(job.trigger.fields[1]),
+        "day": str(job.trigger.fields[2]),
+        "week": str(job.trigger.fields[3]),
+        "day_of_week": str(job.trigger.fields[4]),
+        "hour": str(job.trigger.fields[5]),
+        "minute": str(job.trigger.fields[6]),
+    }
 
 
 def generate_uuid():
@@ -89,7 +90,7 @@ def get_stacktrace():
     """Returns the full stack trace."""
 
     type_, value_, traceback_ = sys.exc_info()
-    return ''.join(traceback.format_exception(type_, value_, traceback_))
+    return "".join(traceback.format_exception(type_, value_, traceback_))
 
 
 def get_hostname():

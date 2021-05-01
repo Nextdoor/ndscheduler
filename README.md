@@ -1,25 +1,24 @@
 # Nextdoor Scheduler
 
-![Apache](https://img.shields.io/hexpm/l/plug.svg) 
-[![Build Status](https://travis-ci.org/Nextdoor/ndscheduler.svg)](https://travis-ci.org/Nextdoor/ndscheduler)
+![Apache](https://img.shields.io/hexpm/l/plug.svg)
 
 ``ndscheduler`` is a flexible python library for building your own cron-like system to schedule jobs, which is to run a tornado process to serve REST APIs and a web ui.
 
-Check out our blog post - [We Don't Run Cron Jobs at Nextdoor](https://engblog.nextdoor.com/we-don-t-run-cron-jobs-at-nextdoor-6f7f9cc62040#.d2erw1pl6)
+Check out the blog post - [We Don't Run Cron Jobs at Nextdoor](https://engblog.nextdoor.com/we-don-t-run-cron-jobs-at-nextdoor-6f7f9cc62040#.d2erw1pl6)
 
-**``ndscheduler`` currently supports Python 2 & 3 on Mac OS X / Linux.**
+**This version of ``ndscheduler`` supports Python 3 on Linux.**
 
 ## Table of contents
   
-  * [Key Abstractions](#key-abstractions)
-  * [Try it NOW](#try-it-now)
-  * [How to build Your own cron-replacement](#how-to-build-your-own-cron-replacement)
-    * [Install ndscheduler](#install-ndscheduler)
-    * [Three things](#three-things)
-    * [Reference Implementation](#reference-implementation)   
-  * [Contribute code to ndscheduler](#contribute-code-to-ndscheduler)
-  * [REST APIs](#rest-apis)
-  * [Web UI](#web-ui)
+* [Key Abstractions](#key-abstractions)
+* [Try it NOW](#try-it-now)
+* [How to build Your own cron-replacement](#how-to-build-your-own-cron-replacement)
+  * [Install ndscheduler](#install-ndscheduler)
+  * [Three things](#three-things)
+  * [Reference Implementation](#reference-implementation)
+* [Contribute code to ndscheduler](#contribute-code-to-ndscheduler)
+* [REST APIs](#rest-apis)
+* [Web UI](#web-ui)
 
 ## Key Abstractions
 
@@ -34,50 +33,34 @@ Check out our blog post - [We Don't Run Cron Jobs at Nextdoor](https://engblog.n
 
 Note: ``corescheduler`` can also be used independently within your own service if you use a different Tornado server / Web UI.
 
-## Try it NOW
-
-From source code:
-
-    git clone https://github.com/Nextdoor/ndscheduler.git
-    cd ndscheduler
-    make simple
-
-Or use docker:
-
-    docker run -it -p 8888:8888 wenbinf/ndscheduler
-    
-Open your browser and go to [localhost:8888](http://localhost:8888). 
-
-**Demo**
-(Click for fullscreen play)
-![ndscheduler demo](https://giant.gfycat.com/NastyBossyBeaver.gif)
-
 ## How to build Your own cron-replacement
 
 ### Install ndscheduler
-Using pip (from GitHub repo)
 
-    #
-    # Put this in requirements.txt, then run
-    #    pip install -r requirements.txt
-    #
+1. Create and activate Python venv under project folder
+    * python -m venv .venv
+    * source .venv/bin/activate
+2. Install with pip
+    * pip install -U pip wheel
+    * pip install .
+    * Install scheduler implementation like `simple_scheduler``
+3. Configure ~/.config/ndscheduler/config.yaml
+    * See [example configuration](config_example.yaml)
+    * Passwords must be hashed with bcrypt
+    * See [Python bcrypt tutorial](http://zetcode.com/python/bcrypt/)
+    * More ideas for basich_auth [Tornado basic auth example](https://gist.github.com/notsobad/5771635)
+4. Start scheduler implementation
+5. Launch web browser at configured URL and authenticate with configured account
 
-    # If you want the latest build
-    git+https://github.com/Nextdoor/ndscheduler.git#egg=ndscheduler
+#### HTTPS support
 
-    # Or put this if you want a specific commit
-    git+https://github.com/Nextdoor/ndscheduler.git@5843322ebb440d324ca5a66ba55fea1fd00dabe8
+For https support the script requires the private public key pair.
 
-    # Or put this if you want a specific tag version
-    git+https://github.com/Nextdoor/ndscheduler.git@v0.1.0#egg=ndscheduler
-    
-    #
-    # Run from command line
-    #
+A self signed certificate can be generated with the command:
 
-    pip install -e git+https://github.com/Nextdoor/ndscheduler.git#egg=ndscheduler
-
-(We'll upload the package to PyPI soon.)
+```sh
+openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout ~/.ssl/private/script-selfsigned.key -out ~/.sslssl/certs/script-selfsigned.crt
+```
 
 ### Three things
 
@@ -99,10 +82,12 @@ Each job should be a standalone class that is a subclass of ``ndscheduler.job.Jo
 
 After you set up ``Settings``, ``Server`` and ``Jobs``, you can run the whole thing like this:
 
-    NDSCHEDULER_SETTINGS_MODULE=simple_scheduler.settings \
-    PYTHONPATH=.:$(PYTHONPATH) \
-		    python simple_scheduler/scheduler.py
-		  
+```sh
+NDSCHEDULER_SETTINGS_MODULE=simple_scheduler.settings \
+PYTHONPATH=.:$(PYTHONPATH) \
+    python simple_scheduler/scheduler.py
+```
+
 ### Upgrading
 
 It is best practice to backup your database before doing any upgrade. ndscheduler relies on [apscheduler](https://apscheduler.readthedocs.io/en/latest/) to serialize jobs to the database, and while it is usually backwards-compatible (i.e. jobs created with an older version of apscheduler will continue to work after upgrading apscheduler) this is not guaranteed, and it is known that downgrading apscheduler can cause issues. See [this PR comment](https://github.com/Nextdoor/ndscheduler/pull/54#issue-262152050) for more details.
@@ -113,11 +98,14 @@ See code in the [simple_scheduler/](https://github.com/Nextdoor/ndscheduler/tree
 
 Run it
 
-    make simple
-    
+```sh
+make simple
+```
+
 Access the web ui via [localhost:8888](http://localhost:8888)
 
 The reference implementation also comes with [several sample jobs](https://github.com/Nextdoor/ndscheduler/tree/master/simple_scheduler/jobs).
+
 * AwesomeJob: it just prints out 2 arguments you pass in.
 * SlackJob: it sends a slack message periodically, for example, team standup reminder.
 * ShellJob: it runs an executable command, for example, run curl to crawl web pages.
@@ -129,16 +117,22 @@ And it's [dockerized](https://github.com/Nextdoor/ndscheduler/tree/master/simple
 
 **Install dependencies**
 
-    # Each time we introduce a new dependency in setup.py, you have to run this
-    make install
+```sh
+# Each time we introduce a new dependency in setup.py, you have to run this
+make install
+```
 
 **Run unit tests**
 
+```sh
     make test
-    
+```
+
 **Clean everything and start from scratch**
-    
-    make clean
+
+```sh
+make clean
+```
 
 Finally, send pull request. Please make sure the [CI](https://travis-ci.org/Nextdoor/ndscheduler) passes for your PR.
 
@@ -150,24 +144,40 @@ Please see [README.md in ndscheduler/server/handlers](https://github.com/Nextdoo
 
 We provide a default implementation of web ui. You can replace the default web ui by overwriting these settings
 
-    STATIC_DIR_PATH = :static asset directory paths:
-    TEMPLATE_DIR_PATH = :template directory path:
-    APP_INDEX_PAGE = :the file name of the single page app's html:
-    
+```sh
+STATIC_DIR_PATH = :static asset directory paths:
+TEMPLATE_DIR_PATH = :template directory path:
+APP_INDEX_PAGE = :the file name of the single page app's html:
+```
+
 ### The default web ui
+
+**Login**
+
+![Login](doc/login.png)
 
 **List of jobs**
 
-![List of jobs](http://i.imgur.com/dGILbkZ.png)
+![List of jobs](doc/list_of_jobs.png)
 
 **List of executions**
 
-![List of executions](http://i.imgur.com/JpjzrlU.png)
+![List of executions](doc/list_of_executions.png)
 
 **Audit Logs**
 
-![Audit logs](http://i.imgur.com/eHLzHhw.png)
+![Audit logs](doc/audit_log.png)
 
 **Modify a job**
 
-![Modify a job](http://i.imgur.com/aWv6xOR.png)
+![Modify a job](doc/modify_job.png)
+
+### Docker
+
+There is a docker implementation of teh original ndscheduler
+
+```sh
+docker run -it -p 8888:8888 wenbinf/ndscheduler
+```
+
+Open your browser and go to [localhost:8888](http://localhost:8888).

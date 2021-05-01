@@ -16,15 +16,16 @@ DEBUG = True
 #
 # The web UI is a single page app. All javascripts/css files should be in STATIC_DIR_PATH
 #
-STATIC_DIR_PATH = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'static')
+STATIC_DIR_PATH = os.path.join(os.path.dirname(os.path.realpath(__file__)), "static")
 TEMPLATE_DIR_PATH = STATIC_DIR_PATH
-APP_INDEX_PAGE = 'index.html'
+APP_INDEX_PAGE = "index.html"
+WEBSITE_TITLE = "Scheduler"
 
 #
 # Server setup
 #
 HTTP_PORT = 7777
-HTTP_ADDRESS = '127.0.0.1'
+HTTP_ADDRESS = "127.0.0.1"
 
 TORNADO_MAX_WORKERS = 8
 
@@ -34,7 +35,7 @@ TORNADO_MAX_WORKERS = 8
 THREAD_POOL_SIZE = 4
 JOB_MAX_INSTANCES = 3
 JOB_COALESCE = True
-TIMEZONE = 'UTC'
+TIMEZONE = "UTC"
 
 # When a job is misfired -- A job were to run at a specific time, but due to some
 # reason (e.g., scheduler restart), we miss that run.
@@ -46,24 +47,22 @@ JOB_MISFIRE_GRACE_SEC = 3600
 #
 # Database settings
 #
-JOBS_TABLENAME = 'scheduler_jobs'
-EXECUTIONS_TABLENAME = 'scheduler_execution'
-AUDIT_LOGS_TABLENAME = 'scheduler_jobauditlog'
+JOBS_TABLENAME = "scheduler_jobs"
+EXECUTIONS_TABLENAME = "scheduler_execution"
+AUDIT_LOGS_TABLENAME = "scheduler_jobauditlog"
 
 DATABASE_TABLENAMES = {
-    'jobs_tablename': JOBS_TABLENAME,
-    'executions_tablename': EXECUTIONS_TABLENAME,
-    'auditlogs_tablename': AUDIT_LOGS_TABLENAME
+    "jobs_tablename": JOBS_TABLENAME,
+    "executions_tablename": EXECUTIONS_TABLENAME,
+    "auditlogs_tablename": AUDIT_LOGS_TABLENAME,
 }
 
 # See different database providers in ndscheduler/core/datastore/providers/
 
 # SQLite
 #
-DATABASE_CLASS = 'ndscheduler.corescheduler.datastore.providers.sqlite.DatastoreSqlite'
-DATABASE_CONFIG_DICT = {
-    'file_path': 'datastore.db'
-}
+DATABASE_CLASS = "ndscheduler.corescheduler.datastore.providers.sqlite.DatastoreSqlite"
+DATABASE_CONFIG_DICT = {"file_path": "datastore.db"}
 
 # Postgres
 #
@@ -88,9 +87,9 @@ DATABASE_CONFIG_DICT = {
 #     'database': 'scheduler'
 # }
 
-# ndschedule is based on apscheduler. Here we can customize the apscheduler's main scheduler class
+# ndscheduler is based on apscheduler. Here we can customize the apscheduler's main scheduler class
 # Please see ndscheduler/core/scheduler/base.py
-SCHEDULER_CLASS = 'ndscheduler.corescheduler.core.base.BaseScheduler'
+SCHEDULER_CLASS = "ndscheduler.corescheduler.core.base.BaseScheduler"
 
 #
 # Set logging level
@@ -101,14 +100,27 @@ logging.getLogger().setLevel(logging.INFO)
 # Packages that contains job classes, e.g., simple_scheduler.jobs
 JOB_CLASS_PACKAGES = []
 
+# Secure Cookie Name
+COOKIE_NAME = "user"
 # Secure Cookie Hash
 SECURE_COOKIE = "__TODO:_GENERATE_YOUR_OWN_RANDOM_VALUE_HERE__"
 # Secure cookie age in days (decimals are supported)
 COOKIE_MAX_AGE = 1
 
-# User authentication
+# Authentication
 #
-# To enable user authentication, modify the dict below
-# e.g. AUTH_CREDENTIALS = {'username': 'password'}
+# If needs basic auth, modify the dict below
+# e.g. BASIC_AUTH_CREDENTIALS = {'username': 'password'}
 # The pasword must be hashed using bcrypt
-AUTH_CREDENTIALS = {}
+BASIC_AUTH_CREDENTIALS = {}
+
+# List of admin users
+ADMIN_USER = []
+
+HELP_URL = None
+
+# Mail Server
+MAIL_SERVER = []
+
+# Server sender mail address
+SERVER_MAIL = ""

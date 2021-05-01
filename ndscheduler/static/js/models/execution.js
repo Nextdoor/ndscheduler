@@ -70,6 +70,8 @@ define(['config',
         style = 'success-color';
       } else if (state === 'failed') {
         style = 'failed-color';
+      } else if (state === 'interrupted') {
+        style = 'scheduled-error-color';
       }
       return '<span class="' + style + '">' + state + '</span>';
     },

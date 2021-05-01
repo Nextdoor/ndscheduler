@@ -4,38 +4,50 @@ This package provides a common set of RequestHandler objects to be
 subclassed in the rest of the app for different URLs.
 """
 
+import logging
 import json
+import base64
 import bcrypt
 
 from concurrent import futures
 
 import tornado.web
+import tornado.gen
 
 from ndscheduler import settings
+
+from time import sleep
 
 
 class BaseHandler(tornado.web.RequestHandler):
 
     executor = futures.ThreadPoolExecutor(max_workers=settings.TORNADO_MAX_WORKERS)
-
     auth_credentials = settings.AUTH_CREDENTIALS
 
     def prepare(self):
         """Preprocess requests."""
+
         try:
-            if self.request.headers['Content-Type'].startswith('application/json'):
+            if self.request.headers["Content-Type"].startswith("application/json"):
                 self.json_args = json.loads(self.request.body.decode())
         except KeyError:
             self.json_args = None
 
+        # clear expired cookies
+        if not self.get_secure_cookie(
+            settings.COOKIE_NAME, max_age_days=settings.COOKIE_MAX_AGE
+        ):
+            self.clear_cookie(settings.COOKIE_NAME)
         # For audit log
         self.username = self.get_username()
-        self.scheduler_manager = self.application.settings['scheduler_manager']
+        self.scheduler_manager = self.application.settings["scheduler_manager"]
         self.datastore = self.scheduler_manager.get_datastore()
 
     def get_current_user(self):
         if len(self.auth_credentials) > 0:
-            return self.get_secure_cookie("user", max_age_days=settings.COOKIE_MAX_AGE)
+            return self.get_secure_cookie(
+                settings.COOKIE_NAME, max_age_days=settings.COOKIE_MAX_AGE
+            )
         else:
             return "anonymous"
 
@@ -47,16 +59,19 @@ class BaseHandler(tornado.web.RequestHandler):
         :return: username
         :rtype: str
         """
-        username = self.get_secure_cookie("user", max_age_days=settings.COOKIE_MAX_AGE)
+
+        username = self.get_secure_cookie(
+            settings.COOKIE_NAME, max_age_days=settings.COOKIE_MAX_AGE
+        )
         return "anonymous" if username is None else username.decode()
 
 
 class LoginHandler(BaseHandler):
-
-    max_age = settings.COOKIE_MAX_AGE
-
     def get(self):
-        self.write("Login required!")
+        self.write(f"Login required!")
+        self.write(
+            "<script>$('#modalLoginForm').modal({backdrop: 'static', keyboard: false});</script>"
+        )
 
     def post(self):
         username = self.get_argument("username")
@@ -65,8 +80,14 @@ class LoginHandler(BaseHandler):
             self.get_argument("password").encode(), hashed.encode()
         ):
             # 6h = 0.25 days
-            # 1min = 0.0007 days
-            self.set_secure_cookie("user", username, expires_days=self.max_age)
+            # 1h = 0.041666667 days
+            # 1min = 0.000694444 days
+            self.set_secure_cookie(
+                settings.COOKIE_NAME, username, expires_days=settings.COOKIE_MAX_AGE
+            )
+            logging.debug(
+                f"Set cookie for user {username}, expires: {settings.COOKIE_MAX_AGE * 1440} minutes"
+            )
             self.redirect("/")
         else:
             self.redirect("/")
@@ -77,5 +98,5 @@ class LogoutHandler(BaseHandler):
     # basic_auth_credentials = settings.BASIC_AUTH_CREDENTIALS
 
     def get(self):
-        self.clear_cookie("user")
+        self.clear_cookie(settings.COOKIE_NAME)
         self.redirect("/")

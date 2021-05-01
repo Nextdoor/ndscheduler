@@ -10,7 +10,6 @@ from ndscheduler.server.handlers import base
 
 
 class Handler(base.BaseHandler):
-
     def _get_logs(self):
         """Returns a dictionary of audit logs in a specific time range.
 
@@ -20,9 +19,11 @@ class Handler(base.BaseHandler):
         :rtype: dict
         """
         now = datetime.utcnow()
-        time_range_end = self.get_argument('time_range_end', now.isoformat())
+        time_range_end = self.get_argument("time_range_end", now.isoformat())
         ten_minutes_ago = now - timedelta(minutes=10)
-        time_range_start = self.get_argument('time_range_start', ten_minutes_ago.isoformat())
+        time_range_start = self.get_argument(
+            "time_range_start", ten_minutes_ago.isoformat()
+        )
 
         logs = self.datastore.get_audit_logs(time_range_start, time_range_end)
         return logs
@@ -36,18 +37,30 @@ class Handler(base.BaseHandler):
         """
         return self._get_logs()
 
-    @tornado.gen.engine
-    def get_logs_yield(self):
-        return_json = yield self.get_logs()
-        self.finish(return_json)
-
-    @tornado.web.authenticated
+    # @tornado.web.authenticated
     @tornado.web.removeslash
-    @tornado.web.asynchronous
-    @tornado.gen.engine
+    @tornado.gen.coroutine
     def get(self):
         """Returns audit logs.
 
         Handles the endpoint GET /api/v1/logs.
         """
-        self.get_logs_yield()
+        if self.current_user:
+            return_json = yield self.get_logs()
+            self.finish(return_json)
+        else:
+            # send dummy log to open login modal
+            self.finish(
+                {
+                    "logs": [
+                        {
+                            "job_id": "",
+                            "job_name": "",
+                            "event": "modified",
+                            "user": "",
+                            "created_time": "",
+                            "description": "<script>$('#modalLoginForm').modal({backdrop: 'static', keyboard: false});</script>",
+                        }
+                    ]
+                }
+            )

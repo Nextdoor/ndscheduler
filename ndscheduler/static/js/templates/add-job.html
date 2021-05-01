@@ -1,5 +1,5 @@
 <div class="modal fade" id="add-job-modal" tabindex="-1" role="dialog" aria-labelledby="add-job-label" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
@@ -31,7 +31,7 @@
                             Arguments
                         </label>
                         <div class="col-sm-10">
-                            <input type="text" class="form-control" id="input-job-task-args" placeholder='e.g., [1, 2, "hello"]' value="[]">
+                            <textarea rows = "3" cols = "60" class="form-control" id="input-job-task-args" placeholder='e.g., [1, 2, "hello"]' value="[]"></textarea>
                             <span class="help-block text-center">Should be valid JSON string of an array (single quote is NOT allowed), e.g., [1, 2, "hello"]</span>
                         </div>
                     </div>

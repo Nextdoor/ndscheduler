@@ -3,9 +3,9 @@
 #
 # Database settings
 #
-DEFAULT_JOBS_TABLENAME = 'scheduler_jobs'
-DEFAULT_EXECUTIONS_TABLENAME = 'scheduler_execution'
-DEFAULT_AUDIT_LOGS_TABLENAME = 'scheduler_jobauditlog'
+DEFAULT_JOBS_TABLENAME = "scheduler_jobs"
+DEFAULT_EXECUTIONS_TABLENAME = "scheduler_execution"
+DEFAULT_AUDIT_LOGS_TABLENAME = "scheduler_jobauditlog"
 
 #
 # APScheduler Settings
@@ -13,7 +13,7 @@ DEFAULT_AUDIT_LOGS_TABLENAME = 'scheduler_jobauditlog'
 DEFAULT_THREAD_POOL_SIZE = 4
 DEFAULT_JOB_MAX_INSTANCES = 3
 DEFAULT_JOB_COALESCE = True
-DEFAULT_TIMEZONE = 'UTC'
+DEFAULT_TIMEZONE = "UTC"
 
 # When a job is misfired -- A job were to run at a specific time, but due to some
 # reason (e.g., scheduler restart), we miss that run.
@@ -36,16 +36,18 @@ EXECUTION_STATUS_FAILED = 4
 EXECUTION_STATUS_SUCCEEDED = 5
 EXECUTION_STATUS_TIMEOUT = 6
 EXECUTION_STATUS_SCHEDULED_ERROR = 7
+EXECUTION_STATUS_INTERRUPTED = 8
 
 EXECUTION_STATUS_DICT = {
-    EXECUTION_STATUS_SCHEDULED: 'scheduled',
-    EXECUTION_STATUS_RUNNING: 'running',
-    EXECUTION_STATUS_STOPPING: 'stopping',
-    EXECUTION_STATUS_STOPPED: 'stopped',
-    EXECUTION_STATUS_FAILED: 'failed',
-    EXECUTION_STATUS_SUCCEEDED: 'succeeded',
-    EXECUTION_STATUS_TIMEOUT: 'timeout',
-    EXECUTION_STATUS_SCHEDULED_ERROR: 'scheduled error'
+    EXECUTION_STATUS_SCHEDULED: "scheduled",
+    EXECUTION_STATUS_RUNNING: "running",
+    EXECUTION_STATUS_STOPPING: "stopping",
+    EXECUTION_STATUS_STOPPED: "stopped",
+    EXECUTION_STATUS_FAILED: "failed",
+    EXECUTION_STATUS_SUCCEEDED: "succeeded",
+    EXECUTION_STATUS_TIMEOUT: "timeout",
+    EXECUTION_STATUS_SCHEDULED_ERROR: "scheduled error",
+    EXECUTION_STATUS_INTERRUPTED: "interrupted",
 }
 
 #
@@ -59,10 +61,10 @@ AUDIT_LOG_RESUMED = 4
 AUDIT_LOG_CUSTOM_RUN = 5
 
 AUDIT_LOG_DICT = {
-    AUDIT_LOG_ADDED: 'added',
-    AUDIT_LOG_MODIFIED: 'modified',
-    AUDIT_LOG_DELETED: 'deleted',
-    AUDIT_LOG_PAUSED: 'paused',
-    AUDIT_LOG_RESUMED: 'resumed',
-    AUDIT_LOG_CUSTOM_RUN: 'custom_run'
+    AUDIT_LOG_ADDED: "added",
+    AUDIT_LOG_MODIFIED: "modified",
+    AUDIT_LOG_DELETED: "deleted",
+    AUDIT_LOG_PAUSED: "paused",
+    AUDIT_LOG_RESUMED: "resumed",
+    AUDIT_LOG_CUSTOM_RUN: "custom_run",
 }

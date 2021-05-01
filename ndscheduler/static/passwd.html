@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="">
+        <meta name="author" content="">
+        {% if website_info["changed"] %}
+        <meta http-equiv="refresh" content="3;url=/" />
+        {% elif website_info['message'] is not None %}
+        <meta http-equiv="refresh" content="1;url=/passwd" />
+        {% end %}
+
+        <title>{{ website_info['title'] }}</title>
+        <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+        <link href="static/css/vendor/bootstrap.css" rel="stylesheet" type="text/css">
+        <link href="static/css/vendor/bootstrap-switch.css" rel="stylesheet" type="text/css">
+        <link href="static/css/vendor/jquery.dataTables.css" rel="stylesheet" type="text/css">
+        <link href="static/css/vendor/select2.css" rel="stylesheet" type="text/css">
+        <link href="static/css/vendor/select2-bootstrap.css" rel="stylesheet" type="text/css">
+        <link href="static/css/main.css" rel="stylesheet" type="text/css">
+
+        <style>
+            /* The message box is shown when the user clicks on the password field */
+            #message, #conf_message {
+            background: #f1f1f1;
+            color: #000;
+            }
+            #message p, #conf_message p{
+            padding: 0px 50px;
+            font-size: 18px;
+            }
+            #message td, #conf_message td{
+                padding: 0px 15px;
+            }
+            /* Add a green text color and a check-mark when the requirements are right */
+            .valid {
+            color: darkgreen;
+            }
+            .valid:before {
+            position: relative;
+            left: -10px;    
+            content: "✔";
+            }
+            /* Add a red text color and an "x" when the requirements are wrong */
+            .invalid {
+            color: darkred;
+            }
+            .invalid:before {
+            position: relative;
+            left: -10px;
+            content: "✖";
+            }
+        </style>
+    </head>
+
+    <body>
+        <!--- Login Modal -->
+        <div class="modal fade in" id="modalPasswdForm" role="dialog" style="display:block">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    {% if website_info["changed"] %}
+                    <div class="modal-header text-center">
+                        <h4 class="modal-title">Password has been changed!</h4>
+                    </div>
+                    {%elif website_info['message'] is not None %}
+                    <div class="modal-header text-center">
+                        <h4 class="modal-title" style="color:red ">{{  website_info['message'] }}</h4>
+                    </div>
+                    {% else %}
+                    <form role="form" method="POST" action="/passwd">
+                        <div class="modal-header text-center">
+                            <h4 class="modal-title">Change Password</h4>
+                        </div>
+                        <div class="modal-body mx-3">
+                            <div class="md-form mb-5">
+                                <i class="fa fa-user"></i>
+                                <label data-error="wrong" data-success="right" for="defaultForm-name">User name</label>
+                                <input type="text" name="username" id="defaultForm-name" class="form-control validate">
+                            </div>
+                            <div class="md-form mb-4">
+                                <i class="fa fa-lock"></i>
+                                <label data-error="wrong" data-success="right" for="defaultForm-pass">Current password</label>
+                                <input type="password" name="password" id="password" class="form-control validate">
+                            </div>
+                            <div class="md-form mb-4">
+                                <i class="fa fa-lock"></i>
+                                <label data-error="wrong" data-success="right" for="defaultForm-pass">New password</label>
+                                <input type="password" id="new_pwd" name="new_pwd" class="form-control validate">
+                            </div>
+                            <div id="message" class="md-form mb-3">
+                                <table style="width:100%;">
+                                    <tr>
+                                        <td style="padding: 0px 5px"><b>Password must contain:</b></td>
+                                        <td id="length" class="invalid">min <b>8 characters</b></td>
+                                    </tr>
+                                    <tr>
+                                        <td id="letter" class="invalid">A <b>lowercase</b> letter</td>
+                                        <td id="capital" class="invalid">A <b>capital (uppercase)</b> letter</td>
+                                    </tr>
+                                    <tr>
+                                        <td id="number" class="invalid">A <b>number</b></td>
+                                        <td id="special" class="invalid">A <b>special character</b></td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class="md-form mb-4">
+                                <i class="fa fa-lock"></i>
+                                <label data-error="wrong" data-success="right" for="defaultForm-pass">Repeat password</label>
+                                <!-- field without name will not be sent -->
+                                <input type="password" id="rep_pwd" class="form-control validate">
+                            </div>
+                            <div id="conf_message" class="md-form mb-3">
+                                <table style="width:100%;">
+                                    <tr><td id="equal" class="invalid">Passwords are equal</td></tr>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="modal-footer d-flex justify-content-center">
+                            <button class="btn btn-default" id="pwCancel" type="button" onclick="window.location.href='/'">Cancel</button>
+                            <button class="btn btn-primary" id="pwChange" disabled>Change Password</button>
+                        </div>
+                    </form>
+                    {% end %}
+                </div>
+            </div>
+        </div>
+
+        <script>
+            var myInput = document.getElementById("new_pwd");
+            var confInput = document.getElementById("rep_pwd");
+            var letter = document.getElementById("letter");
+            var capital = document.getElementById("capital");
+            var number = document.getElementById("number");
+            var length = document.getElementById("length");
+            var special = document.getElementById("special");
+            var equal = document.getElementById("equal");
+            var allChecks = 0;
+
+            myInput.onkeyup = function() {
+              allChecks = 5
+              // Validate lowercase letters
+              var lowerCaseLetters = /[a-z]/g;
+              if(myInput.value.match(lowerCaseLetters)) {  
+                letter.classList.remove("invalid");
+                letter.classList.add("valid");
+              } else {
+                letter.classList.remove("valid");
+                letter.classList.add("invalid");
+                allChecks -= 1;
+              }
+              // Validate capital letters
+              var upperCaseLetters = /[A-Z]/g;
+              if(myInput.value.match(upperCaseLetters)) {  
+                capital.classList.remove("invalid");
+                capital.classList.add("valid");
+              } else {
+                capital.classList.remove("valid");
+                capital.classList.add("invalid");
+                allChecks -= 1;
+              }
+              // Validate numbers
+              var numbers = /[0-9]/g;
+              if(myInput.value.match(numbers)) {  
+                number.classList.remove("invalid");
+                number.classList.add("valid");
+              } else {
+                number.classList.remove("valid");
+                number.classList.add("invalid");
+                allChecks -= 1;
+              }
+              // Validate special
+              var specials = /[^a-zA-Z0-9]/g;
+              if(myInput.value.match(specials)) {  
+                special.classList.remove("invalid");
+                special.classList.add("valid");
+              } else {
+                special.classList.remove("valid");
+                special.classList.add("invalid");
+                allChecks -= 1;
+              }
+              // Validate length
+              if(myInput.value.length >= 8) {
+                length.classList.remove("invalid");
+                length.classList.add("valid");
+              } else {
+                length.classList.remove("valid");
+                length.classList.add("invalid");
+                allChecks -= 1;
+              }
+              if(allChecks == 5 && confInput.value == myInput.value){
+                document.getElementById('pwChange').disabled = false;
+              } else {
+                document.getElementById('pwChange').disabled = true;
+              }
+            }
+
+            confInput.onkeyup = function() {
+              // confirmation password
+              if(confInput.value == myInput.value) {  
+                equal.classList.remove("invalid");
+                equal.classList.add("valid");
+              } else {
+                equal.classList.remove("valid");
+                equal.classList.add("invalid");     
+              }
+              // all checks passed?
+              if(allChecks == 5 && confInput.value == myInput.value){
+                document.getElementById('pwChange').disabled = false;
+              } else {
+                document.getElementById('pwChange').disabled = true;
+              }
+            }
+
+        </script>
+
+        <div class="class="container-fluid text-center" style="text-align:center;">
+            Password change dialog.
+        </div>
+
+        <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <!-- <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="sr-only">Toggle navigation</span>
+                        <i class="icon-bar"></i>
+                        <i class="icon-bar"></i>
+                        <i class="icon-bar"></i>
+                    </button> -->
+                    <span class="navbar-brand">
+                        {{ website_info['title'] }}: {{ website_info['user'] }}@{{ website_info['host'] }}
+                        <!-- <i>(User: {{ current_user }})</i> -->
+                    </span>
+                </div>
+            </div>
+        </div> <!-- End of navbar -->
+        <!-- <script data-main="/static/js/app" src="/static/js/vendor/require.js"></script> -->
+    </body>
+</html>

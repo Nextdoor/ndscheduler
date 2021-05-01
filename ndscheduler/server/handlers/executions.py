@@ -83,6 +83,7 @@ class Handler(base.BaseHandler):
         return_json = yield self.get_executions()
         self.finish(return_json)
 
+    @tornado.web.authenticated
     @tornado.web.removeslash
     @tornado.web.asynchronous
     @tornado.gen.engine
@@ -156,6 +157,7 @@ class Handler(base.BaseHandler):
         return_json = yield self.run_job(job_id)
         self.finish(return_json)
 
+    @tornado.web.authenticated
     @tornado.web.removeslash
     @tornado.web.asynchronous
     @tornado.gen.engine
@@ -170,6 +172,7 @@ class Handler(base.BaseHandler):
         """
         self.run_job_yield(job_id)
 
+    @tornado.web.authenticated
     @tornado.web.removeslash
     def delete(self, job_id):
         """Stops a job execution.

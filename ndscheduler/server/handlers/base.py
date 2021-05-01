@@ -59,8 +59,12 @@ class BaseHandler(tornado.web.RequestHandler):
 
 class LoginHandler(BaseHandler):
     def get(self):
-        self.write("Login required!")
-        self.write("<script>$('#modalLoginForm').modal({backdrop: 'static', keyboard: false});</script>")
+        if len(self.auth_credentials) > 0:
+            logging.info("Login %s", self.auth_credentials)
+            self.write("Login required!")
+            self.write("<script>$('#modalLoginForm').modal({backdrop: 'static', keyboard: false});</script>")
+        else:
+            self.redirect("/")
 
     def post(self):
         username = self.get_argument("username")

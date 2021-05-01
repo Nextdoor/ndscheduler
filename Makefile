@@ -18,6 +18,7 @@ init:
 test:
 	make install
 	make flake8
+	export NDSCHEDULER_SETTINGS_MODULE=simple_scheduler.settings
 	# Hacky way to ensure mock is installed before running setup.py
 	$(SOURCE_VENV) && pip install mock==1.1.2 && $(PYTHON) setup.py test
 

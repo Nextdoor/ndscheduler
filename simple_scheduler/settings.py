@@ -30,3 +30,5 @@ JOB_CLASS_PACKAGES = ["simple_scheduler.jobs"]
 AUTH_CREDENTIALS = {
     # "user": "$2y$11$MCw3cm9Tp.8zF/hmPILW3.1hGMtP0UV8kUevfaxrzM7JzXdoyFi6.",  # Very$ecret
 }
+
+# ADMIN_USER = "user"

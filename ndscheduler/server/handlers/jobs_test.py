@@ -10,21 +10,21 @@ from ndscheduler.server import server
 from ndscheduler.server.handlers import jobs
 
 
-def mock_get_jobs_yield(self):
+def mock_get_jobs(self):
     return_json = self._get_jobs()
     self.finish(return_json)
 
 
-def mock_get_job_yield(self, job_id):
+def mock_get_job(self, job_id):
     return_json = self._get_job(job_id)
     self.finish(return_json)
 
 
-def mock_delete_job_yield(self, job_id):
+def mock_delete_job(self, job_id):
     self._delete_job(job_id)
 
 
-def mock_modify_job_yield(self, job_id):
+def mock_modify_job(self, job_id):
     self._modify_job(job_id)
 
 
@@ -34,22 +34,22 @@ class JobsTest(tornado.testing.AsyncHTTPTestCase):
 
         self.server.start_scheduler()
         self.JOBS_URL = "/api/v1/jobs"
-        self.old_get_jobs_yield = jobs.Handler.get_jobs_yield
-        self.old_get_job_yield = jobs.Handler.get_job_yield
-        self.old_delete_job_yield = jobs.Handler.delete_job_yield
-        self.old_modify_job_yield = jobs.Handler.modify_job_yield
+        self.old_get_jobs = jobs.Handler.get_jobs
+        self.old_get_job = jobs.Handler.get_job
+        self.old_delete_job = jobs.Handler.delete_job
+        self.old_modify_job = jobs.Handler.modify_job
 
-        jobs.Handler.get_jobs_yield = mock_get_jobs_yield
-        jobs.Handler.get_job_yield = mock_get_job_yield
-        jobs.Handler.delete_job_yield = mock_delete_job_yield
-        jobs.Handler.modify_job_yield = mock_modify_job_yield
+        jobs.Handler.get_jobs = mock_get_jobs
+        jobs.Handler.get_job = mock_get_job
+        jobs.Handler.delete_job = mock_delete_job
+        jobs.Handler.modify_job = mock_modify_job
 
     def tearDown(self, *args, **kwargs):
         self.server.stop_scheduler()
-        jobs.Handler.get_jobs_yield = self.old_get_jobs_yield
-        jobs.Handler.get_job_yield = self.old_get_job_yield
-        jobs.Handler.delete_job_yield = self.old_delete_job_yield
-        jobs.Handler.modify_job_yield = self.old_modify_job_yield
+        jobs.Handler.get_jobs = self.old_get_jobs
+        jobs.Handler.get_job = self.old_get_job
+        jobs.Handler.delete_job = self.old_delete_job
+        jobs.Handler.modify_job = self.old_modify_job
 
         super(JobsTest, self).tearDown(*args, **kwargs)
 

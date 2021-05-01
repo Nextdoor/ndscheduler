@@ -11,12 +11,12 @@ from ndscheduler.server import server
 from ndscheduler.server.handlers import executions
 
 
-def mock_get_executions_yield(self):
+def mock_get_executions(self):
     return_json = self._get_executions()
     self.finish(return_json)
 
 
-def mock_get_execution_yield(self, execution_id):
+def mock_get_execution(self, execution_id):
     return_json = self._get_execution(execution_id)
     self.finish(return_json)
 
@@ -26,15 +26,15 @@ class ExecutionsTest(tornado.testing.AsyncHTTPTestCase):
         super(ExecutionsTest, self).setUp(*args, **kwargs)
         self.server.start_scheduler()
         self.EXECUTIONS_URL = "/api/v1/executions"
-        self.old_get_executions_yield = executions.Handler.get_executions_yield
-        self.old_get_execution_yield = executions.Handler.get_execution_yield
-        executions.Handler.get_executions_yield = mock_get_executions_yield
-        executions.Handler.get_execution_yield = mock_get_execution_yield
+        self.old_get_executions = executions.Handler.get_executions
+        self.old_get_execution = executions.Handler.get_execution
+        executions.Handler.get_executions = mock_get_executions
+        executions.Handler.get_execution = mock_get_execution
 
     def tearDown(self, *args, **kwargs):
         self.server.stop_scheduler()
-        executions.Handler.get_executions_yield = self.old_get_executions_yield
-        executions.Handler.get_execution_yield = self.old_get_execution_yield
+        executions.Handler.get_executions = self.old_get_executions
+        executions.Handler.get_execution = self.old_get_execution
         super(ExecutionsTest, self).tearDown(*args, **kwargs)
 
     def get_app(self):

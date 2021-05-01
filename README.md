@@ -1,6 +1,7 @@
 # Nextdoor Scheduler
 
 ![Apache](https://img.shields.io/hexpm/l/plug.svg)
+[![Build Status](https://api.travis-ci.org/palto42/ndscheduler.svg)](https://travis-ci.org/palto42/ndscheduler)
 
 ``ndscheduler`` is a flexible python library for building your own cron-like system to schedule jobs, which is to run a tornado process to serve REST APIs and a web ui.
 
@@ -48,7 +49,7 @@ Note: ``corescheduler`` can also be used independently within your own service i
     * See [example configuration](config_example.yaml)
     * Passwords must be hashed with bcrypt
     * See [Python bcrypt tutorial](http://zetcode.com/python/bcrypt/)
-    * More ideas for basich_auth [Tornado basic auth example](https://gist.github.com/notsobad/5771635)
+    * More ideas for basic_auth [Tornado basic auth example](https://gist.github.com/notsobad/5771635)
 4. Start scheduler implementation
 5. Launch web browser at configured URL and authenticate with configured account
 

@@ -27,6 +27,9 @@ WEBSITE_TITLE = "Scheduler"
 HTTP_PORT = 7777
 HTTP_ADDRESS = "127.0.0.1"
 
+SSL_CERT = None
+SSL_KEY = None
+
 TORNADO_MAX_WORKERS = 8
 
 #
@@ -108,11 +111,13 @@ SECURE_COOKIE = "__TODO:_GENERATE_YOUR_OWN_RANDOM_VALUE_HERE__"
 COOKIE_MAX_AGE = 1
 
 # Authentication
-#
-# If needs basic auth, modify the dict below
-# e.g. BASIC_AUTH_CREDENTIALS = {'username': 'password'}
-# The pasword must be hashed using bcrypt
-BASIC_AUTH_CREDENTIALS = {}
+# To enable user authentication, modify the dict below
+# e.g. AUTH_CREDENTIALS = {'username': 'password'}
+# The pasword must be hashed using bcrypt (e.g. htpasswd -nbB userName userPassword)
+AUTH_CREDENTIALS = {
+    # "user": "$2y$11$MCw3cm9Tp.8zF/hmPILW3.1hGMtP0UV8kUevfaxrzM7JzXdoyFi6.",  # Very$ecret
+}
+
 
 # List of admin users
 ADMIN_USER = []

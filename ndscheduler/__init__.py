@@ -267,6 +267,7 @@ class Settings(object):
                 if setting == setting.upper():
                     setattr(self, setting, getattr(default_settings, setting))
             # use user-provided settings
+            settings_module = None
             try:
                 if args.NDSCHEDULER_SETTINGS_MODULE:
                     settings_module_path = args.NDSCHEDULER_SETTINGS_MODULE
@@ -290,7 +291,7 @@ class Settings(object):
                 logger.warning(
                     ("Environment variable %s is undefined. " "Use default settings for now.") % ENVIRONMENT_VARIABLE
                 )
-            if hasattr(settings_module, "extra_parser"):
+            if settings_module and hasattr(settings_module, "extra_parser"):
                 parents = [parser, getattr(settings_module, "extra_parser")]
             else:
                 parents = [parser]
@@ -304,6 +305,7 @@ class Settings(object):
             for key, value in vars(args).items():
                 if key == key.upper() and value is not None:
                     setattr(self, key, value)
+            print("***", dir(self))
         else:
             # Load config from YAML file
             extra_parser = argparse.ArgumentParser(

@@ -25,7 +25,7 @@ Check out the blog post - [We Don't Run Cron Jobs at Nextdoor](https://engblog.n
 
 * [CoreScheduler](https://github.com/Nextdoor/ndscheduler/tree/master/ndscheduler/corescheduler): encapsulates all core scheduling functionality, and consists of:
   * [Datastore](https://github.com/Nextdoor/ndscheduler/tree/master/ndscheduler/corescheduler/datastore): manages database connections and makes queries; could support Postgres, MySQL, and sqlite.
-    * Job: represents a schedule job and decides how to run a paricular job.
+    * Job: represents a schedule job and decides how to run a particular job.
     * Execution: represents an instance of job execution.
     * AuditLog: logs when and who runs what job.
   * [ScheduleManager](https://github.com/Nextdoor/ndscheduler/blob/master/ndscheduler/corescheduler/scheduler_manager.py): access Datastore to manage jobs, i.e., schedule/modify/delete/pause/resume a job.
@@ -67,17 +67,17 @@ openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout ~/.ssl/private/scrip
 
 You have to implement three things for your scheduler, i.e., ``Settings``, ``Server``, and ``Jobs``.
 
-**Settings**
+#### Settings
 
 In your implementation, you need to provide a settings file to override default settings (e.g., [settings in simple_scheduler](https://github.com/Nextdoor/ndscheduler/blob/master/simple_scheduler/settings.py)). You need to specify the python import path in the environment variable ``NDSCHEDULER_SETTINGS_MODULE`` before running the server.
 
 All available settings can be found in [default_settings.py](https://github.com/Nextdoor/ndscheduler/blob/master/ndscheduler/default_settings.py) file.
 
-**Server**
+#### Server
 
 You need to have a server file to import and run ``ndscheduler.server.server.SchedulerServer``.
 
-**Jobs**
+#### Jobs
 
 Each job should be a standalone class that is a subclass of ``ndscheduler.job.JobBase`` and put the main logic of the job in ``run()`` function.
 
@@ -116,20 +116,20 @@ And it's [dockerized](https://github.com/Nextdoor/ndscheduler/tree/master/simple
 
 ## Contribute code to ndscheduler
 
-**Install dependencies**
+### Install dependencies
 
 ```sh
 # Each time we introduce a new dependency in setup.py, you have to run this
 make install
 ```
 
-**Run unit tests**
+### Run unit tests
 
 ```sh
     make test
 ```
 
-**Clean everything and start from scratch**
+### Clean everything and start from scratch
 
 ```sh
 make clean
@@ -153,32 +153,22 @@ APP_INDEX_PAGE = :the file name of the single page app's html:
 
 ### The default web ui
 
-**Login**
+#### Login
 
 ![Login](doc/login.png)
 
-**List of jobs**
+#### List of jobs
 
 ![List of jobs](doc/list_of_jobs.png)
 
-**List of executions**
+#### List of executions
 
 ![List of executions](doc/list_of_executions.png)
 
-**Audit Logs**
+#### Audit Logs
 
 ![Audit logs](doc/audit_log.png)
 
-**Modify a job**
+#### Modify a job
 
 ![Modify a job](doc/modify_job.png)
-
-### Docker
-
-There is a docker implementation of teh original ndscheduler
-
-```sh
-docker run -it -p 8888:8888 wenbinf/ndscheduler
-```
-
-Open your browser and go to [localhost:8888](http://localhost:8888).

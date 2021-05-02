@@ -147,7 +147,7 @@ Finally, send pull request. Please make sure the [CI](https://travis-ci.org/palt
 
 ## REST APIs
 
-Please see [README.md in ndscheduler/server/handlers](https://github.com/Nextdoor/ndscheduler/blob/master/ndscheduler/server/handlers/README.md).
+Please see [README.md in ndscheduler/server/handlers](ndscheduler/server/handlers/README.md).
 
 ## Web UI
 

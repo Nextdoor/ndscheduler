@@ -5,13 +5,21 @@
         "PYTHONPATH",
         "Postgres",
         "apscheduler",
+        "apscheduler's",
+        "bcrypt",
+        "checkpw",
         "corescheduler",
         "dockerized",
+        "hashpw",
+        "ioloop",
         "keyout",
         "mrkdwn",
         "ndscheduler",
         "newkey",
+        "rtype",
+        "sched",
         "selfsigned",
+        "sendgrid",
         "venv"
     ]
 }

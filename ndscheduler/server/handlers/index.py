@@ -11,6 +11,8 @@ from os import uname
 import pkg_resources
 import logging
 
+logger = logging.getLogger(__name__)
+
 
 class Handler(base.BaseHandler):
     """Index page request handler."""
@@ -35,7 +37,7 @@ class Handler(base.BaseHandler):
             admin_user = self.current_user.decode() in settings.ADMIN_USER
         else:
             admin_user = self.current_user and self.current_user in settings.ADMIN_USER
-        logging.debug("Is admin user: %s", admin_user)
+        logger.debug("Is admin user: %s", admin_user)
         website_info = {
             "title": settings.WEBSITE_TITLE,
             "version": __version__,

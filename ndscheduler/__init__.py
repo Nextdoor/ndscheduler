@@ -205,7 +205,7 @@ def load_yaml_config(
             config_file = Path(yaml_config.config_dir()).joinpath(config_file)
             yaml_config.set_file(config_file)
         else:
-            logging.error(f"Config file '{config_file}' doesn't exist.")
+            logger.error(f"Config file '{config_file}' doesn't exist.")
             exit(1)
     else:
         # default config file location
@@ -278,7 +278,7 @@ class Settings(object):
                     settings_module_path = args.NDSCHEDULER_SETTINGS_MODULE
                 else:
                     settings_module_path = environ[ENVIRONMENT_VARIABLE]
-                logging.debug(f"Import settings module {settings_module_path}")
+                logger.debug(f"Import settings module {settings_module_path}")
                 try:
                     settings_module = importlib.import_module(settings_module_path)
                     for setting in dir(settings_module):

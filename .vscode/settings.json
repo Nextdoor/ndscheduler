@@ -11,15 +11,18 @@
         "corescheduler",
         "dockerized",
         "hashpw",
+        "htpasswd",
         "ioloop",
         "keyout",
         "mrkdwn",
         "ndscheduler",
         "newkey",
+        "palto",
         "rtype",
         "sched",
         "selfsigned",
         "sendgrid",
+        "urlencode",
         "venv"
     ]
 }

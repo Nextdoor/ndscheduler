@@ -1,5 +1,6 @@
 # REST API
 
+* [Authentication](#authentication)
 * [Run it NOW](#run-it-now)
 * [REST APIs](#rest-apis)
   * [Jobs](#jobs)
@@ -16,6 +17,29 @@
     * [Run a job](#run-a-job)
   * [Audit logs](#audit-logs)
     * [Get logs within time range](#get-logs-within-time-range)
+
+## Authentication
+
+If authentication is enabled, then the API must login and save the cookie to be used for the API calls.
+
+Example with `curl`:
+
+```sh
+curl --silent --output /dev/null \
+     --data-urlencode "username=user" \
+     --data-urlencode 'password=Very$ecret' \
+     --cookie-jar - 'http://localhost:8887/login' \
+     > my_cookie.txt
+
+curl --cookie my_cookie.txt \
+     -X POST \
+     --header "Content-Type:application/json" \
+     --data "{\"job_class_string\": \"simple_scheduler.jobs.sample_job.AwesomeJob\", \
+              \"name\": \"My first job\", \"minute\": \"*/1\", \"pub_args\": [\"arg1\", 2]}" \
+     localhost:8887/api/v1/jobs \
+       
+       
+```
 
 ## Run it NOW
 

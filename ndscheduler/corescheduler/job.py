@@ -7,7 +7,6 @@ from ndscheduler.corescheduler import utils
 
 
 class JobBase:
-
     def __init__(self, job_id, execution_id):
         self.job_id = job_id
         self.execution_id = execution_id
@@ -21,31 +20,31 @@ class JobBase:
     def get_scheduled_description(cls):
         hostname = socket.gethostname()
         pid = os.getpid()
-        return 'hostname: %s | pid: %s' % (hostname, pid)
+        return "hostname: %s | pid: %s" % (hostname, pid)
 
     @classmethod
     def get_scheduled_error_description(cls):
         hostname = socket.gethostname()
         pid = os.getpid()
-        return 'hostname: %s | pid: %s' % (hostname, pid)
+        return "hostname: %s | pid: %s" % (hostname, pid)
 
     @classmethod
     def get_running_description(cls):
         hostname = socket.gethostname()
         pid = os.getpid()
-        return 'hostname: %s | pid: %s' % (hostname, pid)
+        return "hostname: %s | pid: %s" % (hostname, pid)
 
     @classmethod
     def get_failed_description(cls):
         hostname = socket.gethostname()
         pid = os.getpid()
-        return 'hostname: %s | pid: %s' % (hostname, pid)
+        return "hostname: %s | pid: %s" % (hostname, pid)
 
     @classmethod
     def get_succeeded_description(cls, result=None):
         hostname = socket.gethostname()
         pid = os.getpid()
-        return 'hostname: %s | pid: %s' % (hostname, pid)
+        return "hostname: %s | pid: %s" % (hostname, pid)
 
     @classmethod
     def get_scheduled_error_result(cls):
@@ -76,10 +75,10 @@ class JobBase:
         :rtype: dict
         """
         return {
-            'job_class_string': '%s.%s' % (cls.__module__, cls.__name__),
-            'arguments': [],
-            'example_arguments': '',
-            'notes': ''
+            "job_class_string": "%s.%s" % (cls.__module__, cls.__name__),
+            "arguments": [],
+            "example_arguments": "",
+            "notes": "",
         }
 
     @classmethod
@@ -102,4 +101,4 @@ class JobBase:
         :param kwargs:
         :return: None or json serializable object.
         """
-        raise NotImplementedError('Please implement this function')
+        raise NotImplementedError("Please implement this function")

@@ -2,7 +2,7 @@ SHELL:=/bin/bash
 PYTHON=.venv/bin/python
 PIP=.venv/bin/pip
 SOURCE_VENV=. .venv/bin/activate
-FLAKE8_CHECKING=$(SOURCE_VENV) && flake8 ndscheduler simple_scheduler --max-line-length 100
+FLAKE8_CHECKING=$(SOURCE_VENV) && flake8 ndscheduler simple_scheduler --max-line-length 120
 
 all: test
 
@@ -11,7 +11,7 @@ init:
 	@echo "Install pre-commit hook for git."
 	@echo "$(FLAKE8_CHECKING)" > .git/hooks/pre-commit && chmod 755 .git/hooks/pre-commit
 	@echo "Setup python virtual environment."
-	if [ ! -d ".venv" ]; then virtualenv .venv; fi
+	if [ ! -d ".venv" ]; then python3 -m venv .venv; fi
 	$(SOURCE_VENV) && $(PIP) install flake8
 	@echo "All Done."
 

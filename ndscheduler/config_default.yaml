@@ -1,0 +1,86 @@
+# Development mode or production mode
+# If DEBUG is True, then auto-reload is enabled, i.e., when code is modified, server will be
+# reloaded immediately
+DEBUG: False
+
+# Static Assets
+# STATIC_DIR_PATH: # non-default folder for the static HTML files
+# TEMPLATE_DIR_PATH: # non-default folder for the Tornado template files
+APP_INDEX_PAGE: index.html
+
+WEBSITE_TITLE: Scheduler
+
+HTTP_PORT: 7777
+# IP address or host name, 0.0.0.0 for all interfaces
+HTTP_ADDRESS: 127.0.0.1
+# Required for HTTPS
+SSL_CERT: "" # /path/to/cert  
+# Required for HTTPS 
+SSL_KEY: "" # /path/to/key
+
+
+TORNADO_MAX_WORKERS: 8
+
+THREAD_POOL_SIZE: 8
+JOB_MAX_INSTANCES: 3
+JOB_COALESCE: True
+JOB_MISFIRE_GRACE_SEC: 3600
+
+TIMEZONE: UTC
+
+# Database settings
+DATABASE_TABLENAMES:
+    jobs_tablename: scheduler_jobs
+    executions_tablename: scheduler_execution
+    auditlogs_tablename: scheduler_jobauditlog
+# Select database type (sqlite, postgres, mysql)
+DATABASE_CLASS: sqlite
+
+# Settings for the selected database type
+#   additional attributes for MySQL and Postgres
+#     "user": confuse.String(default="username"),
+#     "password": confuse.String(default=""),
+#     "hostname": confuse.String(default="localhost"),
+#     "port": confuse.Integer(default=3306),  # MySQL default
+#     "database": confuse.String(default="scheduler"),
+#     "sslmode": confuse.String(default="disable"),
+DATABASE_CONFIG_DICT:
+    "file_path": datastore.db
+
+# ndscheduler is based on apscheduler. Here we can customize the apscheduler's main scheduler class
+# Please see ndscheduler/core/scheduler/base.py
+SCHEDULER_CLASS: ndscheduler.corescheduler.core.base.BaseScheduler
+
+LOGGING_LEVEL: INFO
+
+# Packages that contains job classes, e.g., my_scheduler.jobs
+JOB_CLASS_PACKAGES:
+    - my_scheduler.jobs
+
+# Secure Cookie Hash
+SECURE_COOKIE: __TODO:_GENERATE_YOUR_OWN_RANDOM_VALUE_HERE__
+# Name of the secure cookie
+COOKIE_NAME: user
+# Secure cookie age in days (decimals are supported)
+COOKIE_MAX_AGE: 1
+
+# Authentication
+# If needs authentication, modify the dict below e.g. AUTH_CREDENTIALS = {'username': 'password'}
+# The password must be hashed using bcrypt
+AUTH_CREDENTIALS: {}
+    # user: $2y$11$MCw3cm9Tp.8zF/hmPILW3.1hGMtP0UV8kUevfaxrzM7JzXdoyFi6. # Very$ecret
+
+# List of admin users
+ADMIN_USER: []
+
+# List of admin mail addresses
+ADMIN_MAIL: []
+
+# URL to help page
+HELP_URL: https://path/to/help.html
+
+# Mail Server
+MAIL_SERVER: []
+
+# Server sender mail address
+SERVER_MAIL: ""

@@ -1,0 +1,17 @@
+{
+    "python.linting.flake8Enabled": true,
+    "python.linting.enabled": true,
+    "cSpell.words": [
+        "PYTHONPATH",
+        "Postgres",
+        "apscheduler",
+        "corescheduler",
+        "dockerized",
+        "keyout",
+        "mrkdwn",
+        "ndscheduler",
+        "newkey",
+        "selfsigned",
+        "venv"
+    ]
+}

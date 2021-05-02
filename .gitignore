@@ -15,3 +15,5 @@ dist/
 *.db
 *.egg-info/
 *.egg/
+
+todo_list.md

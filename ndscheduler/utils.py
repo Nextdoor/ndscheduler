@@ -38,17 +38,17 @@ def get_all_available_jobs():
         try:
             package = importlib.import_module(job_class_package)
         except ImportError:
-            logger.warn('Cannot import %s. Ignore it for now.' % job_class_package)
+            logger.warn("Cannot import %s. Ignore it for now." % job_class_package)
             continue
 
         for dir_path in package.__path__:
-            files = glob.glob(os.path.join(dir_path, '*.py'))
+            files = glob.glob(os.path.join(dir_path, "*.py"))
             for file in files:
                 filename = os.path.basename(file)
-                if filename == '__init__.py':
+                if filename == "__init__.py":
                     continue
                 module_name = filename[:-3]
-                job_module = importlib.import_module('%s.%s' % (job_class_package, module_name))
+                job_module = importlib.import_module("%s.%s" % (job_class_package, module_name))
                 for property in dir(job_module):
                     module_property = getattr(job_module, property)
                     try:

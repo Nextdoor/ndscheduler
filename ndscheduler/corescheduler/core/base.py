@@ -1,15 +1,19 @@
 """Ensure there's only one scheduler instancing running."""
 
 import json
+import logging
+from getpass import getuser
 
 from apscheduler.schedulers import tornado as apscheduler_tornado
 
 from ndscheduler.corescheduler import constants
 from ndscheduler.corescheduler import utils
 from ndscheduler.corescheduler.job import JobBase
+from ndscheduler import settings
+from ndscheduler.tools import mail
 
 
-class BaseScheduler (apscheduler_tornado.TornadoScheduler):
+class BaseScheduler(apscheduler_tornado.TornadoScheduler):
     """It's a scheduler instance."""
 
     # Seconds to wake up to see if it's okay to run.
@@ -31,8 +35,9 @@ class BaseScheduler (apscheduler_tornado.TornadoScheduler):
         return True
 
     @classmethod
-    def run_job(cls, job_class_path, job_id, db_class_path, db_config,
-                db_tablenames, *args, **kwargs):
+    def run_job(
+        cls, job_class_path, job_id, db_class_path, db_config, db_tablenames, *args, **kwargs,
+    ):
         """
         :param str job_class_path: String for job class, e.g., 'myscheduler.jobs.a_job.NiceJob'
         :param str job_id: Job id
@@ -46,20 +51,27 @@ class BaseScheduler (apscheduler_tornado.TornadoScheduler):
         """
         execution_id = utils.generate_uuid()
         datastore = utils.get_datastore_instance(db_class_path, db_config, db_tablenames)
-        datastore.add_execution(execution_id, job_id,
-                                constants.EXECUTION_STATUS_SCHEDULED,
-                                description=JobBase.get_scheduled_description())
+        datastore.add_execution(
+            execution_id,
+            job_id,
+            constants.EXECUTION_STATUS_SCHEDULED,
+            description=JobBase.get_scheduled_description(),
+        )
         try:
             job_class = utils.import_from_path(job_class_path)
-            datastore.update_execution(execution_id, state=constants.EXECUTION_STATUS_SCHEDULED,
-                                       description=job_class.get_scheduled_description())
+            datastore.update_execution(
+                execution_id,
+                state=constants.EXECUTION_STATUS_SCHEDULED,
+                description=job_class.get_scheduled_description(),
+            )
             cls.run_scheduler_job(job_class, job_id, execution_id, datastore, *args, **kwargs)
         except Exception:
-            datastore.update_execution(execution_id,
-                                       state=constants.EXECUTION_STATUS_SCHEDULED_ERROR,
-                                       description=JobBase.get_scheduled_error_description(),
-                                       result=JobBase.get_scheduled_error_result()
-                                       )
+            datastore.update_execution(
+                execution_id,
+                state=constants.EXECUTION_STATUS_SCHEDULED_ERROR,
+                description=JobBase.get_scheduled_error_description(),
+                result=JobBase.get_scheduled_error_result(),
+            )
             return None
         return execution_id
 
@@ -98,26 +110,69 @@ class BaseScheduler (apscheduler_tornado.TornadoScheduler):
         :param args: List of args provided to the job class to be run
         :param kwargs: Keyword arguments
         """
+
+        logger = logging.getLogger()
+
         cls.pre_run(job_class, job_id, execution_id, *args, **kwargs)
         try:
-            datastore.update_execution(execution_id, state=constants.EXECUTION_STATUS_RUNNING,
-                                       hostname=utils.get_hostname(), pid=utils.get_pid(),
-                                       description=job_class.get_running_description())
+            datastore.update_execution(
+                execution_id,
+                state=constants.EXECUTION_STATUS_RUNNING,
+                hostname=utils.get_hostname(),
+                pid=utils.get_pid(),
+                description=job_class.get_running_description(),
+            )
             result = job_class.run_job(job_id, execution_id, *args, **kwargs)
             result_json = json.dumps(result, indent=4, sort_keys=True)
-            datastore.update_execution(execution_id, state=constants.EXECUTION_STATUS_SUCCEEDED,
-                                       description=job_class.get_succeeded_description(result),
-                                       result=result_json)
+            if type(result) is dict and (
+                ("error" in result and result["error"])
+                or ("returncode" in result and type(result["returncode"]) is int and result["returncode"] > 0)
+            ):
+                state = constants.EXECUTION_STATUS_FAILED
+            else:
+                state = constants.EXECUTION_STATUS_SUCCEEDED
+            description = job_class.get_succeeded_description(result)
+            datastore.update_execution(
+                execution_id, state=state, description=description, result=result_json,
+            )
             cls.post_run(job_class, job_id, execution_id, result_json, *args, **kwargs)
         except Exception:
-            datastore.update_execution(execution_id,
-                                       state=constants.EXECUTION_STATUS_FAILED,
-                                       description=job_class.get_failed_description(),
-                                       result=job_class.get_failed_result())
+            state = constants.EXECUTION_STATUS_FAILED
+            result_json = job_class.get_failed_result()
+            description = job_class.get_failed_description()
+            datastore.update_execution(
+                execution_id, state=state, description=description, result=result_json,
+            )
+        # If job wasn't completed successfully, then send an email to the ADMIN (if defined)
+        logger.debug(f"Completed job {job_id}, status={constants.EXECUTION_STATUS_FAILED}")
+        if settings.ADMIN_MAIL and settings.SERVER_MAIL and state == constants.EXECUTION_STATUS_FAILED:
+            # hostname = utils.get_hostname()
+            job = datastore.lookup_job(job_id)
+            logger.debug(f"Send failure notification to {settings.ADMIN_MAIL}: job '{job.name}'")
+            sender = (
+                settings.SERVER_MAIL
+                if "<" in settings.SERVER_MAIL
+                else f"{getuser()}.{utils.get_hostname()} <{settings.SERVER_MAIL}>"
+            )
+            _ = mail.send(
+                mail_from=sender,  # settings.SERVER_MAIL,
+                mail_to=settings.ADMIN_MAIL,
+                subject=f"ERROR: Job '{job.name}' did not succeed on {settings.WEBSITE_TITLE}.",
+                text=f"Description: {description}\n\nJob args: {job.args}\n\nResult: {result_json}\n\n",
+            )
 
-    def add_scheduler_job(self, job_class_string, name, pub_args=None,
-                          month=None, day_of_week=None, day=None,
-                          hour=None, minute=None, **kwargs):
+    def add_scheduler_job(
+        self,
+        job_class_string,
+        name,
+        pub_args=None,
+        month=None,
+        day_of_week=None,
+        day=None,
+        hour=None,
+        minute=None,
+        **kwargs,
+    ):
         """Add a job. Job information will be persistent in postgres.
         This is a NON-BLOCKING operation, as internally, apscheduler calls wakeup()
         that is async.
@@ -139,14 +194,29 @@ class BaseScheduler (apscheduler_tornado.TornadoScheduler):
             pub_args = []
 
         job_id = utils.generate_uuid()
-        datastore = self._lookup_jobstore('default')
-        arguments = [job_class_string, job_id, self.datastore_class_path,
-                     datastore.db_config, datastore.table_names]
+        datastore = self._lookup_jobstore("default")
+        arguments = [
+            job_class_string,
+            job_id,
+            self.datastore_class_path,
+            datastore.db_config,
+            datastore.table_names,
+        ]
         arguments.extend(pub_args)
 
-        self.add_job(self.run_job,
-                     'cron', month=month, day=day, day_of_week=day_of_week, hour=hour,
-                     minute=minute, args=arguments, kwargs=kwargs, name=name, id=job_id)
+        self.add_job(
+            self.run_job,
+            "cron",
+            month=month,
+            day=day,
+            day_of_week=day_of_week,
+            hour=hour,
+            minute=minute,
+            args=arguments,
+            kwargs=kwargs,
+            name=name,
+            id=job_id,
+        )
         return job_id
 
     def modify_scheduler_job(self, job_id, **kwargs):
@@ -170,18 +240,18 @@ class BaseScheduler (apscheduler_tornado.TornadoScheduler):
         job = self.get_job(job_id)
 
         # Handle args
-        if 'job_class_string' in kwargs or 'pub_args' in kwargs:
+        if "job_class_string" in kwargs or "pub_args" in kwargs:
             args = list(job.args)
-            if 'job_class_string' in kwargs:
-                args[0] = kwargs['job_class_string']
+            if "job_class_string" in kwargs:
+                args[0] = kwargs["job_class_string"]
                 # 'task_name' is not an argument for modify_job.
-                del kwargs['job_class_string']
-            if 'pub_args' in kwargs:
-                args = args[:constants.JOB_ARGS] + kwargs['pub_args']
-                del kwargs['pub_args']
-            kwargs['args'] = args
+                del kwargs["job_class_string"]
+            if "pub_args" in kwargs:
+                args = args[: constants.JOB_ARGS] + kwargs["pub_args"]
+                del kwargs["pub_args"]
+            kwargs["args"] = args
 
-        cron_keywords = ['month', 'day', 'hour', 'minute', 'day_of_week']
+        cron_keywords = ["month", "day", "hour", "minute", "day_of_week"]
         trigger_kwargs = {}
         for cron_key in cron_keywords:
             if cron_key in kwargs:
@@ -190,7 +260,7 @@ class BaseScheduler (apscheduler_tornado.TornadoScheduler):
 
         if trigger_kwargs:
             # This is a NON-BLOCKING operation
-            job.reschedule(trigger='cron', **trigger_kwargs)
+            job.reschedule(trigger="cron", **trigger_kwargs)
 
         # This is a NON-BLOCKING operation
         job.modify(**kwargs)
@@ -210,7 +280,7 @@ class BaseScheduler (apscheduler_tornado.TornadoScheduler):
         :rtype: int
         """
 
-        if self.is_okay_to_run(self._lookup_jobstore('default')):
+        if self.is_okay_to_run(self._lookup_jobstore("default")):
             return super(apscheduler_tornado.TornadoScheduler, self)._process_jobs()
         else:
             return self.DEFAULT_WAIT_SECONDS

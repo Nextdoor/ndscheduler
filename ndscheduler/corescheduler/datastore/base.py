@@ -1,16 +1,18 @@
 """Base class to represent datastore."""
 
+import logging
+
 import dateutil.tz
 import dateutil.parser
 from apscheduler.jobstores import sqlalchemy as sched_sqlalchemy
 from sqlalchemy import desc, select, MetaData
-import logging
 
 from ndscheduler.corescheduler import constants
 from ndscheduler.corescheduler import utils
 from ndscheduler.corescheduler.datastore import tables
 
-logger = logging.getLogger(__name__)
+
+logger = logging.getLogger()
 
 
 class DatastoreBase(sched_sqlalchemy.SQLAlchemyJobStore):
@@ -46,14 +48,14 @@ class DatastoreBase(sched_sqlalchemy.SQLAlchemyJobStore):
         jobs_tablename = constants.DEFAULT_JOBS_TABLENAME
         auditlogs_tablename = constants.DEFAULT_AUDIT_LOGS_TABLENAME
         if table_names:
-            if 'executions_tablename' in table_names:
-                executions_tablename = table_names['executions_tablename']
+            if "executions_tablename" in table_names:
+                executions_tablename = table_names["executions_tablename"]
 
-            if 'jobs_tablename' in table_names:
-                jobs_tablename = table_names['jobs_tablename']
+            if "jobs_tablename" in table_names:
+                jobs_tablename = table_names["jobs_tablename"]
 
-            if 'auditlogs_tablename' in table_names:
-                auditlogs_tablename = table_names['auditlogs_tablename']
+            if "auditlogs_tablename" in table_names:
+                auditlogs_tablename = table_names["auditlogs_tablename"]
 
         self.executions_table = tables.get_execution_table(self.metadata, executions_tablename)
         self.auditlogs_table = tables.get_auditlogs_table(self.metadata, auditlogs_tablename)
@@ -70,7 +72,7 @@ class DatastoreBase(sched_sqlalchemy.SQLAlchemyJobStore):
         :return: Database url. See: http://docs.sqlalchemy.org/en/latest/core/engines.html
         :rtype: str
         """
-        raise NotImplementedError('Please implement this function.')
+        raise NotImplementedError("Please implement this function.")
 
     def add_execution(self, execution_id, job_id, state, **kwargs):
         """Insert a record of execution to database.
@@ -78,11 +80,7 @@ class DatastoreBase(sched_sqlalchemy.SQLAlchemyJobStore):
         :param str job_id: Job id.
         :param int state: Execution state. See ndscheduler.constants.EXECUTION_*
         """
-        execution = {
-            'eid': execution_id,
-            'job_id': job_id,
-            'state': state
-        }
+        execution = {"eid": execution_id, "job_id": job_id, "state": state}
         execution.update(kwargs)
         execution_insert = self.executions_table.insert().values(**execution)
         self.engine.execute(execution_insert)
@@ -93,7 +91,7 @@ class DatastoreBase(sched_sqlalchemy.SQLAlchemyJobStore):
         :return: Diction for execution info.
         :rtype: dict
         """
-        selectable = select('*').where(self.executions_table.c.eid == execution_id)
+        selectable = select("*").where(self.executions_table.c.eid == execution_id)
         rows = self.engine.execute(selectable)
 
         for row in rows:
@@ -104,8 +102,9 @@ class DatastoreBase(sched_sqlalchemy.SQLAlchemyJobStore):
         :param str execution_id: Execution id.
         :param kwargs: Keyword arguments.
         """
-        execution_update = self.executions_table.update().where(
-            self.executions_table.c.eid == execution_id).values(**kwargs)
+        execution_update = (
+            self.executions_table.update().where(self.executions_table.c.eid == execution_id).values(**kwargs)
+        )
         self.engine.execute(execution_update)
 
     def _build_execution(self, row):
@@ -115,23 +114,25 @@ class DatastoreBase(sched_sqlalchemy.SQLAlchemyJobStore):
         :rtype: dict
         """
         return_json = {
-            'execution_id': row.eid,
-            'state': constants.EXECUTION_STATUS_DICT[row.state],
-            'hostname': row.hostname,
-            'pid': row.pid,
-            'task_id': row.task_id,
-            'description': row.description,
-            'result': row.result,
-            'scheduled_time': self.get_time_isoformat_from_db(row.scheduled_time),
-            'updated_time': self.get_time_isoformat_from_db(row.updated_time)}
+            "execution_id": row.eid,
+            "state": constants.EXECUTION_STATUS_DICT[row.state],
+            "hostname": row.hostname,
+            "pid": row.pid,
+            "task_id": row.task_id,
+            "description": row.description,
+            "result": row.result,
+            "scheduled_time": self.get_time_isoformat_from_db(row.scheduled_time),
+            "updated_time": self.get_time_isoformat_from_db(row.updated_time),
+        }
         job = self.lookup_job(row.job_id)
         if job:
-            return_json['job'] = {
-                'job_id': job.id,
-                'name': job.name,
-                'task_name': utils.get_job_name(job),
-                'pub_args': utils.get_job_args(job)}
-            return_json['job'].update(utils.get_cron_strings(job))
+            return_json["job"] = {
+                "job_id": job.id,
+                "name": job.name,
+                "task_name": utils.get_job_name(job),
+                "pub_args": utils.get_job_args(job),
+            }
+            return_json["job"].update(utils.get_cron_strings(job))
         return return_json
 
     def get_time_isoformat_from_db(self, time_object):
@@ -154,33 +155,32 @@ class DatastoreBase(sched_sqlalchemy.SQLAlchemyJobStore):
             Sorted by updated_time.
         :rtype: dict
         """
-        utc = dateutil.tz.gettz('UTC')
+        utc = dateutil.tz.gettz("UTC")
         start_time = dateutil.parser.parse(time_range_start).replace(tzinfo=utc)
         end_time = dateutil.parser.parse(time_range_end).replace(tzinfo=utc)
-        selectable = select('*').where(
-            self.executions_table.c.scheduled_time.between(
-                start_time, end_time)).order_by(desc(self.executions_table.c.updated_time))
+        selectable = (
+            select("*")
+            .where(self.executions_table.c.scheduled_time.between(start_time, end_time))
+            .order_by(desc(self.executions_table.c.updated_time))
+        )
 
         rows = self.engine.execute(selectable)
 
-        return_json = {
-            'executions': [self._build_execution(row) for row in rows]}
+        return_json = {"executions": [self._build_execution(row) for row in rows]}
 
         return return_json
 
     def _clean_executions(self):
-        # set all executions in state "scheduled", "running", or "stopping" to "failed"
+        # set all executions in state "scheduled", "running", or "stopping" to "interrupted"
         sql_command = (
             self.executions_table.update()
             .where(self.executions_table.c.state < constants.EXECUTION_STATUS_STOPPED)
-            .values(
-                    state=constants.EXECUTION_STATUS_FAILED,
-                    result='{"error": "interrupted"}'
-            )
+            .values(state=constants.EXECUTION_STATUS_INTERRUPTED)
         )
         result = self.engine.execute(sql_command)
         if result.rowcount > 0:
-            logger.warning("Cleaned Executions: %s", result.rowcount)
+            logger.warning(f"Cleaned Executions: {result.rowcount}")
+
         return
 
     def add_audit_log(self, job_id, job_name, event, **kwargs):
@@ -189,11 +189,7 @@ class DatastoreBase(sched_sqlalchemy.SQLAlchemyJobStore):
         :param str job_name: string for job name.
         :param int event: integer for an event.
         """
-        audit_log = {
-            'job_id': job_id,
-            'job_name': job_name,
-            'event': event
-        }
+        audit_log = {"job_id": job_id, "job_name": job_name, "event": event}
         audit_log.update(kwargs)
         log_insert = self.auditlogs_table.insert().values(**audit_log)
         self.engine.execute(log_insert)
@@ -216,17 +212,18 @@ class DatastoreBase(sched_sqlalchemy.SQLAlchemyJobStore):
             Sorted by created_time.
         :rtype: dict
         """
-        utc = dateutil.tz.gettz('UTC')
+        utc = dateutil.tz.gettz("UTC")
         start_time = dateutil.parser.parse(time_range_start).replace(tzinfo=utc)
         end_time = dateutil.parser.parse(time_range_end).replace(tzinfo=utc)
-        selectable = select('*').where(
-            self.auditlogs_table.c.created_time.between(
-                start_time, end_time)).order_by(desc(self.auditlogs_table.c.created_time))
+        selectable = (
+            select("*")
+            .where(self.auditlogs_table.c.created_time.between(start_time, end_time))
+            .order_by(desc(self.auditlogs_table.c.created_time))
+        )
 
         rows = self.engine.execute(selectable)
 
-        return_json = {
-            'logs': [self._build_audit_log(row) for row in rows]}
+        return_json = {"logs": [self._build_audit_log(row) for row in rows]}
 
         return return_json
 
@@ -237,10 +234,11 @@ class DatastoreBase(sched_sqlalchemy.SQLAlchemyJobStore):
         :rtype: dict
         """
         return_dict = {
-            'job_id': row.job_id,
-            'job_name': row.job_name,
-            'event': constants.AUDIT_LOG_DICT[row.event],
-            'user': row.user,
-            'created_time': self.get_time_isoformat_from_db(row.created_time),
-            'description': row.description}
+            "job_id": row.job_id,
+            "job_name": row.job_name,
+            "event": constants.AUDIT_LOG_DICT[row.event],
+            "user": row.user,
+            "created_time": self.get_time_isoformat_from_db(row.created_time),
+            "description": row.description,
+        }
         return return_dict

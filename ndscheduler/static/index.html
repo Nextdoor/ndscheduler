@@ -7,7 +7,8 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Scheduler</title>
+    <title>{{ website_info['title'] }}</title>
+    <link rel="shortcut icon" href="{{ static_url('favicon.ico') }}">
     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
     <link href="static/css/vendor/bootstrap.css" rel="stylesheet" type="text/css">
     <link href="static/css/vendor/bootstrap-switch.css" rel="stylesheet" type="text/css">
@@ -24,21 +25,13 @@
     </script>
 </head>
 <body>
-    <!--- Login Modal -->
-    {% if current_user is None %}
-    <div class="modal-backdrop in"></div>
-    <div class="modal fade in" id="modalLoginForm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display:block">
-    {% else %}
+    <!-- Login modal -->
     <div class="modal fade in" id="modalLoginForm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    {%end %}
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <form role="form" method="POST" action="/login">
                 <div class="modal-header text-center">
                     <h4 class="modal-title">Sign in</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
                 </div>
                 <div class="modal-body mx-3">
                     <div class="md-form mb-5">
@@ -58,6 +51,40 @@
             </div>
         </div>
     </div>
+
+    <!-- About modal -->
+    <div id="modalAbout" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">About Scheduler</h4>
+                </div>
+                    <div class="modal-body">
+                    <p>
+                        This web scheduler is written in Python and the source code can be found on
+                        <a href="https://my.domain/ndscheduler" target="_blank">Gitea: ndscheduler</a>
+                        , which was forked from
+                        <a href="https://github.com/Nextdoor/ndscheduler" target="_blank">Github: Nextdoor/ndscheduler</a>
+                    </p>
+                    <p>ndscheduler version {{ website_info['version'] }}</p>
+                    <p>Job packs: {{ website_info['job_versions'] }}</p>
+                    <p style="margin: 0;">Contributors:</p>
+                    <ul style="margin: 0;">
+                        <li>This fork: palto42</li>
+                        <li>Origin: <a href="https://github.com/Nextdoor/ndscheduler/graphs/contributors" target="_blank">see Github: Nextdoor/ndscheduler</a></li>
+                    </ul>
+                    <hr>
+                    <p>This software is published under Apache License, Version 2.0</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation bar -->
     <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
       <div class="container-fluid">
         <div class="navbar-header">
@@ -67,28 +94,40 @@
             <i class="icon-bar"></i>
             <i class="icon-bar"></i>
           </button>
-          <span class="navbar-brand">Nextdoor Scheduler</span>
+          <span class="navbar-brand">
+              {{ website_info['title'] }}: {{ website_info['user'] }}@{{ website_info['host'] }}
+              <i>(User: {{ current_user }})</i>
+          </span>
         </div>
-        {% if current_user %}
         <div class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
             <li id="jobs-tab"><a href="#jobs">Jobs</a></li>
             <li id="executions-tab"><a href="#executions">Executions</a></li>
             <li id="logs-tab"><a href="#logs">Audit Logs</a></li>
             <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Docs <i class="caret"></i></a>
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Info<i class="caret"></i></a>
                 <ul class="dropdown-menu">
-                    <li><a href="https://github.com/Nextdoor/ndscheduler" target="_blank">ndscheduler GitHub page</a></li>
+                    <li><a href="/passwd">Change password</a></li>
+                    <li><a href="/logout">Logout '{{ current_user }}'</a></li>
                     <li class="divider"></li>
-                    <li><a href="/logout">Logout '{{ escape(current_user) }}'</a></li>
+                    {% if website_info["help_url"] %}
+                    <li><a href="{{ website_info["help_url"] }}" target="_blank">Help</a></li>
+                    {% end %}
+                    <li><a href="https://github.com/palto42/ndscheduler/issues">Report issues</a></li>
+                    <li class="divider"></li>
+                    <li><a href="" data-toggle="modal" data-target="#modalAbout">About</a></li>
+                    {% if website_info["admin_user"] %}
+                    <li class="divider"></li>
+                    <li><a href="/add_user">Add user</a></li>
+                    {% end %}
                 </ul>
             </li>
           </ul>
         </div>
-        {% end %}
       </div>
     </div> <!-- End of navbar -->
-
+    
+    <!-- Hide all content if no user is logged in -->
     {% if current_user is not None %}
     <div class="container-fluid">
         <div class="row">
@@ -121,7 +160,8 @@
                             <option value="600">10 minutes</option>
                             <option value="3600">1 hour</option>
                             <option value="43200">12 hours</option>
-                            <option value="86400">24 hours</option>
+                            <option value="86400">1 day</option>
+                            <option value="604800">1 week</option>
                         </select>
                     </div>
                     <div class="form-group">
@@ -149,7 +189,9 @@
                             <option value="600">10 minutes</option>
                             <option value="3600">1 hour</option>
                             <option value="43200">12 hours</option>
-                            <option value="86400">24 hours</option>
+                            <option value="86400">1 day</option>
+                            <option value="604800">1 week</option>
+                            <option value="2678400">1 month</option>
                         </select>
                     </div>
                     <div class="form-group">

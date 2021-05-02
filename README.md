@@ -12,11 +12,9 @@
 ## Table of contents
   
 * [Key Abstractions](#key-abstractions)
-* [Try it NOW](#try-it-now)
-* [How to build Your own cron-replacement](#how-to-build-your-own-cron-replacement)
-  * [Install ndscheduler](#install-ndscheduler)
-  * [Three things](#three-things)
-  * [Reference Implementation](#reference-implementation)
+* [Install ndscheduler](#install-ndscheduler)
+  * [Setup](#setup)
+* [Reference Implementation](#reference-implementation)
 * [Contribute code to ndscheduler](#contribute-code-to-ndscheduler)
 * [REST APIs](#rest-apis)
 * [Web UI](#web-ui)
@@ -34,9 +32,7 @@
 
 Note: ``corescheduler`` can also be used independently within your own service if you use a different Tornado server / Web UI.
 
-## How to build Your own cron-replacement
-
-### Install ndscheduler
+## Install ndscheduler
 
 1. Create and activate Python venv under project folder
     * python -m venv .venv
@@ -53,7 +49,7 @@ Note: ``corescheduler`` can also be used independently within your own service i
 4. Start scheduler implementation
 5. Launch web browser at configured URL and authenticate with configured account
 
-#### HTTPS support
+### HTTPS support
 
 For https support the script requires the private public key pair.
 
@@ -63,15 +59,29 @@ A self signed certificate can be generated with the command:
 openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout ~/.ssl/private/script-selfsigned.key -out ~/.sslssl/certs/script-selfsigned.crt
 ```
 
-### Three things
+### Setup
 
 You have to implement three things for your scheduler, i.e., ``Settings``, ``Server``, and ``Jobs``.
 
 #### Settings
 
-In your implementation, you need to provide a settings file to override default settings (e.g., [settings in simple_scheduler](https://github.com/Nextdoor/ndscheduler/blob/master/simple_scheduler/settings.py)). You need to specify the python import path in the environment variable ``NDSCHEDULER_SETTINGS_MODULE`` before running the server.
+In your implementation, you need to provide a settings file to override default settings.
+This can either be done with a YAML file (recommended), or like in original version using a Python settings file.
 
-All available settings can be found in [default_settings.py](https://github.com/Nextdoor/ndscheduler/blob/master/ndscheduler/default_settings.py) file.
+If no configuration file is found, the [default settings](ndscheduler/config_default.yaml) will be used.
+
+##### YAML config
+
+The YAML config uses the [Confuse](https://confuse.readthedocs.io/en/latest/usage.html) library which searches for a configuration file in `~/.config/ndscheduler/config.yaml` (see [Confuse search paths](https://confuse.readthedocs.io/en/latest/usage.html#search-paths)).
+
+All available settings can be found in [config_default.yaml](ndscheduler/config_default.yaml) file.
+
+##### Python settings file
+
+Create a Python settings file (e.g., [settings in simple_scheduler](simple_scheduler/settings.py))
+and specify its path in the environment variable ``NDSCHEDULER_SETTINGS_MODULE`` before running the server.
+
+All available settings can be found in [default_settings.py](ndscheduler/default_settings.py) file.
 
 #### Server
 
@@ -93,7 +103,7 @@ PYTHONPATH=.:$(PYTHONPATH) \
 
 It is best practice to backup your database before doing any upgrade. ndscheduler relies on [apscheduler](https://apscheduler.readthedocs.io/en/latest/) to serialize jobs to the database, and while it is usually backwards-compatible (i.e. jobs created with an older version of apscheduler will continue to work after upgrading apscheduler) this is not guaranteed, and it is known that downgrading apscheduler can cause issues. See [this PR comment](https://github.com/Nextdoor/ndscheduler/pull/54#issue-262152050) for more details.
 
-### Reference Implementation
+## Reference Implementation
 
 See code in the [simple_scheduler/](https://github.com/Nextdoor/ndscheduler/tree/master/simple_scheduler) directory for inspiration :)
 

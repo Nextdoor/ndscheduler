@@ -71,6 +71,7 @@ class LoginHandler(BaseHandler):
     def post(self):
         username = self.get_argument("username")
         hashed = self.auth_credentials.get(username)
+        logger.debug(f"Received login for user '{username}'")
         if hashed is not None and bcrypt.checkpw(self.get_argument("password").encode(), hashed.encode()):
             # 6h = 0.25 days
             # 1h = 0.041666667 days
@@ -79,6 +80,7 @@ class LoginHandler(BaseHandler):
             logger.debug(f"Set cookie for user {username}, expires: {settings.COOKIE_MAX_AGE * 1440} minutes")
             self.redirect("/")
         else:
+            logger.debug("Wrong username or password")
             self.redirect("/")
 
 

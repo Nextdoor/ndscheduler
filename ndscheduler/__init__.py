@@ -182,6 +182,7 @@ def load_yaml_config(
         "AUTH_CREDENTIALS": dict,
         "ADMIN_USER": confuse.StrSeq(default=""),
         "HELP_URL": confuse.String(default=""),
+        "ISSUES_URL": confuse.String(default=""),
         "MAIL_SERVER": confuse.StrSeq(),
         "ADMIN_MAIL": confuse.StrSeq(),
         "SERVER_MAIL": confuse.String(default=""),

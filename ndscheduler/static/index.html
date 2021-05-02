@@ -62,20 +62,25 @@
                 </div>
                     <div class="modal-body">
                     <p>
-                        This web scheduler is written in Python and the source code can be found on
-                        <a href="https://my.domain/ndscheduler" target="_blank">Gitea: ndscheduler</a>
-                        , which was forked from
-                        <a href="https://github.com/Nextdoor/ndscheduler" target="_blank">Github: Nextdoor/ndscheduler</a>
+                        This web scheduler is a fork of
+                        <a href="https://github.com/Nextdoor/ndscheduler" target="_blank">Nextdoor/ndscheduler</a>
+                        and written in Python.
+                        <br>
+                        The source code can be found on
+                        <a href="https://github.com/palto42/ndscheduler" target="_blank">palto42/ndscheduler</a>
                     </p>
                     <p>ndscheduler version {{ website_info['version'] }}</p>
                     <p>Job packs: {{ website_info['job_versions'] }}</p>
-                    <p style="margin: 0;">Contributors:</p>
-                    <ul style="margin: 0;">
-                        <li>This fork: palto42</li>
-                        <li>Origin: <a href="https://github.com/Nextdoor/ndscheduler/graphs/contributors" target="_blank">see Github: Nextdoor/ndscheduler</a></li>
-                    </ul>
+                    <p style="margin: 0;">Contributors:
+                        <a href="https://github.com/palto42/ndscheduler/graphs/contributors" target="_blank">see GitHub</a>
+                    </p>
                     <hr>
-                    <p>This software is published under Apache License, Version 2.0</p>
+                    <p>
+                        This software is published under
+                        <a href="https://github.com/palto42/ndscheduler/blob/develop/LICENSE.txt" target="_blank">
+                            BSD 2-Clause "Simplified" License
+                        </a>
+                    </p>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -113,7 +118,7 @@
                     {% if website_info["help_url"] %}
                     <li><a href="{{ website_info["help_url"] }}" target="_blank">Help</a></li>
                     {% end %}
-                    <li><a href="https://github.com/palto42/ndscheduler/issues">Report issues</a></li>
+                    <li><a href="{{ website_info["issues_url"] }}" target="_blank">Report issues</a></li>
                     <li class="divider"></li>
                     <li><a href="" data-toggle="modal" data-target="#modalAbout">About</a></li>
                     {% if website_info["admin_user"] %}

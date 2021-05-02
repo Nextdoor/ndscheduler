@@ -77,7 +77,8 @@ ADMIN_USER: []
 ADMIN_MAIL: []
 
 # URL to help page
-HELP_URL: https://path/to/help.html
+HELP_URL: https://github.com/palto42/ndscheduler/blob/develop/README.md
+ISSUES_URL: https://github.com/palto42/ndscheduler/issues
 
 # Mail Server
 MAIL_SERVER: []

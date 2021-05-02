@@ -44,6 +44,7 @@ class Handler(base.BaseHandler):
             "host": uname()[1],
             "admin_user": admin_user,  # self.current_user and self.current_user in settings.ADMIN_USER,
             "help_url": settings.HELP_URL,
+            "issues_url": settings.ISSUES_URL,
         }
 
         meta_info = utils.get_all_available_jobs()

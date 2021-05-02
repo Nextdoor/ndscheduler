@@ -1,11 +1,11 @@
 # Nextdoor Scheduler
 
-![Apache](https://img.shields.io/hexpm/l/plug.svg)
+[![License](https://img.shields.io/badge/License-BSD%202--Clause-orange.svg)](LICENSE.txt)
 [![Build Status](https://api.travis-ci.org/palto42/ndscheduler.svg)](https://travis-ci.org/palto42/ndscheduler)
 
 ``ndscheduler`` is a flexible python library for building your own cron-like system to schedule jobs, which is to run a tornado process to serve REST APIs and a web ui.
 
-Check out the blog post - [We Don't Run Cron Jobs at Nextdoor](https://engblog.nextdoor.com/we-don-t-run-cron-jobs-at-nextdoor-6f7f9cc62040#.d2erw1pl6)
+**Note:** It seems that the [original repository](https://github.com/Nextdoor/ndscheduler) of ndscheduler isn't maintained anymore. This fork has meanwhile significantly deviated from it and is not fully backwards compatible anymore.
 
 **This version of ``ndscheduler`` supports Python 3 on Linux.**
 
@@ -112,8 +112,6 @@ The reference implementation also comes with [several sample jobs](https://githu
 * ShellJob: it runs an executable command, for example, run curl to crawl web pages.
 * CurlJob: it's like running [curl](http://curl.haxx.se/) periodically.
 
-And it's [dockerized](https://github.com/Nextdoor/ndscheduler/tree/master/simple_scheduler/docker).
-
 ## Contribute code to ndscheduler
 
 ### Install dependencies
@@ -135,7 +133,7 @@ make install
 make clean
 ```
 
-Finally, send pull request. Please make sure the [CI](https://travis-ci.org/Nextdoor/ndscheduler) passes for your PR.
+Finally, send pull request. Please make sure the [CI](https://travis-ci.org/palto42/ndscheduler) passes for your PR.
 
 ## REST APIs
 

@@ -15,6 +15,8 @@ import tornado.gen
 
 from ndscheduler import settings
 
+logger = logging.getLogger(__name__)
+
 
 class BaseHandler(tornado.web.RequestHandler):
 
@@ -60,7 +62,7 @@ class BaseHandler(tornado.web.RequestHandler):
 class LoginHandler(BaseHandler):
     def get(self):
         if len(self.auth_credentials) > 0:
-            logging.info("Login %s", self.auth_credentials)
+            logger.info("Login %s", self.auth_credentials)
             self.write("Login required!")
             self.write("<script>$('#modalLoginForm').modal({backdrop: 'static', keyboard: false});</script>")
         else:
@@ -69,14 +71,16 @@ class LoginHandler(BaseHandler):
     def post(self):
         username = self.get_argument("username")
         hashed = self.auth_credentials.get(username)
+        logger.debug(f"Received login for user '{username}'")
         if hashed is not None and bcrypt.checkpw(self.get_argument("password").encode(), hashed.encode()):
             # 6h = 0.25 days
             # 1h = 0.041666667 days
             # 1min = 0.000694444 days
             self.set_secure_cookie(settings.COOKIE_NAME, username, expires_days=settings.COOKIE_MAX_AGE)
-            logging.debug(f"Set cookie for user {username}, expires: {settings.COOKIE_MAX_AGE * 1440} minutes")
+            logger.debug(f"Set cookie for user {username}, expires: {settings.COOKIE_MAX_AGE * 1440} minutes")
             self.redirect("/")
         else:
+            logger.debug("Wrong username or password")
             self.redirect("/")
 
 

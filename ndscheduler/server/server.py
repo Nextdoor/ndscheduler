@@ -115,7 +115,7 @@ class SchedulerServer:
             cls.singleton.start_scheduler()
 
             if settings.SSL_CERT and settings.SSL_KEY:
-                logging.debug(f"SSL_CERT: {settings.SSL_CERT}, SSL_KEY: {settings.SSL_KEY}")
+                logger.debug(f"SSL_CERT: {settings.SSL_CERT}, SSL_KEY: {settings.SSL_KEY}")
                 # HTTPS server
                 prefix = "https"
                 ssl_ctx = ssl.create_default_context(ssl.Purpose.CLIENT_AUTH)

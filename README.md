@@ -40,7 +40,7 @@ Note: ``corescheduler`` can also be used independently within your own service i
 2. Install with pip
     * pip install -U pip wheel
     * pip install .
-    * Install scheduler implementation like `simple_scheduler``
+    * Install scheduler implementation like [simple_scheduler](https://github.com/palto42/simple_scheduler)
 3. Configure ~/.config/ndscheduler/config.yaml
     * See [example configuration](config_example.yaml)
     * Passwords must be hashed with bcrypt
@@ -105,22 +105,9 @@ It is best practice to backup your database before doing any upgrade. ndschedule
 
 ## Reference Implementation
 
-See code in the [simple_scheduler/](https://github.com/Nextdoor/ndscheduler/tree/master/simple_scheduler) directory for inspiration :)
+See code in the [simple_scheduler/](https://github.com/palto42/simple_scheduler) for inspiration :)
 
-Run it
-
-```sh
-make simple
-```
-
-Access the web ui via [localhost:8888](http://localhost:8888)
-
-The reference implementation also comes with [several sample jobs](https://github.com/Nextdoor/ndscheduler/tree/master/simple_scheduler/jobs).
-
-* AwesomeJob: it just prints out 2 arguments you pass in.
-* SlackJob: it sends a slack message periodically, for example, team standup reminder.
-* ShellJob: it runs an executable command, for example, run curl to crawl web pages.
-* CurlJob: it's like running [curl](http://curl.haxx.se/) periodically.
+This reference implementation was originally included in the ndscheduler repository, but has been separated out in this fork.
 
 ## Contribute code to ndscheduler
 

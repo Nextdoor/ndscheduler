@@ -2,10 +2,14 @@
     "python.linting.flake8Enabled": true,
     "python.linting.enabled": true,
     "cSpell.words": [
+        "CACERTDIR",
+        "CACERTFILE",
         "PYTHONPATH",
         "Postgres",
+        "TABLENAMES",
         "apscheduler",
         "apscheduler's",
+        "auditlogs",
         "bcrypt",
         "checkpw",
         "corescheduler",
@@ -15,7 +19,9 @@
         "hashpw",
         "htpasswd",
         "ioloop",
+        "jobauditlog",
         "keyout",
+        "ldaps",
         "mrkdwn",
         "ndscheduler",
         "newkey",
@@ -24,7 +30,10 @@
         "sched",
         "selfsigned",
         "sendgrid",
+        "sqlite",
+        "sslmode",
         "urlencode",
         "venv"
-    ]
+    ],
+    "python.pythonPath": ".venv/bin/python"
 }

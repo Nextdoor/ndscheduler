@@ -1,7 +1,7 @@
 # Nextdoor Scheduler
 
 [![License](https://img.shields.io/badge/License-BSD%202--Clause-orange.svg)](LICENSE.txt)
-[![Build Status](https://api.travis-ci.org/palto42/ndscheduler.svg)](https://travis-ci.org/palto42/ndscheduler)
+[![Build Status](https://api.travis-ci.com/palto42/ndscheduler.svg)](https://travis-ci.com/palto42/ndscheduler)
 
 ``ndscheduler`` is a flexible python library for building your own cron-like system to schedule jobs, which is to run a tornado process to serve REST APIs and a web ui.
 
@@ -42,10 +42,11 @@ Note: ``corescheduler`` can also be used independently within your own service i
     * pip install .
     * Install scheduler implementation like [simple_scheduler](https://github.com/palto42/simple_scheduler)
 3. Configure ~/.config/ndscheduler/config.yaml
-    * See [example configuration](config_example.yaml)
-    * Passwords must be hashed with bcrypt
-    * See [Python bcrypt tutorial](http://zetcode.com/python/bcrypt/)
-    * More ideas for basic_auth [Tornado basic auth example](https://gist.github.com/notsobad/5771635)
+    * See [example configuration](config_example.yaml) and [default configuration](ndscheduler/config_default.yaml) for available options.
+    * Optionally, enable authentication
+      * For local authentication, configure users and passwords as in the [example configuration](config_example.yaml). Passwords must be hashed with bcrypt, which can be done with the command `python -m ndscheduler --encrypt`
+      * For LDAP authentication, configure the LDAP server settings and the list of allowed users.
+        * If LDAP authentication should be used, the Python package `python-ldap`must be installed.
 4. Start scheduler implementation
 5. Launch web browser at configured URL and authenticate with configured account
 

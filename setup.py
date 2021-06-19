@@ -12,7 +12,7 @@ from setuptools import setup
 
 multiprocessing
 
-PACKAGE = "ndscheduler"
+PACKAGE = "ndscheduler-fork"
 __version__ = None
 
 exec(open(os.path.join("ndscheduler", "version.py")).read())  # set __version__
@@ -61,10 +61,10 @@ setup(
     version=__version__,
     description="ndscheduler: A cron-replacement library from Nextdoor",
     long_description=open("README.md").read(),
-    author="Nextdoor Engineering",
-    author_email="eng@nextdoor.com",
-    url="https://github.com/Nextdoor/ndscheduler",
-    license="Apache License, Version 2",
+    author="Matthias Homann (original: Nextdoor Engineering)",
+    author_email="palto@mailbox.org",
+    url="https://github.com/palto42/ndscheduler",
+    license="BSD 2-Clause 'Simplified' License",
     keywords="scheduler nextdoor cron python",
     packages=find_packages(),
     include_package_data=True,
@@ -79,6 +79,8 @@ setup(
         "python-dateutil >= 2.2",
         "bcrypt >= 3.1.7",  # for user authentication
         "confuse >= 1.1.0",  # for yaml config support
+        # python-ldap is only required if LDAP authentication is used
+        # "python-ldap >= 3.3.1",
     ],
     classifiers=classifiers,
     cmdclass={"clean": CleanHook},

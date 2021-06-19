@@ -85,3 +85,14 @@ MAIL_SERVER: []
 
 # Server sender mail address
 SERVER_MAIL: ""
+
+# LDAP server address in the format "ldap://my.ldap.server" "ldaps://my.ldap.server"
+# Non-standard ports can be specified like "ldap://my.ldap.server:1234"
+# LDAP_SERVER: ldaps://my.ldap.server
+LDAP_REQUIRE_CERT: demand
+# LDAP_CERT_DIR: None
+# LDAP_CERT_FILE: None
+# Define LDAP dn format for login, {username} will be replaced with the entered user name
+LDAP_LOGIN_DN: uid={username},ou=users,dc=example,dc=com
+# List of permitted LDAP users. If none are specified, any authenticated used is allowed
+LDAP_USERS: []

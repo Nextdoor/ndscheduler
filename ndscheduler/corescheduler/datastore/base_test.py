@@ -41,16 +41,10 @@ class DatastoreBaseTest(unittest.TestCase):
             "12", "34", state=constants.EXECUTION_STATUS_SCHEDULED, scheduled_time=now + datetime.timedelta(minutes=5),
         )
         self.store.add_execution(
-            "13",
-            "34",
-            state=constants.EXECUTION_STATUS_SCHEDULED,
-            scheduled_time=now + datetime.timedelta(minutes=50),
+            "13", "34", state=constants.EXECUTION_STATUS_SCHEDULED, scheduled_time=now + datetime.timedelta(minutes=50),
         )
         self.store.add_execution(
-            "14",
-            "34",
-            state=constants.EXECUTION_STATUS_SCHEDULED,
-            scheduled_time=now + datetime.timedelta(minutes=70),
+            "14", "34", state=constants.EXECUTION_STATUS_SCHEDULED, scheduled_time=now + datetime.timedelta(minutes=70),
         )
         self.store.add_execution(
             "15",

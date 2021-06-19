@@ -52,10 +52,7 @@ class BaseScheduler(apscheduler_tornado.TornadoScheduler):
         execution_id = utils.generate_uuid()
         datastore = utils.get_datastore_instance(db_class_path, db_config, db_tablenames)
         datastore.add_execution(
-            execution_id,
-            job_id,
-            constants.EXECUTION_STATUS_SCHEDULED,
-            description=JobBase.get_scheduled_description(),
+            execution_id, job_id, constants.EXECUTION_STATUS_SCHEDULED, description=JobBase.get_scheduled_description(),
         )
         try:
             job_class = utils.import_from_path(job_class_path)

@@ -118,7 +118,6 @@ AUTH_CREDENTIALS = {
     # "user": "$2y$11$MCw3cm9Tp.8zF/hmPILW3.1hGMtP0UV8kUevfaxrzM7JzXdoyFi6.",  # Very$ecret
 }
 
-
 # List of admin users
 ADMIN_USER = []
 
@@ -130,3 +129,16 @@ MAIL_SERVER = []
 
 # Server sender mail address
 SERVER_MAIL = ""
+
+# LDAP server address in the format "ldap://my.ldap.server" "ldaps://my.ldap.server"
+# Non-standard ports can be specified like "ldap://my.ldap.server:1234"
+LDAP_SERVER = ""
+# If "ldaps://" is used, specify of the SSL certificate should be verified
+# Possible options are "demand", "allow" or "never"
+LDAP_REQUIRE_CERT = "demand"
+LDAP_CERT_DIR = None
+LDAP_CERT_File = None
+# Define LDAP dn format for login, {username} will be replaced with the entered user name
+LDAP_LOGIN_DN = "uid={username},ou=users,dc=example,dc=com"
+# List of permitted LDAP users. If none are specified, any authenticated used is allowed
+LDAP_USERS = []

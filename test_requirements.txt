@@ -1,2 +1,3 @@
 mock==1.1.2
+construct>=2.10
 python-ldap >= "3.3.1"

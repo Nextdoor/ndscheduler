@@ -329,6 +329,5 @@ class Handler(base.BaseHandler):
 
         if not valid_cron_string:
             raise tornado.web.HTTPError(
-                400,
-                reason=("Require at least one of following parameters:" " %s" % str(at_least_one_required_fields)),
+                400, reason=("Require at least one of following parameters:" " %s" % str(at_least_one_required_fields)),
             )

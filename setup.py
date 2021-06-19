@@ -79,7 +79,8 @@ setup(
         "python-dateutil >= 2.2",
         "bcrypt >= 3.1.7",  # for user authentication
         "confuse >= 1.1.0",  # for yaml config support
-        "python-ldap >= 3.3.1", 
+        # python-ldap is only required if LDAP authentication is used
+        # "python-ldap >= 3.3.1",
     ],
     classifiers=classifiers,
     cmdclass={"clean": CleanHook},

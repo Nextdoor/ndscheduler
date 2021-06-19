@@ -18,7 +18,7 @@ SSL_KEY: /path/to/key  # required for HTTPS
 #     "jobs_tablename": confuse.String(default="scheduler_jobs"),
 #     "executions_tablename": confuse.String(default="scheduler_execution"),
 #     "auditlogs_tablename": confuse.String(default="scheduler_jobauditlog"),
-# DATABASE_CLASS: sqlite  # supporte: sqlite, postgres, mysql
+# DATABASE_CLASS: sqlite  # supported: sqlite, postgres, mysql
 DATABASE_CONFIG_DICT:
     "file_path": datastore.db  # SQlite
     # additional attributes for MySQL and Postgres

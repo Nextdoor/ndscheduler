@@ -21,6 +21,7 @@ from os import environ
 import bcrypt
 from getpass import getpass
 from time import sleep
+import pkg_resources
 
 from ndscheduler import default_settings
 
@@ -84,6 +85,13 @@ def get_cli_args():
     )
     parser.add_argument(
         "--encrypt", "-e", help="Create hash value from password for use in AUTH_CREDENTIALS.", action="store_true",
+    )
+    parser.add_argument(
+        "--version",
+        "-V",
+        action="version",
+        help="Show version",
+        version=f"%(prog)s fla{pkg_resources.get_distribution('construct').version}",
     )
 
     args, _ = parser.parse_known_args()
@@ -189,7 +197,7 @@ def load_yaml_config(
         # LDAP server addess in the format "ldap://my.ldap.server" "ldaps://my.ldap.server"
         # Non-standard ports can be specified like "ldap://my.ldap.server:1234"
         "LDAP_SERVER": confuse.String(default=""),
-        "LDAP_REQUIRE_CERT": confuse.Choice(["demand", "allow", "never"], default="demand", ),
+        "LDAP_REQUIRE_CERT": confuse.Choice(["demand", "allow", "never"], default="demand",),
         "LDAP_CERT_DIR": confuse.String(default=None),
         "LDAP_CERT_FILE": confuse.String(default=None),
         # Define LDAP dn format for login, {username} will be replaced with the entered user name

@@ -19,7 +19,7 @@ test:
 	make install
 	make flake8
 	# Hacky way to ensure mock is installed before running setup.py
-	$(SOURCE_VENV) && pip install mock==1.1.2 && $(PYTHON) setup.py test
+	$(SOURCE_VENV) && pip install -r test_requirements.txt && $(PYTHON) setup.py test
 
 install:
 	make init

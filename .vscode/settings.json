@@ -11,6 +11,7 @@
         "apscheduler's",
         "auditlogs",
         "bcrypt",
+        "bdist",
         "checkpw",
         "corescheduler",
         "dateutil",
@@ -26,14 +27,19 @@
         "ndscheduler",
         "newkey",
         "palto",
+        "pypi",
         "rtype",
         "sched",
+        "sdist",
         "selfsigned",
         "sendgrid",
         "sqlite",
         "sslmode",
+        "tablename",
         "urlencode",
-        "venv"
+        "venv",
+        "webcron",
+        "wheel"
     ],
     "python.pythonPath": ".venv/bin/python"
 }

@@ -28,13 +28,13 @@ class CurlJob(job.JobBase):
                                   '["http://localhost:8888/api/v1/jobs/ba12e", "DELETE"]')
         }
 
-    def run(self, url, request_type,  *args, **kwargs):
+    def run(self, url, request_type, timeout=TIMEOUT, *args, **kwargs):
         print('Calling GET on url: %s' % (url))
 
         session = requests.Session()
         result = session.request(request_type,
                                  url,
-                                 timeout=self.TIMEOUT,
+                                 timeout=timeout,
                                  headers=None,
                                  data=None)
         return result.text

@@ -84,7 +84,6 @@ class Handler(base.BaseHandler):
         self.finish(return_json)
 
     @tornado.web.removeslash
-    @tornado.web.asynchronous
     @tornado.gen.coroutine
     def get(self, execution_id=None):
         """Returns a execution or multiple executions.
@@ -157,7 +156,6 @@ class Handler(base.BaseHandler):
         self.finish(return_json)
 
     @tornado.web.removeslash
-    @tornado.web.asynchronous
     @tornado.gen.coroutine
     def post(self, job_id):
         """Runs a job.

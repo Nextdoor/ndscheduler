@@ -100,7 +100,6 @@ class Handler(base.BaseHandler):
         self.finish(return_json)
 
     @tornado.web.removeslash
-    @tornado.web.asynchronous
     @tornado.gen.coroutine
     def get(self, job_id=None):
         """Returns a job or multiple jobs.
@@ -165,7 +164,6 @@ class Handler(base.BaseHandler):
         yield self.delete_job(job_id)
 
     @tornado.web.removeslash
-    @tornado.web.asynchronous
     @tornado.gen.coroutine
     def delete(self, job_id):
         """Deletes a job.
@@ -256,7 +254,6 @@ class Handler(base.BaseHandler):
         yield self.modify_job(job_id)
 
     @tornado.web.removeslash
-    @tornado.web.asynchronous
     @tornado.gen.coroutine
     def put(self, job_id):
         """Modifies a job.

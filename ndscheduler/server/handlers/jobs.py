@@ -19,6 +19,7 @@ class Handler(base.BaseHandler):
         It's a blocking operation.
         """
         jobs = self.scheduler_manager.get_jobs()
+        print(jobs)
         return_json = []
         for job in jobs:
             return_json.append(self._build_job_dict(job))
@@ -58,8 +59,7 @@ class Handler(base.BaseHandler):
         """
         return self._get_jobs()
 
-    @tornado.gen.coroutine
-    def get_jobs_yield(self):
+    async def get_jobs_yield(self):
         """Wrapper for get_jobs in async mode."""
         return_json = yield self.get_jobs()
         self.finish(return_json)
@@ -90,8 +90,7 @@ class Handler(base.BaseHandler):
         """
         return self._get_job(job_id)
 
-    @tornado.gen.coroutine
-    def get_job_yield(self, job_id):
+    async def get_job_yield(self, job_id):
         """Wrapper for get_job() to run in async mode.
 
         :param str job_id: Job id.
@@ -100,8 +99,7 @@ class Handler(base.BaseHandler):
         self.finish(return_json)
 
     @tornado.web.removeslash
-    @tornado.gen.coroutine
-    def get(self, job_id=None):
+    async def get(self, job_id=None):
         """Returns a job or multiple jobs.
 
         Handles two endpoints:
@@ -159,13 +157,11 @@ class Handler(base.BaseHandler):
         """Wrapper for _delete_job() to run on a threaded executor."""
         self._delete_job(job_id)
 
-    @tornado.gen.coroutine
-    def delete_job_yield(self, job_id):
+    async def delete_job_yield(self, job_id):
         yield self.delete_job(job_id)
 
     @tornado.web.removeslash
-    @tornado.gen.coroutine
-    def delete(self, job_id):
+    async def delete(self, job_id):
         """Deletes a job.
 
         Handles an endpoint:
@@ -245,8 +241,7 @@ class Handler(base.BaseHandler):
         """
         self._modify_job(job_id)
 
-    @tornado.gen.coroutine
-    def modify_job_yield(self, job_id):
+    async def modify_job_yield(self, job_id):
         """Wrapper for modify_job() to run in async mode.
 
         :param str job_id: Job id.
@@ -254,8 +249,7 @@ class Handler(base.BaseHandler):
         yield self.modify_job(job_id)
 
     @tornado.web.removeslash
-    @tornado.gen.coroutine
-    def put(self, job_id):
+    async def put(self, job_id):
         """Modifies a job.
 
         Handles an endpoint:

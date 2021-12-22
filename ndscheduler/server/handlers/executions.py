@@ -42,7 +42,7 @@ class Handler(base.BaseHandler):
         """
         return self._get_execution(execution_id)
 
-    @tornado.gen.engine
+    @tornado.gen.coroutine
     def get_execution_yield(self, execution_id):
         """Wrapper for get_execution to run in async mode
 
@@ -77,7 +77,7 @@ class Handler(base.BaseHandler):
         """
         return self._get_executions()
 
-    @tornado.gen.engine
+    @tornado.gen.coroutine
     def get_executions_yield(self):
         """Wrapper for get_executions to run in async mode."""
         return_json = yield self.get_executions()
@@ -85,7 +85,7 @@ class Handler(base.BaseHandler):
 
     @tornado.web.removeslash
     @tornado.web.asynchronous
-    @tornado.gen.engine
+    @tornado.gen.coroutine
     def get(self, execution_id=None):
         """Returns a execution or multiple executions.
 
@@ -146,7 +146,7 @@ class Handler(base.BaseHandler):
         """
         return self._run_job(job_id)
 
-    @tornado.gen.engine
+    @tornado.gen.coroutine
     def run_job_yield(self, job_id):
         """Wrapper for run_job to run in async mode.
 
@@ -158,7 +158,7 @@ class Handler(base.BaseHandler):
 
     @tornado.web.removeslash
     @tornado.web.asynchronous
-    @tornado.gen.engine
+    @tornado.gen.coroutine
     def post(self, job_id):
         """Runs a job.
 

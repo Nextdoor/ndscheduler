@@ -31,7 +31,6 @@ class Handler(base.BaseHandler):
             return {'error': 'Execution not found: %s' % execution_id}
         return execution
 
-    @tornado.concurrent.run_on_executor
     def get_execution(self, execution_id):
         """Wrapper for _get_execution() to run on threaded executor.
 
@@ -42,12 +41,13 @@ class Handler(base.BaseHandler):
         """
         return self._get_execution(execution_id)
 
-    async def get_execution_yield(self, execution_id):
+    @tornado.gen.coroutine
+    def get_execution_yield(self, execution_id):
         """Wrapper for get_execution to run in async mode
 
         :param str execution_id: Execution id.
         """
-        return_json = yield self.get_execution(execution_id)
+        return_json = self.get_execution(execution_id)
         self.finish(return_json)
 
     def _get_executions(self):
@@ -67,7 +67,6 @@ class Handler(base.BaseHandler):
         executions = self.datastore.get_executions(time_range_start, time_range_end)
         return executions
 
-    @tornado.concurrent.run_on_executor
     def get_executions(self):
         """Wrapper for _get_executions to run on threaded executor.
 
@@ -76,12 +75,14 @@ class Handler(base.BaseHandler):
         """
         return self._get_executions()
 
-    async def get_executions_yield(self):
+    @tornado.gen.coroutine
+    def get_executions_yield(self):
         """Wrapper for get_executions to run in async mode."""
-        return_json = yield self.get_executions()
+        return_json = self.get_executions()
         self.finish(return_json)
 
     @tornado.web.removeslash
+    @tornado.gen.coroutine
     async def get(self, execution_id=None):
         """Returns a execution or multiple executions.
 
@@ -131,7 +132,6 @@ class Handler(base.BaseHandler):
             'execution_id': execution_id}
         return response
 
-    @tornado.concurrent.run_on_executor
     def run_job(self, job_id):
         """Wrapper for _run_job() to run on threaded executor.
 
@@ -142,16 +142,18 @@ class Handler(base.BaseHandler):
         """
         return self._run_job(job_id)
 
-    async def run_job_yield(self, job_id):
+    @tornado.gen.coroutine
+    def run_job_yield(self, job_id):
         """Wrapper for run_job to run in async mode.
 
         :param str job_id:
         :return:
         """
-        return_json = yield self.run_job(job_id)
+        return_json = self.run_job(job_id)
         self.finish(return_json)
 
     @tornado.web.removeslash
+    @tornado.gen.coroutine
     async def post(self, job_id):
         """Runs a job.
 
@@ -164,6 +166,7 @@ class Handler(base.BaseHandler):
         self.run_job_yield(job_id)
 
     @tornado.web.removeslash
+    @tornado.gen.coroutine
     def delete(self, job_id):
         """Stops a job execution.
 

@@ -36,17 +36,13 @@ class Handler(base.BaseHandler):
         """
         return self._get_logs()
 
-    @tornado.gen.engine
-    def get_logs_yield(self):
-        return_json = yield self.get_logs()
-        self.finish(return_json)
-
     @tornado.web.removeslash
-    @tornado.web.asynchronous
-    @tornado.gen.engine
+    @tornado.gen.coroutine
     def get(self):
         """Returns audit logs.
 
         Handles the endpoint GET /api/v1/logs.
         """
-        self.get_logs_yield()
+        return_json = yield self.get_logs()
+        self.finish(return_json)
+        

@@ -58,12 +58,6 @@ class Handler(base.BaseHandler):
         """
         return self._get_jobs()
 
-    @tornado.gen.engine
-    def get_jobs_yield(self):
-        """Wrapper for get_jobs in async mode."""
-        return_json = yield self.get_jobs()
-        self.finish(return_json)
-
     def _get_job(self, job_id):
         """Returns a dictionary for a job info.
 
@@ -90,18 +84,8 @@ class Handler(base.BaseHandler):
         """
         return self._get_job(job_id)
 
-    @tornado.gen.engine
-    def get_job_yield(self, job_id):
-        """Wrapper for get_job() to run in async mode.
-
-        :param str job_id: Job id.
-        """
-        return_json = yield self.get_job(job_id)
-        self.finish(return_json)
-
     @tornado.web.removeslash
-    @tornado.web.asynchronous
-    @tornado.gen.engine
+    @tornado.gen.coroutine
     def get(self, job_id=None):
         """Returns a job or multiple jobs.
 
@@ -112,9 +96,10 @@ class Handler(base.BaseHandler):
         :param str job_id: String for job id.
         """
         if job_id is None:
-            self.get_jobs_yield()
+            return_json = yield self.get_jobs()
         else:
-            self.get_job_yield(job_id)
+            return_json = yield self.get_job(job_id)
+        self.finish(return_json)
 
     @tornado.web.removeslash
     def post(self):
@@ -160,13 +145,9 @@ class Handler(base.BaseHandler):
         """Wrapper for _delete_job() to run on a threaded executor."""
         self._delete_job(job_id)
 
-    @tornado.gen.engine
-    def delete_job_yield(self, job_id):
-        yield self.delete_job(job_id)
 
     @tornado.web.removeslash
-    @tornado.web.asynchronous
-    @tornado.gen.engine
+    @tornado.gen.coroutine
     def delete(self, job_id):
         """Deletes a job.
 
@@ -175,10 +156,9 @@ class Handler(base.BaseHandler):
 
         :param str job_id: Job id
         """
-        self.delete_job_yield(job_id)
+        yield self.delete_job(job_id)
 
-        response = {
-            'job_id': job_id}
+        response = {'job_id': job_id}
         self.set_status(200)
         self.finish(response)
 
@@ -247,17 +227,10 @@ class Handler(base.BaseHandler):
         """
         self._modify_job(job_id)
 
-    @tornado.gen.engine
-    def modify_job_yield(self, job_id):
-        """Wrapper for modify_job() to run in async mode.
 
-        :param str job_id: Job id.
-        """
-        yield self.modify_job(job_id)
 
     @tornado.web.removeslash
-    @tornado.web.asynchronous
-    @tornado.gen.engine
+    @tornado.gen.coroutine
     def put(self, job_id):
         """Modifies a job.
 
@@ -267,10 +240,9 @@ class Handler(base.BaseHandler):
         :param str job_id: Job id.
         """
         self._validate_post_data()
-        self.modify_job_yield(job_id)
+        yield self.modify_job(job_id)
+        response = {'job_id': job_id}
 
-        response = {
-            'job_id': job_id}
         self.set_status(200)
         self.finish(response)
 

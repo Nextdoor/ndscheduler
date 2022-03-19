@@ -42,14 +42,6 @@ class Handler(base.BaseHandler):
         """
         return self._get_execution(execution_id)
 
-    @tornado.gen.engine
-    def get_execution_yield(self, execution_id):
-        """Wrapper for get_execution to run in async mode
-
-        :param str execution_id: Execution id.
-        """
-        return_json = yield self.get_execution(execution_id)
-        self.finish(return_json)
 
     def _get_executions(self):
         """Returns a dictionary of executions in a specific time range.
@@ -77,15 +69,9 @@ class Handler(base.BaseHandler):
         """
         return self._get_executions()
 
-    @tornado.gen.engine
-    def get_executions_yield(self):
-        """Wrapper for get_executions to run in async mode."""
-        return_json = yield self.get_executions()
-        self.finish(return_json)
 
     @tornado.web.removeslash
-    @tornado.web.asynchronous
-    @tornado.gen.engine
+    @tornado.gen.coroutine
     def get(self, execution_id=None):
         """Returns a execution or multiple executions.
 
@@ -102,9 +88,12 @@ class Handler(base.BaseHandler):
         :param str execution_id: Execution id.
         """
         if execution_id is None:
-            self.get_executions_yield()
+            # self.get_executions_yield()
+            return_json = yield self.get_executions()
         else:
-            self.get_execution_yield(execution_id)
+            # self.get_execution_yield(execution_id)
+            return_json = yield self.get_execution(execution_id)
+        self.finish(return_json)
 
     def _run_job(self, job_id):
         """Kicks off a job.
@@ -146,19 +135,9 @@ class Handler(base.BaseHandler):
         """
         return self._run_job(job_id)
 
-    @tornado.gen.engine
-    def run_job_yield(self, job_id):
-        """Wrapper for run_job to run in async mode.
-
-        :param str job_id:
-        :return:
-        """
-        return_json = yield self.run_job(job_id)
-        self.finish(return_json)
 
     @tornado.web.removeslash
-    @tornado.web.asynchronous
-    @tornado.gen.engine
+    @tornado.gen.coroutine
     def post(self, job_id):
         """Runs a job.
 
@@ -168,7 +147,8 @@ class Handler(base.BaseHandler):
         Args:
             job_id: String for job id.
         """
-        self.run_job_yield(job_id)
+        return_json = yield self.run_job(job_id)
+        self.finish(return_json)
 
     @tornado.web.removeslash
     def delete(self, job_id):
